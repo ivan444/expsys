@@ -1,18 +1,16 @@
 package imaing.expsys;
 
 public class Literal implements Rule {
-	private final Fuzzyfier fuzzyfier;
-	private final FuzzyClass fcls;
-	private final Characteristic prodChar;
+	private final String characteristic;
+	private final int fcls;
 	
-	public Literal(Fuzzyfier fuzzyfier, FuzzyClass fcls, Characteristic prodChar) {
-		this.fuzzyfier = fuzzyfier;
+	public Literal(int fcls, String characteristic) {
+		this.characteristic = characteristic;
 		this.fcls = fcls;
-		this.prodChar = prodChar;
 	}
 
 	@Override
 	public double eval(Product p) {
-		return fuzzyfier.fuzz(prodChar.filter(p), fcls);
+		return p.charaMemberVal(characteristic, fcls);
 	}
 }
