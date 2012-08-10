@@ -4,7 +4,7 @@ public class Literal implements Rule {
 	private final String characteristic;
 	private final int fcls;
 	
-	public Literal(int fcls, String characteristic) {
+	public Literal(String characteristic, int fcls) {
 		this.characteristic = characteristic;
 		this.fcls = fcls;
 	}
