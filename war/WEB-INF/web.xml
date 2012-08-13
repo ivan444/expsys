@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+
+	<!-- Spring config -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>/WEB-INF/applicationContext.xml</param-value>
+	</context-param>
+	
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
+	<!-- Servlets -->
+<!--	 Spring MVC DispatcherServlet -->
+	<servlet>
+		<servlet-name>spring</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+
+<!--	Redirectamo sve *.rpc zahtjeve na spring Dispatcher.
+		On je konfiguriran u spring-servlet.xml (na servlet-name se dodaje -servlet.xml)
+		U greetServlet primjeru (to dodje s GWT-om) requesti se mapiraju direktno na klasu,
+		tj servlet je klasa (u ovom primjeru to je GreetingServiceImpl).
+		Mi prvo mapiramo na spring controller koji onda dispatcha dalje na klase (vidi spring-servlet.xml)  
+-->
+	<servlet-mapping>
+		<servlet-name>spring</servlet-name>
+		<url-pattern>*.rpc</url-pattern>
+	</servlet-mapping>
+
+	<!-- Default page to serve -->
+	<welcome-file-list>
+		<welcome-file>expsys.html</welcome-file>
+	</welcome-file-list>
+
+</web-app>

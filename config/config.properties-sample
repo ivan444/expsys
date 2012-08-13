@@ -1,0 +1,22 @@
+# DB params.
+jdbc.url=jdbc:postgresql://127.0.0.1/expsysdb
+jdbc.username=expsys
+jdbc.password=qwerty
+
+# Mailer params.
+smtp.host=localhost
+smtp.port=25
+smtp.username=support@example.com
+smtp.password=pass
+mail.from=support@example.com
+
+# Application params.
+app.baseurl=www.example.com
+
+# Build properties.
+gwt.sdk=/home/example/gwt
+tomcat=/home/example/tomcat
+war.name=laptopexpsys
+
+# Runtime params.
+webinf.path=webapps/ROOT/WEB-INF

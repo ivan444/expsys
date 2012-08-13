@@ -1,0 +1,3 @@
+CREATE DATABASE expsysdb;
+CREATE USER expsys WITH PASSWORD 'qwerty';
+GRANT ALL PRIVILEGES ON DATABASE expsysdb to expsys;
