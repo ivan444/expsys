@@ -27,4 +27,9 @@ public class Laptop implements Product {
 		return desc;
 	}
 
+	@Override
+	public String toString() {
+		return describe();
+	}
+
 }

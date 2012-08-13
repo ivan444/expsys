@@ -30,14 +30,22 @@ public class ImplicationClause implements Rule {
 
 	@Override
 	public double eval(Product p) {
-		OrClauseMin or = new OrClauseMin(new NotClause(leftLiteral), new Rule() {
-				@Override
-				public double eval(Product p) {
-					return rel.mval();
-				}
-			});
+//		OrClause or = new OrClause(new NotClause(leftLiteral), new Rule() {
+//				@Override
+//				public double eval(Product p) {
+//					return rel.mval();
+//				}
+//			});
+//		
+//		return or.eval(p);
+		AndClause and = new AndClause(leftLiteral, new Rule() {
+			@Override
+			public double eval(Product p) {
+				return rel.mval();
+			}
+		});
 		
-		return or.eval(p);
+		return and.eval(p);
 	}
 
 }
