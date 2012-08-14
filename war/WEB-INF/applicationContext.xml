@@ -20,6 +20,4 @@
   <import resource="classpath:repositoriesConfig.xml"/>
   
   <import resource="classpath:servicesConfig.xml"/>
-	
-
 </beans>	

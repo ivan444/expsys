@@ -8,8 +8,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface ShopOwnerServiceAsync {
 
-	void say(AsyncCallback<String> callback);
-	
 	void list(AsyncCallback<List<ShopOwner>> callback);
 	
 	void save(ShopOwner shopOwner, AsyncCallback<ShopOwner> callback);

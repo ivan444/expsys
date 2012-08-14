@@ -1,6 +1,9 @@
 package imaing.expsys.client.view;
 
 
+import java.util.List;
+
+import imaing.expsys.client.domain.ShopOwner;
 import imaing.expsys.client.presenter.WelcomePagePresenter;
 
 import com.google.gwt.core.client.GWT;
@@ -11,6 +14,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class WelcomePage extends Composite implements WelcomePagePresenter.Display {
@@ -21,31 +25,52 @@ public class WelcomePage extends Composite implements WelcomePagePresenter.Displ
 	private static WelcomePageUiBinder uiBinder = GWT.create(WelcomePageUiBinder.class);
 
 	@UiField
-	TextBox name;
+	TextBox title;
 	
 	@UiField
-	Button btnHello;
+	TextBox email;
 	
 	@UiField
-	Label greet;
+	Button btnAdd;
+	
+	@UiField
+	Button btnList;
+	
+	@UiField
+	VerticalPanel ownersPane;
 	
 	public WelcomePage() {
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 
 	@Override
-	public HasClickHandlers getHelloButton() {
-		return btnHello;
+	public HasClickHandlers getAddButton() {
+		return btnAdd;
 	}
 
 	@Override
-	public TextBox getNameField() {
-		return name;
+	public HasClickHandlers getListButton() {
+		return btnList;
 	}
 
 	@Override
-	public void sendGreet(String greet) {
-		this.greet.setText(greet);
+	public TextBox getTitleField() {
+		return title;
 	}
+
+	@Override
+	public TextBox getEmailField() {
+		return email;
+	}
+
+	@Override
+	public void listShopOwners(List<ShopOwner> owners) {
+		ownersPane.clear();
+		
+		for (ShopOwner ownr : owners) {
+			ownersPane.add(new Label(ownr.getTitle() + " " + ownr.getEmail()));
+		}
+	}
+
 
 }

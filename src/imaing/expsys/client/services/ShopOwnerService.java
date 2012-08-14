@@ -12,8 +12,6 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 @RemoteServiceRelativePath("shopowner.rpc")
 public interface ShopOwnerService extends RemoteService {
 
-	String say();
-	
 	List<ShopOwner> list();
 	
 	ShopOwner save(ShopOwner shopOwner) throws InvalidDataException;

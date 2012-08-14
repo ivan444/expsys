@@ -1,10 +1,11 @@
 package imaing.expsys.server.dao;
 
-
 import imaing.expsys.shared.exceptions.InvalidDataException;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Abstract implementation of DAO generic repository.
@@ -24,15 +25,16 @@ public class GenericRepositoryImpl<E extends DAOobject<G>, G>
 	
 	@Override
 	public G getById(Long id) {
-		E dao = (E) hibernateTemplate.get(type, id);
+		E dao = (E) entityManager.find(type, id);
 		
 		if (dao == null) return null;
 		else return dao.getCleaned();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<G> list() {
-		List<E> allDaos = hibernateTemplate.loadAll(type);
+		List<E> allDaos = entityManager.createQuery("from " + type.getName()).getResultList();
 		
 		List<G> allGs = new ArrayList<G>();
 		
@@ -46,6 +48,7 @@ public class GenericRepositoryImpl<E extends DAOobject<G>, G>
 	}
 
 	@Override
+	@Transactional(readOnly=false)
 	public void save(G gwtObject) throws InvalidDataException {
 		if (gwtObject == null) throw new InvalidDataException("Trying to save null object!");
 		E dao = null;
@@ -59,25 +62,31 @@ public class GenericRepositoryImpl<E extends DAOobject<G>, G>
 		
 		dao.fill(gwtObject);
 		try {
-			hibernateTemplate.saveOrUpdate(dao);
+			if (dao.getId() == null) {
+				entityManager.persist(dao);
+			} else {
+				entityManager.merge(dao);
+			}
 		} catch (Exception e) {
 			throw new InvalidDataException(e);
 		}
 	}
 	
 	@Override
+	@Transactional(readOnly=false)
 	public void delete(E daoObject) throws InvalidDataException {
 		if (daoObject == null) throw new InvalidDataException("Trying to delete null object!");
 		
-		hibernateTemplate.delete(daoObject);
+		entityManager.remove(daoObject);
 	}
 	
 	@Override
+	@Transactional(readOnly=false)
 	public void delete(Long id) throws InvalidDataException {
 		if (id == null) throw new InvalidDataException("Trying to delete object with null ID!");
-		E dao = (E) hibernateTemplate.get(type, id);
+		E dao = (E) entityManager.find(type, id);
 		
-		hibernateTemplate.delete(dao);
+		delete(dao);
 	}
 
 }

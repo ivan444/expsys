@@ -1,14 +1,17 @@
 package imaing.expsys.client.presenter;
 
 
+import imaing.expsys.client.domain.ShopOwner;
 import imaing.expsys.client.services.ShopOwnerServiceAsync;
+
+import java.util.List;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.TextBox;
@@ -20,11 +23,13 @@ public class WelcomePagePresenter implements Presenter {
 	private final Display display;
 	private final ShopOwnerServiceAsync shopOwnerSrv;
 	
-	
 	public interface Display {
-		HasClickHandlers getHelloButton();
-		TextBox getNameField();
-		void sendGreet(String greet);
+		HasClickHandlers getAddButton();
+		HasClickHandlers getListButton();
+		TextBox getTitleField();
+		TextBox getEmailField();
+		void listShopOwners(List<ShopOwner> owners);
+		
 		Widget asWidget();
 	}
 	
@@ -32,7 +37,6 @@ public class WelcomePagePresenter implements Presenter {
 		this.eventBus = eventBus;
 		this.display = view;
 		this.shopOwnerSrv = rpcService;
-		display.getNameField().setFocus(true);
 		
 	}
 	
@@ -44,34 +48,64 @@ public class WelcomePagePresenter implements Presenter {
 	}
 
 	private void bind() {
-		
-		display.getHelloButton().addClickHandler(new ClickHandler() {
+		display.getAddButton().addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				doGreet();
+				addOwner();
 			}
 		});
 		
-		display.getNameField().addClickHandler(new ClickHandler() {
-			
+		display.getListButton().addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				listOwners();
+			}
+		});
+		
+		display.getTitleField().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				display.getNameField().setText("");
+				display.getTitleField().setText("");
+			}
+		});
+		
+		display.getEmailField().addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				display.getEmailField().setText("");
 			}
 		});
 		
 	}
 	
-	private void doGreet() {
-		//History.newItem("register");
+	private void addOwner() {
 		
-		shopOwnerSrv.say(new AsyncCallback<String>() {
+		ShopOwner ownr = new ShopOwner();
+		ownr.setEmail(display.getEmailField().getText());
+		ownr.setTitle(display.getTitleField().getText());
+		
+		shopOwnerSrv.save(ownr, new AsyncCallback<ShopOwner>() {
 			@Override
-			public void onSuccess(String result) {
-				display.sendGreet(result);
+			public void onSuccess(ShopOwner result) {
+				Window.alert("Saved!");
 			}
 			@Override
 			public void onFailure(Throwable caught) {
-				GWT.log("Failed to greet", caught);
+				GWT.log("Failed to add owner", caught);
+				Window.alert("Failed to add owner");
+			}
+		});
+	}
+	
+	private void listOwners() {
+		shopOwnerSrv.list(new AsyncCallback<List<ShopOwner>>() {
+			@Override
+			public void onSuccess(List<ShopOwner> owners) {
+				display.listShopOwners(owners);
+			}
+			
+			@Override
+			public void onFailure(Throwable caught) {
+				GWT.log("Failed to list owners", caught);
+				Window.alert("Failed to list owners");
 			}
 		});
 	}
