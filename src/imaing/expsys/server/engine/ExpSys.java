@@ -1,4 +1,4 @@
-package imaing.expsys;
+package imaing.expsys.server.engine;
 
 import java.util.Collections;
 import java.util.LinkedList;

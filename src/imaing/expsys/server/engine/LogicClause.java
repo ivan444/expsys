@@ -1,4 +1,4 @@
-package imaing.expsys;
+package imaing.expsys.server.engine;
 
 public abstract class LogicClause implements Rule {
 	protected final Rule leftLiteral;

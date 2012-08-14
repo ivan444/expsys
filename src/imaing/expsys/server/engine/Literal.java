@@ -1,4 +1,4 @@
-package imaing.expsys;
+package imaing.expsys.server.engine;
 
 public class Literal implements Rule {
 	private final String characteristic;

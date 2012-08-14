@@ -1,14 +1,14 @@
 package imaing.expsys.test;
 
-import imaing.expsys.Aggregator;
-import imaing.expsys.AndClause;
-import imaing.expsys.AvgAggregator;
-import imaing.expsys.ImplicationClause;
-import imaing.expsys.ImplicationClause.Relevance;
-import imaing.expsys.Laptop;
-import imaing.expsys.Literal;
-import imaing.expsys.Product;
-import imaing.expsys.Rule;
+import imaing.expsys.server.engine.Aggregator;
+import imaing.expsys.server.engine.AndClause;
+import imaing.expsys.server.engine.AvgAggregator;
+import imaing.expsys.server.engine.ImplicationClause;
+import imaing.expsys.server.engine.Laptop;
+import imaing.expsys.server.engine.Literal;
+import imaing.expsys.server.engine.Product;
+import imaing.expsys.server.engine.Rule;
+import imaing.expsys.server.engine.ImplicationClause.Relevance;
 
 import java.util.Collections;
 import java.util.LinkedList;

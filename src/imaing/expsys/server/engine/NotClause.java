@@ -1,4 +1,4 @@
-package imaing.expsys;
+package imaing.expsys.server.engine;
 
 public class NotClause implements Rule {
 	private final Rule literal;
