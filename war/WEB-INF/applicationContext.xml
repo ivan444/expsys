@@ -13,18 +13,13 @@
        http://www.springframework.org/schema/context/spring-context-2.5.xsd">
 
 	<!-- Locate all properties files -->
-	<context:property-placeholder location="classpath*:config/*.properties" />
+  <context:property-placeholder location="classpath:config.properties" />
 
-	<!-- Konfiguracije baze podataka i Hibernate-a -->
-	<import resource="classpath:datasourceConfig.xml"/>
+  <import resource="classpath:datasourceConfig.xml"/>
 
-	<!-- Konfiguracija repozitorija -->
-	<import resource="classpath:repositoriesConfig.xml"/>
-	
-	<!-- Konfiguracija servisa -->
-	<import resource="classpath:servicesConfig.xml"/>
-	
-	<import resource="classpath:fileUploadConfig.xml"/>
+  <import resource="classpath:repositoriesConfig.xml"/>
+  
+  <import resource="classpath:servicesConfig.xml"/>
 	
 
 </beans>	

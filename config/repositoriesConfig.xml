@@ -15,7 +15,7 @@
 
 	<bean id="abstractDao" class="org.springframework.aop.framework.ProxyFactoryBean" abstract="true" />
 	
-	<bean id="customerRepository" parent="abstractDao">
+	<!--bean id="customerRepository" parent="abstractDao">
 		<property name="proxyInterfaces">
 			<value>com.sportivo1.server.dao.CustomerRepository</value>
 		</property>
@@ -26,6 +26,6 @@
 				</constructor-arg>
 			</bean>
 		</property>
-	</bean>
+	</bean-->
 	
 </beans>

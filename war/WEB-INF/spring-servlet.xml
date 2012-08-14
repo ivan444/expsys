@@ -21,7 +21,7 @@
     <bean id="urlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
         <property name="mappings">
             <props>
-              <prop key="*/customer.rpc">rpcCustomerController</prop>
+              <prop key="*/shopowner.rpc">rpcShopOwnerController</prop>
             </props>
         </property>
     </bean>
@@ -30,8 +30,8 @@
     <!-- request then delegates processing of the call to the POJO service -->
     <!-- and then encodes the return value forwarding the response. -->
     
-    <bean id="rpcCustomerController" class="com.sportivo1.server.controllers.GwtRpcController">
-        <property name="remoteService" ref="customerService" />
+    <bean id="rpcShopOwnerController" class="imaing.expsys.server.controllers.GwtRpcController">
+        <property name="remoteService" ref="shopOwnerService" />
     </bean>
     
 </beans>
