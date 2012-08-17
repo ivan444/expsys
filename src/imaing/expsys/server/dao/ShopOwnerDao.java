@@ -36,8 +36,8 @@ public class ShopOwnerDao implements DAOobject<ShopOwner> {
 	@Column(name="email")
 	private String email;
 	
-	@Column(name="title")
-	private String title;
+	@Column(name="shopName")
+	private String shopName;
 	
 	public ShopOwnerDao() {}
 	
@@ -45,24 +45,24 @@ public class ShopOwnerDao implements DAOobject<ShopOwner> {
 		fill(shpOwner);
 	}
 	
-	@Override
 	@Transient
+	@Override
 	public void fill(ShopOwner shpOwner) {
 		setId(shpOwner.getId());
 		setPassword(shpOwner.getPassword());
 		setEmail(shpOwner.getEmail());
-		setTitle(shpOwner.getTitle());
+		setShopName(shpOwner.getShopName());
 	}
 	
 	@Transient
 	@Override
-	public ShopOwner getCleaned(String skipMember, Object member) {
+	public ShopOwner getCleaned(Object caller) {
 		ShopOwner shpOwner = new ShopOwner();
 		
 		shpOwner.setId(getId());
 		shpOwner.setPassword(getPassword());
 		shpOwner.setEmail(getEmail());
-		shpOwner.setTitle(getTitle());
+		shpOwner.setShopName(getShopName());
 		
 		return shpOwner;
 	}
@@ -70,7 +70,7 @@ public class ShopOwnerDao implements DAOobject<ShopOwner> {
 	@Transient
 	@Override
 	public ShopOwner getCleaned() {
-		return getCleaned(null, null);
+		return getCleaned(null);
 	}
 	
 	public String getEmail() {
@@ -81,12 +81,12 @@ public class ShopOwnerDao implements DAOobject<ShopOwner> {
 		this.email = email;
 	}
 
-	public String getTitle() {
-		return title;
+	public String getShopName() {
+		return shopName;
 	}
 
-	public void setTitle(String title) {
-		this.title = title;
+	public void setShopName(String shopName) {
+		this.shopName = shopName;
 	}
 
 	public Long getId() {

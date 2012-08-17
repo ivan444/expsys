@@ -9,13 +9,7 @@ public interface DAOobject<G> {
 	/** Get domain object from DAO object. */
 	G getCleaned();
 	
-	/** 
-	 * Get domain object from DAO object but don't
-	 * clean {@code skipMember} attribute. Instead
-	 * of cleaning it, put object {@code member}
-	 * which is an GWT DTO object.
-	 */
-	G getCleaned(String skipMember, Object member);
+	G getCleaned(Object caller);
 	
 	void fill(G g);
 	Long getId();

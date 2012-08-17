@@ -20,7 +20,7 @@ public class ShopOwnerRepositoryImpl extends GenericRepositoryImpl<ShopOwnerDao,
 			// New record
 			if (gwtObject.getEmail() == null) {
 				throw new InvalidDataException("E-mail not set for ShopOwner: "
-						+ gwtObject.getEmail() + " " + gwtObject.getTitle());
+						+ gwtObject.getEmail() + " " + gwtObject.getShopName());
 			} else {
 				ShopOwner other = getShopOwnerForEmail(gwtObject.getEmail());
 				if (other != null) {

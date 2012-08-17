@@ -68,7 +68,7 @@ public class WelcomePage extends Composite implements WelcomePagePresenter.Displ
 		ownersPane.clear();
 		
 		for (ShopOwner ownr : owners) {
-			ownersPane.add(new Label(ownr.getTitle() + " " + ownr.getEmail()));
+			ownersPane.add(new Label(ownr.getShopName() + " " + ownr.getEmail()));
 		}
 	}
 

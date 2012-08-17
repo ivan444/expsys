@@ -1,24 +1,11 @@
 package imaing.expsys.client.domain;
 
-import com.google.gwt.user.client.rpc.IsSerializable;
 
-public class ShopOwner implements IsSerializable {
-	private Long id;
+public class ShopOwner extends DTOObject {
 	private String password;
 	private String email;
-	private String title;
+	private String shopName;
 	
-	public ShopOwner(){
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
 	public String getPassword() {
 		return password;
 	}
@@ -35,12 +22,12 @@ public class ShopOwner implements IsSerializable {
 		this.email = email;
 	}
 
-	public String getTitle() {
-		return title;
+	public String getShopName() {
+		return shopName;
 	}
 
-	public void setTitle(String title) {
-		this.title = title;
+	public void setShopName(String shopName) {
+		this.shopName = shopName;
 	}
 
 	@Override

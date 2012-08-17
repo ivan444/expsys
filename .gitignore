@@ -1,6 +1,7 @@
 *.class
 *.war
 *.jar
+.gwt
 gwt-unitCache*
 war/expsys/*
 war/WEB-INF/classes/*

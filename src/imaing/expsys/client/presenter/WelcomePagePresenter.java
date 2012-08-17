@@ -80,7 +80,7 @@ public class WelcomePagePresenter implements Presenter {
 		
 		ShopOwner ownr = new ShopOwner();
 		ownr.setEmail(display.getEmailField().getText());
-		ownr.setTitle(display.getTitleField().getText());
+		ownr.setShopName(display.getTitleField().getText());
 		
 		shopOwnerSrv.save(ownr, new AsyncCallback<ShopOwner>() {
 			@Override

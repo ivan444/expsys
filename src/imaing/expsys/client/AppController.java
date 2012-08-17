@@ -32,18 +32,11 @@ public class AppController implements Presenter, ValueChangeHandler<String> {
 		this.container = container;
 		String token = History.getToken();
 		
-		// Tokens "welcome" and "" have same function.
-		// They alter at beginning to provoke ValueChangeHandler
+		// Tokens "welcome" and "" have the same function.
 		if (token == null || "".equals(token)) {
 			History.newItem("welcome");
-		} else if ("welcome".equals(token)) {
-			History.newItem("");
-			History.newItem("welcome");
-		} else if (token.startsWith("welcome?")){
-			History.newItem("");
-			History.newItem(token);
 		} else {
-			History.newItem("welcome");
+			History.fireCurrentHistoryState();
 		}
 	}
 
@@ -82,7 +75,8 @@ public class AppController implements Presenter, ValueChangeHandler<String> {
 		}	
 
 		if (presenter != null) {
-			activatePresenter(presenter);
+//			activatePresenter(presenter);
+			presenter.go(container);
 		}
 	}
 
@@ -92,15 +86,15 @@ public class AppController implements Presenter, ValueChangeHandler<String> {
 		onHistoryChange(token);
 	}
 	
-	/**
-	 * Method for activating the presenter. The active presenter should only be
-	 * set through this method to ensure consistency of the object.
-	 * 
-	 * @param presenter The new active presenter
-	 */
-	private void activatePresenter(Presenter presenter) {
-		presenter.go(container);
-	}
+//	/**
+//	 * Method for activating the presenter. The active presenter should only be
+//	 * set through this method to ensure consistency of the object.
+//	 * 
+//	 * @param presenter The new active presenter
+//	 */
+//	private void activatePresenter(Presenter presenter) {
+//		presenter.go(container);
+//	}
 
 	void disableLogoutLink(){
 		DOM.getElementById("upperBar").setInnerHTML("<br/>");
