@@ -1,4 +1,4 @@
-package imaing.expsys.server.dao;
+package imaing.expsys.server.model;
 
 
 import imaing.expsys.shared.exceptions.InvalidDataException;
@@ -6,12 +6,11 @@ import imaing.expsys.shared.exceptions.InvalidDataException;
 import java.util.List;
 
 /**
- * Generic repository for DAO classes.
+ * DAO for entities.
  *
- * @param <E> DAO class type for entity.
- * @param <G> GWT class type for entity.
+ * @param <E> Class type for entity.
  */
-public interface GenericRepository<E extends DAOobject<G>, G> {
+public interface GenericDAO<E> {
 	
 	/**
 	 * Return data with id equal to {@code id}.
@@ -19,7 +18,7 @@ public interface GenericRepository<E extends DAOobject<G>, G> {
 	 * @param id Id of needed data.
 	 * @return Data with id equal to {@code id}.
 	 */
-	public G getById(Long id);
+	public E findById(Long id);
 	
 	/**
 	 * Save data from {@code gwtObject}.
@@ -27,12 +26,12 @@ public interface GenericRepository<E extends DAOobject<G>, G> {
 	 * @param gwtObject
 	 * @throws InvalidDataException 
 	 */
-	public void save(G gwtObject) throws InvalidDataException;
+	public void save(E gwtObject) throws InvalidDataException;
 	
 	/**
 	 * @return All saved data from objects of type G as a list.
 	 */
-	public List<G> list();
+	public List<E> findAll();
 	
 	/**
 	 * Delete object {@code daoObject} from database.

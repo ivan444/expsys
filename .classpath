@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
+	<classpathentry excluding="imaing/expsys/server/olddao/CharacteristicDao.java|imaing/expsys/server/olddao/CharacteristicRepository.java|imaing/expsys/server/olddao/FuzzyClassDao.java|imaing/expsys/server/olddao/FuzzyClassRepository.java|imaing/expsys/server/olddao/FuzzyClassRepositoryImpl.java|imaing/expsys/server/olddao/ProdChrstcDao.java|imaing/expsys/server/olddao/ProdChrstcRepository.java|imaing/expsys/server/olddao/ProdChrstcRepositoryImpl.java|imaing/expsys/server/olddao/ProductDao.java|imaing/expsys/server/olddao/ProductRepository.java|imaing/expsys/server/olddao/ProductRepositoryImpl.java|imaing/expsys/server/olddao/ShopOwnerDao.java|imaing/expsys/server/olddao/ShopOwnerRepository.java|imaing/expsys/server/olddao/ShopOwnerRepositoryImpl.java|imaing/expsys/server/olddao/CharacteristicRepositoryImpl.java" kind="src" path="src"/>
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER/gwt"/>

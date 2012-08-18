@@ -1,4 +1,4 @@
-package imaing.expsys.server.dao;
+package imaing.expsys.server.olddao;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,6 +13,7 @@ import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 import imaing.expsys.client.domain.Characteristic;
+import imaing.expsys.server.model.BaseEntity;
 
 @Entity
 @Table(name="characteristic",uniqueConstraints=@UniqueConstraint(

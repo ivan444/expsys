@@ -38,7 +38,7 @@
 <!-- 		</property> -->
 
 		<!-- Classes with Hibernate annotations -->
-<!-- 		<property name="packagesToScan" value="imaing.expsys.server.dao" /> -->
+<!-- 		<property name="packagesToScan" value="imaing.expsys.server.model" /> -->
 <!-- 	</bean> -->
 
 <!-- 	<bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager"> -->
@@ -48,11 +48,12 @@
 	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
 		<property name="dataSource" ref="database" />
 <!--  		<property name="persistenceUnitName" value="db" /> -->
-		<property name="packagesToScan" value="imaing.expsys.server.dao" />
+		<property name="packagesToScan" value="imaing.expsys.server.model" />
 		<property name="jpaVendorAdapter">
 			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
 				<property name="database" value="POSTGRESQL" />
 				<property name="showSql" value="true" />
+				<property name="generateDdl" value="true"/>
 			</bean>
 		</property>
 	</bean>

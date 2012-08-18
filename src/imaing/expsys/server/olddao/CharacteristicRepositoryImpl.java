@@ -1,7 +1,11 @@
-package imaing.expsys.server.dao;
+package imaing.expsys.server.olddao;
 
 import imaing.expsys.client.domain.Characteristic;
 import imaing.expsys.client.domain.ShopOwner;
+import imaing.expsys.server.model.GenericDAOImpl;
+import imaing.expsys.server.olddao.CharacteristicDao;
+import imaing.expsys.server.olddao.CharacteristicRepository;
+import imaing.expsys.server.olddao.ShopOwnerDao;
 
 import java.util.LinkedList;
 import java.util.List;

@@ -1,9 +1,12 @@
 package imaing.expsys.client.presenter;
 
 
-import imaing.expsys.client.domain.ShopOwner;
-import imaing.expsys.client.services.ShopOwnerServiceAsync;
+import imaing.expsys.client.domain.ShopOwnerProxy;
+import imaing.expsys.client.service.ShopOwnerServiceAsync;
+import imaing.expsys.server.engine.Product;
+import imaing.expsys.server.model.ShopOwner;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.core.shared.GWT;
@@ -28,7 +31,7 @@ public class WelcomePagePresenter implements Presenter {
 		HasClickHandlers getListButton();
 		TextBox getTitleField();
 		TextBox getEmailField();
-		void listShopOwners(List<ShopOwner> owners);
+		void listShopOwners(List<ShopOwnerProxy> owners);
 		
 		Widget asWidget();
 	}
@@ -81,6 +84,24 @@ public class WelcomePagePresenter implements Presenter {
 		ShopOwner ownr = new ShopOwner();
 		ownr.setEmail(display.getEmailField().getText());
 		ownr.setShopName(display.getTitleField().getText());
+		
+		Product p1 = new Product();
+		p1.setDescription("d1");
+		p1.setShop(ownr);
+		
+		Product p2 = new Product();
+		p1.setDescription("d2");
+		p1.setShop(ownr);
+		
+		Product p3 = new Product();
+		p1.setDescription("d3");
+		p1.setShop(ownr);
+		
+		List<Product> prods = new ArrayList<Product>();
+		prods.add(p1);
+		prods.add(p2);
+		prods.add(p3);
+		ownr.setProducts(prods);
 		
 		shopOwnerSrv.save(ownr, new AsyncCallback<ShopOwner>() {
 			@Override

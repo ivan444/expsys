@@ -1,8 +1,9 @@
-package imaing.expsys.server.dao;
+package imaing.expsys.server.olddao;
 
 import imaing.expsys.client.domain.ProdChrstc;
 import imaing.expsys.client.domain.Product;
 import imaing.expsys.client.domain.ShopOwner;
+import imaing.expsys.server.model.BaseEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,8 +74,8 @@ public class ProdChrstcDao implements DAOobject<ProdChrstc> {
 	@Override
 	public void fill(ProdChrstc g) {
 		setId(g.getId());
-		setChr(new CharacteristicDao(g.getChr()));
-		setMembershipVal(g.getMembershipVal());
+//		setChr(new CharacteristicDao(g.getChr()));
+//		setMembershipVal(g.getMembershipVal());
 		setValue(g.getValue());
 	}
 
@@ -102,12 +103,12 @@ public class ProdChrstcDao implements DAOobject<ProdChrstc> {
 		this.chrstc = chrstc;
 	}
 
-	public ProductDao getProd() {
-		return prod;
-	}
-
-	public void setProd(ProductDao prod) {
-		this.prod = prod;
-	}
+//	public ProductDao getProd() {
+//		return prod;
+//	}
+//
+//	public void setProd(ProductDao prod) {
+//		this.prod = prod;
+//	}
 
 }

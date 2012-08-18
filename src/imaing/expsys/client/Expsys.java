@@ -1,7 +1,7 @@
 package imaing.expsys.client;
 
-import imaing.expsys.client.services.ShopOwnerService;
-import imaing.expsys.client.services.ShopOwnerServiceAsync;
+import imaing.expsys.client.service.ShopOwnerService;
+import imaing.expsys.client.service.ShopOwnerServiceAsync;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;

@@ -1,10 +1,10 @@
 package imaing.expsys.client;
 
-import imaing.expsys.client.domain.ShopOwner;
 import imaing.expsys.client.presenter.Presenter;
 import imaing.expsys.client.presenter.WelcomePagePresenter;
-import imaing.expsys.client.services.ShopOwnerServiceAsync;
+import imaing.expsys.client.service.ShopOwnerServiceAsync;
 import imaing.expsys.client.view.WelcomePage;
+import imaing.expsys.server.model.ShopOwner;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;

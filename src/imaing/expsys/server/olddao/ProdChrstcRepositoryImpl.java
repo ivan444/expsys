@@ -1,16 +1,17 @@
-package imaing.expsys.server.dao;
+package imaing.expsys.server.olddao;
 
 import imaing.expsys.client.domain.Characteristic;
 import imaing.expsys.client.domain.FuzzyClass;
+import imaing.expsys.server.model.GenericDAOImpl;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.persistence.NoResultException;
 
-public class FuzzyClassRepositoryImpl extends GenericRepositoryImpl<FuzzyClassDao, FuzzyClass> implements FuzzyClassRepository {
+public class ProdChrstcRepositoryImpl extends GenericRepositoryImpl<FuzzyClassDao, FuzzyClass> implements FuzzyClassRepository {
 	
-	public FuzzyClassRepositoryImpl(Class<FuzzyClassDao> type) {
+	public ProdChrstcRepositoryImpl(Class<FuzzyClassDao> type) {
 		super(type);
 	}
 	

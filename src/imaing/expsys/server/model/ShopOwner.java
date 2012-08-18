@@ -1,17 +1,17 @@
-package imaing.expsys.server.dao;
+package imaing.expsys.server.model;
 
 
-import imaing.expsys.client.domain.ShopOwner;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.FetchType;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 /*
@@ -23,13 +23,11 @@ import javax.persistence.UniqueConstraint;
 		columnNames={"email"}
 ))
 @NamedQueries({
-    @NamedQuery(name="ShopOwnerDao.getShopOwnerForEmail",query="select o from ShopOwnerDao as o where o.email=:email")
+    @NamedQuery(name="ShopOwner.getShopOwnerForEmail",query="select o from ShopOwner as o where o.email=:email")
 })
-public class ShopOwnerDao implements DAOobject<ShopOwner> {
-	
-	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Long id;
-	
+public class ShopOwner extends BaseEntity {
+	private static final long serialVersionUID = 1L;
+
 	@Column(name="password")
 	private String password;
 	
@@ -39,39 +37,10 @@ public class ShopOwnerDao implements DAOobject<ShopOwner> {
 	@Column(name="shopName")
 	private String shopName;
 	
-	public ShopOwnerDao() {}
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy="shop")
+	private List<Product> products = new ArrayList<Product>();
 	
-	public ShopOwnerDao(ShopOwner shpOwner) {
-		fill(shpOwner);
-	}
-	
-	@Transient
-	@Override
-	public void fill(ShopOwner shpOwner) {
-		setId(shpOwner.getId());
-		setPassword(shpOwner.getPassword());
-		setEmail(shpOwner.getEmail());
-		setShopName(shpOwner.getShopName());
-	}
-	
-	@Transient
-	@Override
-	public ShopOwner getCleaned(Object caller) {
-		ShopOwner shpOwner = new ShopOwner();
-		
-		shpOwner.setId(getId());
-		shpOwner.setPassword(getPassword());
-		shpOwner.setEmail(getEmail());
-		shpOwner.setShopName(getShopName());
-		
-		return shpOwner;
-	}
-	
-	@Transient
-	@Override
-	public ShopOwner getCleaned() {
-		return getCleaned(null);
-	}
+	public ShopOwner() {}
 	
 	public String getEmail() {
 		return email;
@@ -87,14 +56,6 @@ public class ShopOwnerDao implements DAOobject<ShopOwner> {
 
 	public void setShopName(String shopName) {
 		this.shopName = shopName;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	public String getPassword() {
@@ -121,7 +82,7 @@ public class ShopOwnerDao implements DAOobject<ShopOwner> {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ShopOwnerDao other = (ShopOwnerDao) obj;
+		ShopOwner other = (ShopOwner) obj;
 		if (email == null) {
 			if (other.email != null)
 				return false;
@@ -129,4 +90,13 @@ public class ShopOwnerDao implements DAOobject<ShopOwner> {
 			return false;
 		return true;
 	}
+
+	public List<Product> getProducts() {
+		return products;
+	}
+
+	public void setProducts(List<Product> products) {
+		this.products = products;
+	}
+
 }

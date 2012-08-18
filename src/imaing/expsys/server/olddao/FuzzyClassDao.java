@@ -1,6 +1,7 @@
-package imaing.expsys.server.dao;
+package imaing.expsys.server.olddao;
 
 import imaing.expsys.client.domain.FuzzyClass;
+import imaing.expsys.server.model.BaseEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

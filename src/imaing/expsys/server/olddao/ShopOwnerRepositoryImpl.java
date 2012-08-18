@@ -1,6 +1,7 @@
-package imaing.expsys.server.dao;
+package imaing.expsys.server.olddao;
 
 import imaing.expsys.client.domain.ShopOwner;
+import imaing.expsys.server.model.GenericDAOImpl;
 import imaing.expsys.shared.exceptions.InvalidDataException;
 
 import javax.persistence.NoResultException;
