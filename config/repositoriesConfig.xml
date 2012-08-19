@@ -20,7 +20,7 @@
 
 	<bean id="abstractDao" class="org.springframework.aop.framework.ProxyFactoryBean" abstract="true" />
 	
-	<bean id="shpOwnerRepos" parent="abstractDao">
+	<bean id="shopDao" parent="abstractDao">
 		<property name="proxyInterfaces">
 			<value>imaing.expsys.server.model.ShopDAO</value>
 		</property>
@@ -32,5 +32,57 @@
 			</bean>
 		</property>
 	</bean>
+	
+	<bean id="chrDao" parent="abstractDao">
+    <property name="proxyInterfaces">
+      <value>imaing.expsys.server.model.CharacteristicDAO</value>
+    </property>
+    <property name="target">
+      <bean class="imaing.expsys.server.model.CharacteristicDAOImpl" parent="abstractDaoTarget">
+        <constructor-arg>
+          <value>imaing.expsys.server.model.CharacteristicEnt</value>
+        </constructor-arg>
+      </bean>
+    </property>
+  </bean>
+  
+	<bean id="fuzzyClsDao" parent="abstractDao">
+    <property name="proxyInterfaces">
+      <value>imaing.expsys.server.model.FuzzyClassDAO</value>
+    </property>
+    <property name="target">
+      <bean class="imaing.expsys.server.model.FuzzyClassDAOImpl" parent="abstractDaoTarget">
+        <constructor-arg>
+          <value>imaing.expsys.server.model.FuzzyClassEnt</value>
+        </constructor-arg>
+      </bean>
+    </property>
+  </bean>
+  
+	<bean id="prodchrDao" parent="abstractDao">
+    <property name="proxyInterfaces">
+      <value>imaing.expsys.server.model.ProdChrDAO</value>
+    </property>
+    <property name="target">
+      <bean class="imaing.expsys.server.model.ProdChrDAOImpl" parent="abstractDaoTarget">
+        <constructor-arg>
+          <value>imaing.expsys.server.model.ProdChrEnt</value>
+        </constructor-arg>
+      </bean>
+    </property>
+  </bean>
+  
+	<bean id="prodDao" parent="abstractDao">
+    <property name="proxyInterfaces">
+      <value>imaing.expsys.server.model.ProductDAO</value>
+    </property>
+    <property name="target">
+      <bean class="imaing.expsys.server.model.ProductDAOImpl" parent="abstractDaoTarget">
+        <constructor-arg>
+          <value>imaing.expsys.server.model.ProductEnt</value>
+        </constructor-arg>
+      </bean>
+    </property>
+  </bean>
 	
 </beans>
