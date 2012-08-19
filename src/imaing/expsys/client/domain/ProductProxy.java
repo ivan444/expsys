@@ -1,12 +1,12 @@
 package imaing.expsys.client.domain;
 
-import imaing.expsys.server.model.GenericDAOImpl;
 import imaing.expsys.server.model.Product;
+import imaing.expsys.server.model.ProductDAOImpl;
 
 import com.google.web.bindery.requestfactory.shared.EntityProxy;
 import com.google.web.bindery.requestfactory.shared.ProxyFor;
 
-@ProxyFor(value = Product.class, locator = GenericDAOImpl.class)
+@ProxyFor(value = Product.class, locator = ProductDAOImpl.class)
 public interface ProductProxy extends EntityProxy {
 	ShopOwnerProxy getShop();
 

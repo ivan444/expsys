@@ -1,14 +1,14 @@
 package imaing.expsys.client.domain;
 
-import imaing.expsys.server.model.GenericDAOImpl;
 import imaing.expsys.server.model.ShopOwner;
+import imaing.expsys.server.model.ShopOwnerDAOImpl;
 
 import java.util.List;
 
 import com.google.web.bindery.requestfactory.shared.EntityProxy;
 import com.google.web.bindery.requestfactory.shared.ProxyFor;
 
-@ProxyFor(value = ShopOwner.class, locator = GenericDAOImpl.class)
+@ProxyFor(value = ShopOwner.class, locator = ShopOwnerDAOImpl.class)
 public interface ShopOwnerProxy extends EntityProxy {
 	String getPassword();
 

@@ -1,6 +1,5 @@
 package imaing.expsys.shared.service;
 
-import imaing.expsys.client.service.ShopOwnerRequest;
 
 import com.google.web.bindery.requestfactory.shared.RequestFactory;
 

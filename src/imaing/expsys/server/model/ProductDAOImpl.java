@@ -5,5 +5,5 @@ public class ProductDAOImpl extends GenericDAOImpl<Product> implements ProductDA
 	public ProductDAOImpl(Class<Product> type) {
 		super(type);
 	}
-	
+
 }

@@ -34,6 +34,11 @@
 		<servlet-name>spring</servlet-name>
 		<url-pattern>*.rpc</url-pattern>
 	</servlet-mapping>
+	
+	<servlet-mapping>
+    <servlet-name>spring</servlet-name>
+    <url-pattern>/gwtRequest</url-pattern>
+  </servlet-mapping>
 
 	<!-- Default page to serve -->
 	<welcome-file-list>

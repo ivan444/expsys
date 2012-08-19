@@ -1,19 +1,20 @@
-package imaing.expsys.client.service;
+package imaing.expsys.shared.service;
 
 import imaing.expsys.client.domain.ShopOwnerProxy;
-import imaing.expsys.server.model.ShopOwner;
-import imaing.expsys.shared.exceptions.InvalidDataException;
+import imaing.expsys.server.ShopOwnerService;
+import imaing.expsys.server.SpringServiceLocator;
 
 import java.util.List;
 
-import com.google.web.bindery.requestfactory.shared.InstanceRequest;
 import com.google.web.bindery.requestfactory.shared.Request;
 import com.google.web.bindery.requestfactory.shared.RequestContext;
 import com.google.web.bindery.requestfactory.shared.Service;
 
-@Service(ShopOwner.class)
+@Service(value = ShopOwnerService.class, locator = SpringServiceLocator.class)
 public interface ShopOwnerRequest extends RequestContext {
+	
 	Request<List<ShopOwnerProxy>> list();
 	
-	InstanceRequest<ShopOwnerProxy, Void> save() throws InvalidDataException;
+//	InstanceRequest<ShopOwnerProxy, Void> save();
+	Request<ShopOwnerProxy> save(ShopOwnerProxy ownr);
 }

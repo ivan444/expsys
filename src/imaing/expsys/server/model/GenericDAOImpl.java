@@ -5,12 +5,15 @@ import imaing.expsys.shared.exceptions.InvalidDataException;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import javax.persistence.EntityManagerFactory;
+import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.context.ApplicationContext;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import com.google.web.bindery.requestfactory.server.RequestFactoryServlet;
 import com.google.web.bindery.requestfactory.shared.Locator;
-import com.google.web.bindery.requestfactory.shared.ServiceLocator;
 
 /**
  * Abstract implementation of DAO generic repository.
@@ -18,29 +21,34 @@ import com.google.web.bindery.requestfactory.shared.ServiceLocator;
  * @param <E> DAO class type for entity.
  */
 public abstract class GenericDAOImpl<E extends BaseEntity> extends Locator<E, Long> implements
-		GenericDAO<E>, ServiceLocator {
+		GenericDAO<E> {
 	
 	protected EntityManager entityManager;
 
-	@PersistenceContext
-	public void setEntityManager (EntityManager entityManager) {
-		this.entityManager = entityManager;
-	}
+//	@PersistenceContext
+//	public void setEntityManager (EntityManager entityManager) {
+//		this.entityManager = entityManager;
+//	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
-	public E create(Class<? extends E> clazz) {
-		return (E) getInstance(clazz);
+	public E create(Class<? extends E> cls) {
+		try {
+			return cls.newInstance();
+		} catch (InstantiationException e) {
+			throw new RuntimeException(e);
+		} catch (IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	@Override
 	public E find(Class<? extends E> clazz, Long id) {
-		return (E) entityManager.find(clazz, id);
+		return (E) em().find(clazz, id);
 	}
 
 	@Override
 	public Class<E> getDomainType() {
-		throw new UnsupportedOperationException();
+		return type;
 	}
 
 	@Override
@@ -64,26 +72,15 @@ public abstract class GenericDAOImpl<E extends BaseEntity> extends Locator<E, Lo
 	}
 
 	@Override
-	public Object getInstance(Class<?> cls) {
-		try {
-			return cls.newInstance();
-		} catch (InstantiationException e) {
-			throw new RuntimeException(e);
-		} catch (IllegalAccessException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	@Override
 	public E findById(Long id) {
-		E ent = (E) entityManager.find(type, id);
+		E ent = (E) em().find(type, id);
 		return ent;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<E> findAll() {
-		List<E> allEnts = entityManager.createQuery("from " + type.getName()).getResultList();
+		List<E> allEnts = em().createQuery("from " + type.getName()).getResultList();
 		return allEnts;
 	}
 
@@ -94,9 +91,9 @@ public abstract class GenericDAOImpl<E extends BaseEntity> extends Locator<E, Lo
 			throw new InvalidDataException("Trying to save null object!");
 		try {
 			if (e.getId() == null) {
-				entityManager.persist(e);
+				em().persist(e);
 			} else {
-				entityManager.merge(e);
+				em().merge(e);
 			}
 		} catch (Exception ex) {
 			throw new InvalidDataException(ex);
@@ -109,7 +106,7 @@ public abstract class GenericDAOImpl<E extends BaseEntity> extends Locator<E, Lo
 		if (daoObject == null)
 			throw new InvalidDataException("Trying to delete null object!");
 
-		entityManager.remove(daoObject);
+		em().remove(daoObject);
 	}
 
 	@Override
@@ -118,17 +115,20 @@ public abstract class GenericDAOImpl<E extends BaseEntity> extends Locator<E, Lo
 		if (id == null)
 			throw new InvalidDataException(
 					"Trying to delete object with null ID!");
-		E dao = (E) entityManager.find(type, id);
+		E dao = (E) em().find(type, id);
 
 		delete(dao);
 	}
 	
-//	private void init() {
-//        HttpServletRequest request = RequestFactoryServlet.getThreadLocalRequest();
-//        ApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(request.getSession().getServletContext());
-//        EntityManagerFactory entityManagerFactory = context.getBean(EntityManagerFactory.class);
-//        entityManager = entityManagerFactory.createEntityManager();
-//    }
+	protected EntityManager em() {
+		if (entityManager == null) {
+			HttpServletRequest request = RequestFactoryServlet.getThreadLocalRequest();
+	        ApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(request.getSession().getServletContext());
+	        EntityManagerFactory entityManagerFactory = context.getBean(EntityManagerFactory.class);
+	        entityManager = entityManagerFactory.createEntityManager();	
+		}
+		return entityManager;
+	}
 
 
 }

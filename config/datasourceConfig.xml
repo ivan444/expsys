@@ -26,28 +26,8 @@
 		</property>
 	</bean>
 
-<!-- 	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean"> -->
-<!-- 		<property name="dataSource" ref="database" /> -->
-
-<!-- 		<property name="hibernateProperties"> -->
-<!-- 			<props> -->
-<!-- 				<prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</prop> -->
-<!-- 				<prop key="hibernate.show_sql">true</prop> -->
-<!-- 				<prop key="hibernate.hbm2ddl.auto">update</prop> -->
-<!-- 			</props> -->
-<!-- 		</property> -->
-
-		<!-- Classes with Hibernate annotations -->
-<!-- 		<property name="packagesToScan" value="imaing.expsys.server.model" /> -->
-<!-- 	</bean> -->
-
-<!-- 	<bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager"> -->
-<!-- 		<property name="sessionFactory" ref="sessionFactory" /> -->
-<!-- 	</bean> -->
-
 	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
 		<property name="dataSource" ref="database" />
-<!--  		<property name="persistenceUnitName" value="db" /> -->
 		<property name="packagesToScan" value="imaing.expsys.server.model" />
 		<property name="jpaVendorAdapter">
 			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">

@@ -16,7 +16,10 @@ import javax.persistence.Version;
 public abstract class BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
+    
+    /**
+     * Primary key of entity. Long is fixed pk type for all entities.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "pkGen")
     @TableGenerator(allocationSize = 1, initialValue = 0, name = "pkGen", table = "PRIMARY_KEYS")
