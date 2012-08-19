@@ -3,24 +3,24 @@ package imaing.expsys.client;
 import imaing.expsys.client.domain.Shop;
 import imaing.expsys.client.presenter.Presenter;
 import imaing.expsys.client.presenter.WelcomePagePresenter;
-import imaing.expsys.client.services.ShopOwnerServiceAsync;
+import imaing.expsys.client.services.ShopServiceAsync;
 import imaing.expsys.client.view.WelcomePage;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.HasWidgets;
+import com.google.web.bindery.event.shared.EventBus;
 
 public class AppController implements Presenter, ValueChangeHandler<String> {
 	
-	public final HandlerManager eventBus;
-	private final ShopOwnerServiceAsync shopOwnerRpcSrv;
+	public final EventBus eventBus;
+	private final ShopServiceAsync shopOwnerRpcSrv;
 	private HasWidgets container;
 //	private Shop activeUser;
 	
-	public AppController(ShopOwnerServiceAsync shopOwnerRpcSrv, HandlerManager eventBus) {
+	public AppController(ShopServiceAsync shopOwnerRpcSrv, EventBus eventBus) {
 		this.eventBus = eventBus;
 		this.shopOwnerRpcSrv = shopOwnerRpcSrv;
 		

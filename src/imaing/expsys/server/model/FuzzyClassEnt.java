@@ -24,7 +24,7 @@ public class FuzzyClassEnt extends BaseEntity<FuzzyClass> {
 	private static final long serialVersionUID = 1L;
 	
 	@ManyToOne
-	@JoinColumn(name="chr_id", nullable=false)
+	@JoinColumn(name="chr_id", nullable=false, updatable=false)
 	private CharacteristicEnt chr;
 	
 	@Column(name="value", nullable=false)

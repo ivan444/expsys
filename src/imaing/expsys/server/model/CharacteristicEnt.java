@@ -14,17 +14,17 @@ import javax.persistence.UniqueConstraint;
 
 @Entity
 @Table(name="characteristic",uniqueConstraints=@UniqueConstraint(
-		columnNames={"shop", "name"}
+		columnNames={"shop_id", "name"}
 ))
 @NamedQueries({
-    @NamedQuery(name="CharacteristicEnt.listCharacteristicsForShop",query="select c from CharacteristicsDao as c where c.shop=:shop"),
-    @NamedQuery(name="CharacteristicEnt.getCharacteristicForShopAndName",query="select c from CharacteristicsDao as c where c.shop=:shop and c.name=:name")
+    @NamedQuery(name="CharacteristicEnt.listCharacteristicsForShop",query="select c from CharacteristicEnt as c where c.shop=:shop"),
+    @NamedQuery(name="CharacteristicEnt.getCharacteristicForShopAndName",query="select c from CharacteristicEnt as c where c.shop=:shop and c.name=:name")
 })
 public class CharacteristicEnt extends BaseEntity<Characteristic> {
 	private static final long serialVersionUID = 1L;
 
 	@ManyToOne
-	@JoinColumn(name="shop_id", nullable=false)
+	@JoinColumn(name="shop_id", nullable=false, updatable=false)
 	private ShopEnt shop;
 	
 	@Column(name="name", nullable=false)

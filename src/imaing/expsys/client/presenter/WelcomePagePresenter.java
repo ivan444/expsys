@@ -1,8 +1,9 @@
 package imaing.expsys.client.presenter;
 
 
+import imaing.expsys.client.domain.Product;
 import imaing.expsys.client.domain.Shop;
-import imaing.expsys.client.services.ShopOwnerServiceAsync;
+import imaing.expsys.client.services.ShopServiceAsync;
 
 import java.util.List;
 
@@ -10,18 +11,18 @@ import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.web.bindery.event.shared.EventBus;
 
 public class WelcomePagePresenter implements Presenter {
 
-	private final HandlerManager eventBus;
+	private final EventBus eventBus;
 	private final Display display;
-	private final ShopOwnerServiceAsync shopOwnerSrv;
+	private final ShopServiceAsync shopSrv;
 	
 	public interface Display {
 		HasClickHandlers getAddButton();
@@ -33,10 +34,10 @@ public class WelcomePagePresenter implements Presenter {
 		Widget asWidget();
 	}
 	
-	public WelcomePagePresenter(ShopOwnerServiceAsync rpcService, HandlerManager eventBus, Display view){
+	public WelcomePagePresenter(ShopServiceAsync rpcService, EventBus eventBus, Display view){
 		this.eventBus = eventBus;
 		this.display = view;
-		this.shopOwnerSrv = rpcService;
+		this.shopSrv = rpcService;
 		
 	}
 	
@@ -50,7 +51,7 @@ public class WelcomePagePresenter implements Presenter {
 	private void bind() {
 		display.getAddButton().addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				addOwner();
+				addShop();
 			}
 		});
 		
@@ -76,15 +77,16 @@ public class WelcomePagePresenter implements Presenter {
 		
 	}
 	
-	private void addOwner() {
+	private void addShop() {
 		
-		Shop ownr = new Shop();
-		ownr.setEmail(display.getEmailField().getText());
-		ownr.setShopName(display.getTitleField().getText());
+		Shop shp = new Shop();
+		shp.setEmail(display.getEmailField().getText());
+		shp.setShopName(display.getTitleField().getText());
 		
-		shopOwnerSrv.save(ownr, new AsyncCallback<Shop>() {
+		shopSrv.save(shp, new AsyncCallback<Shop>() {
 			@Override
 			public void onSuccess(Shop result) {
+				addProducts(result);
 				Window.alert("Saved!");
 			}
 			@Override
@@ -95,8 +97,42 @@ public class WelcomePagePresenter implements Presenter {
 		});
 	}
 	
+	protected void addProducts(Shop shp) {
+		Product p1 = new Product();
+		p1.setShop(shp);
+		p1.setDescription("d1");
+		p1.setIntegrationId("i1");
+		
+		Product p2 = new Product();
+		p2.setShop(shp);
+		p2.setDescription("d2");
+		p2.setIntegrationId("i2");
+		
+		Product p3 = new Product();
+		p3.setShop(shp);
+		p3.setDescription("d3");
+		p3.setIntegrationId("i3");
+		
+		AsyncCallback<Void> addPCallb = new AsyncCallback<Void>() {
+			@Override
+			public void onSuccess(Void result) {
+				GWT.log("Product added");
+			}
+			
+			@Override
+			public void onFailure(Throwable caught) {
+				GWT.log("Failed to add product", caught);
+				Window.alert("Failed to add product");
+			}
+		};
+		
+		shopSrv.addProduct(p1, addPCallb);
+		shopSrv.addProduct(p2, addPCallb);
+		shopSrv.addProduct(p3, addPCallb);
+	}
+
 	private void listOwners() {
-		shopOwnerSrv.list(new AsyncCallback<List<Shop>>() {
+		shopSrv.list(new AsyncCallback<List<Shop>>() {
 			@Override
 			public void onSuccess(List<Shop> owners) {
 				display.listShopOwners(owners);

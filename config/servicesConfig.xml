@@ -14,7 +14,7 @@
        http://www.springframework.org/schema/context
        http://www.springframework.org/schema/context/spring-context-2.5.xsd">
 
-  <bean id="shopOwnerService" class="imaing.expsys.server.ShopOwnerServiceImpl">
+  <bean id="shopService" class="imaing.expsys.server.ShopServiceImpl">
 <!--     <property name="mailer" ref="mailSender" /> -->
 <!--     <property name="mailTemplates" ref="mailTemplatesMap" /> -->
 <!--     <property name="appBaseUrl" value="${app.baseurl}" /> -->

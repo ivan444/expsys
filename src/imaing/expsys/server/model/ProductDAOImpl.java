@@ -3,20 +3,25 @@ package imaing.expsys.server.model;
 import imaing.expsys.client.domain.ProdChr;
 import imaing.expsys.client.domain.Product;
 import imaing.expsys.client.domain.Shop;
+import imaing.expsys.shared.exceptions.InvalidDataException;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.persistence.NoResultException;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 public class ProductDAOImpl extends GenericDAOImpl<ProductEnt, Product> implements ProductDAO {
 	
-	@Autowired ProdChrDAO prodChrDao;
+	private ProdChrDAO prodChrDao;
 	
 	public ProductDAOImpl(Class<ProductEnt> type) {
 		super(type);
+	}
+	
+	public void setProdChrDao(ProdChrDAO prodChrDao) {
+		this.prodChrDao = prodChrDao;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -66,4 +71,26 @@ public class ProductDAOImpl extends GenericDAOImpl<ProductEnt, Product> implemen
 		p.setCharacteristics(pcs);
 		return p;
 	}
+
+	@Override
+	@Transactional(readOnly=false)
+	public void save(Product g) throws InvalidDataException {
+		if (g == null) throw new InvalidDataException("Trying to save null object!");
+		if (g.getShop() == null || g.getShop().getId() == null) throw new InvalidDataException("Product's shop is null object or not persisted!");
+		
+		
+		if (g.getId() == null) {
+			ProductEnt pe = new ProductEnt();
+			pe.fill(g);
+			ShopEnt shp = entityManager.find(ShopEnt.class, g.getShop().getId());
+			pe.setShop(shp);
+			entityManager.persist(pe);
+		} else {
+			ProductEnt pe = entityManager.find(ProductEnt.class, g.getId());
+			pe.setDescription(g.getDescription());
+			pe.setIntegrationId(g.getIntegrationId());
+			entityManager.merge(pe);
+		}
+	}
+
 }

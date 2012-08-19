@@ -25,22 +25,22 @@ public class GenericDAOImpl<E extends BaseEntity<G>, G>
 	
 	@Override
 	public G getById(Long id) {
-		E dao = (E) entityManager.find(type, id);
+		E ent = (E) entityManager.find(type, id);
 		
-		if (dao == null) return null;
-		else return dao.getCleaned();
+		if (ent == null) return null;
+		else return ent.getCleaned();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<G> list() {
-		List<E> allDaos = entityManager.createQuery("from " + type.getName()).getResultList();
+		List<E> allEnts = entityManager.createQuery("from " + type.getName()).getResultList();
 		
 		List<G> allGs = new ArrayList<G>();
 		
-		if (allDaos != null) {
-			for (E dao : allDaos) {
-				allGs.add(dao.getCleaned());
+		if (allEnts != null) {
+			for (E ent : allEnts) {
+				allGs.add(ent.getCleaned());
 			}
 		}
 		
@@ -51,21 +51,21 @@ public class GenericDAOImpl<E extends BaseEntity<G>, G>
 	@Transactional(readOnly=false)
 	public void save(G gwtObject) throws InvalidDataException {
 		if (gwtObject == null) throw new InvalidDataException("Trying to save null object!");
-		E dao = null;
+		E ent = null;
 		try {
-			dao = type.newInstance();
+			ent = type.newInstance();
 		} catch (InstantiationException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		}
 		
-		dao.fill(gwtObject);
+		ent.fill(gwtObject);
 		try {
-			if (dao.getId() == null) {
-				entityManager.persist(dao);
+			if (ent.getId() == null) {
+				entityManager.persist(ent);
 			} else {
-				entityManager.merge(dao);
+				entityManager.merge(ent);
 			}
 		} catch (Exception e) {
 			throw new InvalidDataException(e);
@@ -74,19 +74,19 @@ public class GenericDAOImpl<E extends BaseEntity<G>, G>
 	
 	@Override
 	@Transactional(readOnly=false)
-	public void delete(E daoObject) throws InvalidDataException {
-		if (daoObject == null) throw new InvalidDataException("Trying to delete null object!");
+	public void delete(E ent) throws InvalidDataException {
+		if (ent == null) throw new InvalidDataException("Trying to delete null object!");
 		
-		entityManager.remove(daoObject);
+		entityManager.remove(ent);
 	}
 	
 	@Override
 	@Transactional(readOnly=false)
 	public void delete(Long id) throws InvalidDataException {
 		if (id == null) throw new InvalidDataException("Trying to delete object with null ID!");
-		E dao = (E) entityManager.find(type, id);
+		E ent = (E) entityManager.find(type, id);
 		
-		delete(dao);
+		delete(ent);
 	}
 
 }

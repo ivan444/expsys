@@ -24,11 +24,11 @@ public class ProdChrEnt extends BaseEntity<ProdChr> {
 	private static final long serialVersionUID = 1L;
 
 	@ManyToOne
-	@JoinColumn(name="chr_id", nullable=false)
+	@JoinColumn(name="chr_id", nullable=false, updatable=false)
 	private CharacteristicEnt chr;
 	
 	@ManyToOne
-	@JoinColumn(name="prod_id", nullable=false)
+	@JoinColumn(name="prod_id", nullable=false, updatable=false)
 	private ProductEnt product;
 	
 	@Column(name="value")

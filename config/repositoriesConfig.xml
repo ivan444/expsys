@@ -5,18 +5,10 @@
   xmlns:context="http://www.springframework.org/schema/context"
   xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
-       http://www.springframework.org/schema/jdbc
-       http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd
-       http://www.springframework.org/schema/tx
-       http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
        http://www.springframework.org/schema/context
        http://www.springframework.org/schema/context/spring-context-3.1.xsd">
 
-	<bean id="abstractDaoTarget" class="imaing.expsys.server.model.GenericDAOImpl" abstract="true">
-<!-- 		<property name="sessionFactory"> -->
-<!-- 			<ref bean="sessionFactory"/> -->
-<!-- 		</property> -->
-	</bean>
+	<bean id="abstractDaoTarget" class="imaing.expsys.server.model.GenericDAOImpl" abstract="true" />
 
 	<bean id="abstractDao" class="org.springframework.aop.framework.ProxyFactoryBean" abstract="true" />
 	
@@ -59,7 +51,7 @@
     </property>
   </bean>
   
-	<bean id="prodchrDao" parent="abstractDao">
+	<bean id="prodChrDao" parent="abstractDao">
     <property name="proxyInterfaces">
       <value>imaing.expsys.server.model.ProdChrDAO</value>
     </property>
@@ -81,6 +73,9 @@
         <constructor-arg>
           <value>imaing.expsys.server.model.ProductEnt</value>
         </constructor-arg>
+        <property name="prodChrDao">
+            <ref bean="prodChrDao" />
+        </property>
       </bean>
     </property>
   </bean>
