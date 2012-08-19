@@ -1,6 +1,6 @@
 package imaing.expsys.client;
 
-import imaing.expsys.client.domain.ShopOwner;
+import imaing.expsys.client.domain.Shop;
 import imaing.expsys.client.presenter.Presenter;
 import imaing.expsys.client.presenter.WelcomePagePresenter;
 import imaing.expsys.client.services.ShopOwnerServiceAsync;
@@ -18,7 +18,7 @@ public class AppController implements Presenter, ValueChangeHandler<String> {
 	public final HandlerManager eventBus;
 	private final ShopOwnerServiceAsync shopOwnerRpcSrv;
 	private HasWidgets container;
-//	private ShopOwner activeUser;
+//	private Shop activeUser;
 	
 	public AppController(ShopOwnerServiceAsync shopOwnerRpcSrv, HandlerManager eventBus) {
 		this.eventBus = eventBus;
@@ -57,7 +57,7 @@ public class AppController implements Presenter, ValueChangeHandler<String> {
 //		History.newItem("welcome");
 //	}
 
-	private void doEditProfile(ShopOwner customer) {
+	private void doEditProfile(Shop customer) {
 		History.newItem("myprofile");
 	}
 

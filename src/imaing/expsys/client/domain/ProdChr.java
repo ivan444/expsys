@@ -3,7 +3,7 @@ package imaing.expsys.client.domain;
 /**
  * Value of one products characteristic.
  */
-public class ProdChrstc extends DTOObject {
+public class ProdChr extends DTOObject {
 	private Product prod;
 	private Characteristic chrstc;
 	private String value;
@@ -16,11 +16,11 @@ public class ProdChrstc extends DTOObject {
 		this.prod = prod;
 	}
 
-	public Characteristic getChrstc() {
+	public Characteristic getChr() {
 		return chrstc;
 	}
 
-	public void setChrstc(Characteristic chrstc) {
+	public void setChr(Characteristic chrstc) {
 		this.chrstc = chrstc;
 	}
 
@@ -49,7 +49,7 @@ public class ProdChrstc extends DTOObject {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ProdChrstc other = (ProdChrstc) obj;
+		ProdChr other = (ProdChr) obj;
 		if (chrstc == null) {
 			if (other.chrstc != null)
 				return false;

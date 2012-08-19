@@ -2,24 +2,20 @@ package imaing.expsys.client.domain;
 
 
 /**
- * Characteristic of an product. Every ShopOwner has it's
+ * Characteristic of an product. Every Shop has it's
  * product characteristic (therefore, characteristic name
- * isn't globally unique, but it is unique for one ShopOwner).
- * 
- * <s>ShopOwner isn't present in DTO object because it is not
- * necessary (it should be known if we are using his
- * characteristic).</s>
+ * isn't globally unique, but it is unique for one Shop).
  */
 public class Characteristic extends DTOObject {
-	private ShopOwner shop;
+	private Shop shop;
 	private String name;
 	private int fClsNum;
 	
-	public ShopOwner getShop() {
+	public Shop getShop() {
 		return shop;
 	}
 
-	public void setShop(ShopOwner shop) {
+	public void setShop(Shop shop) {
 		this.shop = shop;
 	}
 

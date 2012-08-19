@@ -7,4 +7,5 @@ war/expsys/*
 war/WEB-INF/classes/*
 war/WEB-INF/deploy/*
 config/config.properties
+.factorypath
 

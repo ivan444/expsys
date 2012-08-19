@@ -1,4 +1,4 @@
-package imaing.expsys.server.dao;
+package imaing.expsys.server.model;
 
 import imaing.expsys.shared.exceptions.InvalidDataException;
 
@@ -14,12 +14,12 @@ import org.springframework.transaction.annotation.Transactional;
  * @param <E> DAO class type for entity.
  * @param <G> GWT class type for entity.
  */
-public class GenericRepositoryImpl<E extends DAOobject<G>, G>
-		extends BaseRepository implements GenericRepository<E, G> {
+public class GenericDAOImpl<E extends BaseEntity<G>, G>
+		extends BaseDAO implements GenericDAO<E, G> {
 	
 	private Class<E> type;
 	
-	public GenericRepositoryImpl(Class<E> type) {
+	public GenericDAOImpl(Class<E> type) {
 		this.type = type;
 	}
 	

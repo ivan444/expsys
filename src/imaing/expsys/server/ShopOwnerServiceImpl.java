@@ -6,13 +6,13 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import imaing.expsys.client.domain.ShopOwner;
+import imaing.expsys.client.domain.Shop;
 import imaing.expsys.client.services.ShopOwnerService;
-import imaing.expsys.server.dao.ShopOwnerRepository;
+import imaing.expsys.server.model.ShopDAO;
 import imaing.expsys.shared.exceptions.InvalidDataException;
 
 public class ShopOwnerServiceImpl implements ShopOwnerService, SessionAware {
-	@Autowired private ShopOwnerRepository shpOwnerRepos;
+	@Autowired private ShopDAO shpOwnerRepos;
 	
 	public ShopOwnerServiceImpl() {
 	}
@@ -23,12 +23,12 @@ public class ShopOwnerServiceImpl implements ShopOwnerService, SessionAware {
 	}
 
 	@Override
-	public List<ShopOwner> list() {
+	public List<Shop> list() {
 		return shpOwnerRepos.list();
 	}
 
 	@Override
-	public ShopOwner save(ShopOwner shopOwner) throws InvalidDataException {
+	public Shop save(Shop shopOwner) throws InvalidDataException {
 		shpOwnerRepos.save(shopOwner);
 		return null;
 	}

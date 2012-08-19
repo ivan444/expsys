@@ -3,7 +3,7 @@ package imaing.expsys.client.view;
 
 import java.util.List;
 
-import imaing.expsys.client.domain.ShopOwner;
+import imaing.expsys.client.domain.Shop;
 import imaing.expsys.client.presenter.WelcomePagePresenter;
 
 import com.google.gwt.core.client.GWT;
@@ -64,10 +64,10 @@ public class WelcomePage extends Composite implements WelcomePagePresenter.Displ
 	}
 
 	@Override
-	public void listShopOwners(List<ShopOwner> owners) {
+	public void listShopOwners(List<Shop> owners) {
 		ownersPane.clear();
 		
-		for (ShopOwner ownr : owners) {
+		for (Shop ownr : owners) {
 			ownersPane.add(new Label(ownr.getShopName() + " " + ownr.getEmail()));
 		}
 	}

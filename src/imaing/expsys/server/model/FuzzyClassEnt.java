@@ -1,12 +1,10 @@
-package imaing.expsys.server.dao;
+package imaing.expsys.server.model;
 
 import imaing.expsys.client.domain.FuzzyClass;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -15,42 +13,36 @@ import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name="fuzzyclass",uniqueConstraints=@UniqueConstraint(
-		columnNames={"chr", "value"}
+@Table(name="fuzzy_class",uniqueConstraints=@UniqueConstraint(
+		columnNames={"chr_id", "value"}
 ))
 @NamedQueries({
-    @NamedQuery(name="FuzzyClassDao.listFClsForCharacteristic",query="select c from FuzzyClassDao as c where c.chr=:chr"),
-    @NamedQuery(name="FuzzyClassDao.getFClsForCharacteristicAndValue",query="select c from FuzzyClassDao as c where c.chr=:chr and c.value=:value")
+    @NamedQuery(name="FuzzyClassEnt.listFClsForCharacteristic",query="select c from FuzzyClassEnt as c where c.chr=:chr"),
+    @NamedQuery(name="FuzzyClassEnt.getFClsForCharacteristicAndValue",query="select c from FuzzyClassEnt as c where c.chr=:chr and c.value=:value")
 })
-public class FuzzyClassDao implements DAOobject<FuzzyClass> {
-	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Long id;
+public class FuzzyClassEnt extends BaseEntity<FuzzyClass> {
+	private static final long serialVersionUID = 1L;
 	
 	@ManyToOne
-	private CharacteristicDao chr;
+	@JoinColumn(name="chr_id", nullable=false)
+	private CharacteristicEnt chr;
 	
-	@Column(name="value")
+	@Column(name="value", nullable=false)
 	private String value;
 	
 	@Column(name="membershipval")
 	private double[] membershipVal;
 	
-	public FuzzyClassDao() {
+	public FuzzyClassEnt() {
 	}
 	
-	public FuzzyClassDao(FuzzyClass fc) {
-		fill(fc);
+	public FuzzyClassEnt(FuzzyClass fc) {
+		super(fc);
 	}
 	
 	@Transient
 	@Override
 	public FuzzyClass getCleaned() {
-		return getCleaned(null);
-	}
-
-	@Transient
-	@Override
-	public FuzzyClass getCleaned(Object caller) {
 		FuzzyClass fc = new FuzzyClass();
 		fc.setId(getId());
 		fc.setChr(getChr().getCleaned());
@@ -63,24 +55,16 @@ public class FuzzyClassDao implements DAOobject<FuzzyClass> {
 	@Override
 	public void fill(FuzzyClass g) {
 		setId(g.getId());
-		setChr(new CharacteristicDao(g.getChr()));
+		setChr(new CharacteristicEnt(g.getChr()));
 		setMembershipVal(g.getMembershipVal());
 		setValue(g.getValue());
 	}
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public CharacteristicDao getChr() {
+	public CharacteristicEnt getChr() {
 		return chr;
 	}
 
-	public void setChr(CharacteristicDao chr) {
+	public void setChr(CharacteristicEnt chr) {
 		this.chr = chr;
 	}
 
@@ -117,7 +101,7 @@ public class FuzzyClassDao implements DAOobject<FuzzyClass> {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		FuzzyClassDao other = (FuzzyClassDao) obj;
+		FuzzyClassEnt other = (FuzzyClassEnt) obj;
 		if (chr == null) {
 			if (other.chr != null)
 				return false;

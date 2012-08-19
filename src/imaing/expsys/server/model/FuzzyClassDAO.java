@@ -1,11 +1,11 @@
-package imaing.expsys.server.dao;
+package imaing.expsys.server.model;
 
 import imaing.expsys.client.domain.Characteristic;
 import imaing.expsys.client.domain.FuzzyClass;
 
 import java.util.List;
 
-public interface FuzzyClassRepository extends GenericRepository<FuzzyClassDao, FuzzyClass> {
+public interface FuzzyClassDAO extends GenericDAO<FuzzyClassEnt, FuzzyClass> {
 	List<FuzzyClass> listFClsForCharacteristic(Characteristic chr);
 	FuzzyClass getFClsForCharacteristicAndValue(Characteristic chr, String value);
 }

@@ -1,7 +1,7 @@
 package imaing.expsys.client.domain;
 
 
-public class ShopOwner extends DTOObject {
+public class Shop extends DTOObject {
 	private String password;
 	private String email;
 	private String shopName;
@@ -46,7 +46,7 @@ public class ShopOwner extends DTOObject {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ShopOwner other = (ShopOwner) obj;
+		Shop other = (Shop) obj;
 		if (email == null) {
 			if (other.email != null)
 				return false;

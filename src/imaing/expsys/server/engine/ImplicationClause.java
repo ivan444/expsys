@@ -32,7 +32,7 @@ public class ImplicationClause implements Rule {
 	public double eval(Product p) {
 //		OrClause or = new OrClause(new NotClause(leftLiteral), new Rule() {
 //				@Override
-//				public double eval(Product p) {
+//				public double eval(ProductEnt p) {
 //					return rel.mval();
 //				}
 //			});

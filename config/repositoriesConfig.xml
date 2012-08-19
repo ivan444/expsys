@@ -12,7 +12,7 @@
        http://www.springframework.org/schema/context
        http://www.springframework.org/schema/context/spring-context-3.1.xsd">
 
-	<bean id="abstractDaoTarget" class="imaing.expsys.server.dao.GenericRepositoryImpl" abstract="true">
+	<bean id="abstractDaoTarget" class="imaing.expsys.server.model.GenericDAOImpl" abstract="true">
 <!-- 		<property name="sessionFactory"> -->
 <!-- 			<ref bean="sessionFactory"/> -->
 <!-- 		</property> -->
@@ -22,12 +22,12 @@
 	
 	<bean id="shpOwnerRepos" parent="abstractDao">
 		<property name="proxyInterfaces">
-			<value>imaing.expsys.server.dao.ShopOwnerRepository</value>
+			<value>imaing.expsys.server.model.ShopDAO</value>
 		</property>
 		<property name="target">
-			<bean class="imaing.expsys.server.dao.ShopOwnerRepositoryImpl" parent="abstractDaoTarget">
+			<bean class="imaing.expsys.server.model.ShopDAOImpl" parent="abstractDaoTarget">
 				<constructor-arg>
-					<value>imaing.expsys.server.dao.ShopOwnerDao</value>
+					<value>imaing.expsys.server.model.ShopEnt</value>
 				</constructor-arg>
 			</bean>
 		</property>

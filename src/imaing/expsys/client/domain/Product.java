@@ -1,18 +1,23 @@
 package imaing.expsys.client.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Product extends DTOObject {
-	private ShopOwner shop;
+	private Shop shop;
 	private String description;
 	private String integrationId;
-	private List<ProdChrstc> characteristics;
+	private List<ProdChr> characteristics;
+	
+	public Product() {
+		characteristics = new ArrayList<ProdChr>();
+	}
 
-	public ShopOwner getShop() {
+	public Shop getShop() {
 		return shop;
 	}
 
-	public void setShop(ShopOwner shop) {
+	public void setShop(Shop shop) {
 		this.shop = shop;
 	}
 
@@ -32,11 +37,11 @@ public class Product extends DTOObject {
 		this.integrationId = integrationId;
 	}
 
-	public List<ProdChrstc> getCharacteristics() {
+	public List<ProdChr> getCharacteristics() {
 		return characteristics;
 	}
 
-	public void setCharacteristics(List<ProdChrstc> characteristics) {
+	public void setCharacteristics(List<ProdChr> characteristics) {
 		this.characteristics = characteristics;
 	}
 

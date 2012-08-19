@@ -1,10 +1,10 @@
-package imaing.expsys.server.dao;
+package imaing.expsys.server.model;
+
+import imaing.expsys.client.domain.Characteristic;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -12,45 +12,37 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
-import imaing.expsys.client.domain.Characteristic;
-
 @Entity
 @Table(name="characteristic",uniqueConstraints=@UniqueConstraint(
 		columnNames={"shop", "name"}
 ))
 @NamedQueries({
-    @NamedQuery(name="CharacteristicDao.listCharacteristicsForShop",query="select c from CharacteristicsDao as c where c.shop=:shop"),
-    @NamedQuery(name="CharacteristicDao.getCharacteristicForShopAndName",query="select c from CharacteristicsDao as c where c.shop=:shop and c.name=:name")
+    @NamedQuery(name="CharacteristicEnt.listCharacteristicsForShop",query="select c from CharacteristicsDao as c where c.shop=:shop"),
+    @NamedQuery(name="CharacteristicEnt.getCharacteristicForShopAndName",query="select c from CharacteristicsDao as c where c.shop=:shop and c.name=:name")
 })
-public class CharacteristicDao implements DAOobject<Characteristic> {
-	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Long id;
-	
+public class CharacteristicEnt extends BaseEntity<Characteristic> {
+	private static final long serialVersionUID = 1L;
+
 	@ManyToOne
-	private ShopOwnerDao shop;
+	@JoinColumn(name="shop_id", nullable=false)
+	private ShopEnt shop;
 	
-	@Column(name="name")
+	@Column(name="name", nullable=false)
 	private String name;
 	
 	@Column(name="fclsnum")
 	private int fClsNum;
 	
-	public CharacteristicDao() {
+	public CharacteristicEnt() {
 	}
 	
-	public CharacteristicDao(Characteristic c) {
-		fill(c);
+	public CharacteristicEnt(Characteristic c) {
+		super(c);
 	}
 	
 	@Transient
 	@Override
 	public Characteristic getCleaned() {
-		return getCleaned(null);
-	}
-
-	@Transient
-	@Override
-	public Characteristic getCleaned(Object caller) {
 		Characteristic chr = new Characteristic();
 		chr.setId(getId());
 		chr.setfClsNum(getfClsNum());
@@ -65,22 +57,14 @@ public class CharacteristicDao implements DAOobject<Characteristic> {
 		setId(g.getId());
 		setfClsNum(g.getfClsNum());
 		setName(g.getName());
-		setShop(new ShopOwnerDao(g.getShop()));
+		setShop(new ShopEnt(g.getShop()));
 	}
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public ShopOwnerDao getShop() {
+	public ShopEnt getShop() {
 		return shop;
 	}
 
-	public void setShop(ShopOwnerDao shop) {
+	public void setShop(ShopEnt shop) {
 		this.shop = shop;
 	}
 
@@ -117,7 +101,7 @@ public class CharacteristicDao implements DAOobject<Characteristic> {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		CharacteristicDao other = (CharacteristicDao) obj;
+		CharacteristicEnt other = (CharacteristicEnt) obj;
 		if (name == null) {
 			if (other.name != null)
 				return false;

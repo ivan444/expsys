@@ -1,7 +1,7 @@
 package imaing.expsys.client.presenter;
 
 
-import imaing.expsys.client.domain.ShopOwner;
+import imaing.expsys.client.domain.Shop;
 import imaing.expsys.client.services.ShopOwnerServiceAsync;
 
 import java.util.List;
@@ -28,7 +28,7 @@ public class WelcomePagePresenter implements Presenter {
 		HasClickHandlers getListButton();
 		TextBox getTitleField();
 		TextBox getEmailField();
-		void listShopOwners(List<ShopOwner> owners);
+		void listShopOwners(List<Shop> owners);
 		
 		Widget asWidget();
 	}
@@ -78,13 +78,13 @@ public class WelcomePagePresenter implements Presenter {
 	
 	private void addOwner() {
 		
-		ShopOwner ownr = new ShopOwner();
+		Shop ownr = new Shop();
 		ownr.setEmail(display.getEmailField().getText());
 		ownr.setShopName(display.getTitleField().getText());
 		
-		shopOwnerSrv.save(ownr, new AsyncCallback<ShopOwner>() {
+		shopOwnerSrv.save(ownr, new AsyncCallback<Shop>() {
 			@Override
-			public void onSuccess(ShopOwner result) {
+			public void onSuccess(Shop result) {
 				Window.alert("Saved!");
 			}
 			@Override
@@ -96,9 +96,9 @@ public class WelcomePagePresenter implements Presenter {
 	}
 	
 	private void listOwners() {
-		shopOwnerSrv.list(new AsyncCallback<List<ShopOwner>>() {
+		shopOwnerSrv.list(new AsyncCallback<List<Shop>>() {
 			@Override
-			public void onSuccess(List<ShopOwner> owners) {
+			public void onSuccess(List<Shop> owners) {
 				display.listShopOwners(owners);
 			}
 			
