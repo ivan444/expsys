@@ -24,7 +24,8 @@ import javax.persistence.UniqueConstraint;
 		columnNames={"rel", "shop_id", "desc"}
 ))
 @NamedQueries({
-    @NamedQuery(name="RuleEnt.listRulesForShop",query="select e from RuleEnt as e where e.shop=:shop")
+    @NamedQuery(name="RuleEnt.listRulesForShop",query="select e from RuleEnt as e where e.shop=:shop"),
+    @NamedQuery(name="RuleEnt.listLogClausesForRule",query="select e from LogClauseEnt as e where e.rule=:rule")
 })
 public class RuleEnt extends BaseEntity<Rule> {
 	private static final long serialVersionUID = 1L;

@@ -1,6 +1,7 @@
 package imaing.expsys.server.model;
 
 
+import imaing.expsys.client.domain.DTOObject;
 import imaing.expsys.shared.exceptions.InvalidDataException;
 
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
  * @param <E> DAO class type for entity.
  * @param <G> GWT class type for entity.
  */
-public interface GenericDAO<E extends BaseEntity<G>, G> {
+public interface GenericDAO<E extends BaseEntity<G>, G extends DTOObject> {
 	
 	/**
 	 * Return data with id equal to {@code id}.

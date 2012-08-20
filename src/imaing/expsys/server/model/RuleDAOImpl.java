@@ -1,5 +1,6 @@
 package imaing.expsys.server.model;
 
+import imaing.expsys.client.domain.LogClause;
 import imaing.expsys.client.domain.Rule;
 import imaing.expsys.client.domain.Shop;
 
@@ -21,6 +22,21 @@ public class RuleDAOImpl extends GenericDAOImpl<RuleEnt, Rule> implements RuleDA
 		if (ents != null) {
 			for (RuleEnt e : ents) {
 				dtos.add(e.getCleaned());
+			}
+		}
+		return dtos;
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
+	public List<LogClause> listLogClausesForRule(Rule rule) {
+		List<LogClauseEnt> ents = (List<LogClauseEnt>) entityManager
+				.createNamedQuery("RuleEnt.listLogClausesForRule")
+				.setParameter("rule", new RuleEnt(rule)).getResultList();
+		List<LogClause> dtos = new LinkedList<LogClause>();
+		if (ents != null) {
+			for (LogClauseEnt e : ents) {
+				dtos.add((LogClause) e.getCleaned());
 			}
 		}
 		return dtos;
