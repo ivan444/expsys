@@ -15,4 +15,10 @@ public abstract class DTOObject implements IsSerializable {
 	public void setId(Long id) {
 		this.id = id;
 	}
+
+	@Override
+	public abstract int hashCode();
+
+	@Override
+	public abstract boolean equals(Object obj);
 }

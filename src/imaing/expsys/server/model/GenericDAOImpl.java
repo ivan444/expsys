@@ -46,6 +46,45 @@ public class GenericDAOImpl<E extends BaseEntity<G>, G>
 		
 		return allGs;
 	}
+	
+//	public void save2(G gwtObject) throws InvalidDataException {
+//		if (gwtObject == null) throw new InvalidDataException("Trying to save null object!");
+//		E ent = null;
+//		try {
+//			ent = type.newInstance();
+//		} catch (InstantiationException e) {
+//			e.printStackTrace();
+//		} catch (IllegalAccessException e) {
+//			e.printStackTrace();
+//		}
+//		
+//		Method[] methods = type.getDeclaredMethods();
+//		List<Method> setters = new LinkedList<Method>();
+//		List<Method> getters = new LinkedList<Method>();
+//		for (int i = 0; i < methods.length; i++) {
+//			Method m = methods[i];
+//			if (m.getName().startsWith("set")) {
+//				setters.add(m);
+//			} else if (m.getName().startsWith("get")) {
+//				getters.add(m);
+//			}
+//			
+//			m.invoke(ent, args)
+//		}
+//		
+//		gwtObject.getClass()
+//		
+//		ent.fill(gwtObject);
+//		try {
+//			if (ent.getId() == null) {
+//				entityManager.persist(ent);
+//			} else {
+//				entityManager.merge(ent);
+//			}
+//		} catch (Exception e) {
+//			throw new InvalidDataException(e);
+//		}
+//	}
 
 	@Override
 	@Transactional(readOnly=false)

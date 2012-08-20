@@ -79,5 +79,18 @@
       </bean>
     </property>
   </bean>
+  
+	<bean id="ruleDao" parent="abstractDao">
+    <property name="proxyInterfaces">
+      <value>imaing.expsys.server.model.RuleDAO</value>
+    </property>
+    <property name="target">
+      <bean class="imaing.expsys.server.model.RuleDAOImpl" parent="abstractDaoTarget">
+        <constructor-arg>
+          <value>imaing.expsys.server.model.RuleEnt</value>
+        </constructor-arg>
+      </bean>
+    </property>
+  </bean>
 	
 </beans>
