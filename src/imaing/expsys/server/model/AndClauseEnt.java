@@ -17,11 +17,11 @@ public class AndClauseEnt extends LogClauseEnt<AndClause> {
 	private static final long serialVersionUID = 1L;
 	
 	@ManyToOne(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name="left_id", updatable=false)
+    @JoinColumn(name="left_id", nullable=false, updatable=false)
 	private LogClauseEnt<?> leftClause;
 	
 	@ManyToOne(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name="right_id", updatable=false)
+    @JoinColumn(name="right_id", nullable=false, updatable=false)
 	private LogClauseEnt<?> rightClause;
 	
 	public AndClauseEnt() {

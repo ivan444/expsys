@@ -17,5 +17,5 @@ public interface ShopService extends RemoteService {
 	
 	Shop save(Shop shop) throws InvalidDataException;
 	
-	void addProduct(Product p) throws InvalidDataException;
+	Product addProduct(Product p) throws InvalidDataException;
 }

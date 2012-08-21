@@ -89,7 +89,7 @@ public class GenericDAOImpl<E extends BaseEntity<G>, G extends DTOObject>
 
 	@Override
 	@Transactional(readOnly=false)
-	public void save(G gwtObject) throws InvalidDataException {
+	public G save(G gwtObject) throws InvalidDataException {
 		if (gwtObject == null) throw new InvalidDataException("Trying to save null object!");
 		E ent = null;
 		try {
@@ -102,14 +102,12 @@ public class GenericDAOImpl<E extends BaseEntity<G>, G extends DTOObject>
 		
 		ent.fill(gwtObject);
 		try {
-			if (ent.getId() == null) {
-				em.persist(ent);
-			} else {
-				em.merge(ent);
-			}
+			ent = em.merge(ent);
 		} catch (Exception e) {
 			throw new InvalidDataException(e);
 		}
+		
+		return ent.getCleaned();
 	}
 	
 	@Override

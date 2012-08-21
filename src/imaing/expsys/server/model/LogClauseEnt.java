@@ -27,7 +27,7 @@ public abstract class LogClauseEnt<L extends DTOObject> extends BaseEntity<L> {
     private static final long serialVersionUID = 1L;
     
     @ManyToOne(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name="rule_id", updatable=false)
+    @JoinColumn(name="rule_id", nullable=false, updatable=false)
 	protected RuleEnt rule;
 	
 	@Column(name="ns_left", nullable=false)

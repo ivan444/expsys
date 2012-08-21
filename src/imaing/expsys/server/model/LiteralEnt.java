@@ -17,7 +17,7 @@ public class LiteralEnt extends LogClauseEnt<Literal> {
 	private static final long serialVersionUID = 1L;
 	
 	@ManyToOne(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name="chr_id", updatable=false)
+    @JoinColumn(name="chr_id", nullable=false, updatable=false)
 	private CharacteristicEnt chr;
 	
 	@Column(name="fuzzy_cls_idx")

@@ -113,9 +113,9 @@ public class WelcomePagePresenter implements Presenter {
 		p3.setDescription("d3");
 		p3.setIntegrationId("i3");
 		
-		AsyncCallback<Void> addPCallb = new AsyncCallback<Void>() {
+		AsyncCallback<Product> addPCallb = new AsyncCallback<Product>() {
 			@Override
-			public void onSuccess(Void result) {
+			public void onSuccess(Product result) {
 				GWT.log("Product added");
 			}
 			

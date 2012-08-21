@@ -28,7 +28,7 @@ public interface GenericDAO<E extends BaseEntity<G>, G extends DTOObject> {
 	 * @param gwtObject
 	 * @throws InvalidDataException 
 	 */
-	public void save(G gwtObject) throws InvalidDataException;
+	public G save(G gwtObject) throws InvalidDataException;
 	
 	/**
 	 * @return All saved data from objects of type G as a list.

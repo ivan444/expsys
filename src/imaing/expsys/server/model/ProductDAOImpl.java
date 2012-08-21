@@ -74,13 +74,14 @@ public class ProductDAOImpl extends GenericDAOImpl<ProductEnt, Product> implemen
 
 	@Override
 	@Transactional(readOnly=false)
-	public void save(Product g) throws InvalidDataException {
+	public Product save(Product g) throws InvalidDataException {
 		if (g == null) throw new InvalidDataException("Trying to save null object!");
 		if (g.getShop() == null || g.getShop().getId() == null) throw new InvalidDataException("Product's shop is null object or not persisted!");
 		
 		ProductEnt pe = new ProductEnt();
 		pe.fill(g);
-		em.merge(pe);
+		pe = em.merge(pe);
+		return pe.getCleaned();
 	}
 
 }

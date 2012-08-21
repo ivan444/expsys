@@ -33,14 +33,13 @@ public class ShopServiceImpl implements ShopService, SessionAware {
 
 	@Override
 	public Shop save(Shop shopOwner) throws InvalidDataException {
-		shpDao.save(shopOwner);
-		Shop saved = shpDao.getShopForEmail(shopOwner.getEmail());
+		Shop saved = shpDao.save(shopOwner);
 		return saved;
 	}
 
 	@Override
-	public void addProduct(Product p) throws InvalidDataException {
-		prodDao.save(p);
+	public Product addProduct(Product p) throws InvalidDataException {
+		return prodDao.save(p);
 	}
 
 }

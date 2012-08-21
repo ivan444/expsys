@@ -17,7 +17,7 @@ public class NotClauseEnt extends LogClauseEnt<NotClause> {
 	private static final long serialVersionUID = 1L;
 	
 	@ManyToOne(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name="left_id", updatable=false)
+    @JoinColumn(name="left_id", nullable=false, updatable=false)
 	private LogClauseEnt<?> leftClause;
 	
 	public NotClauseEnt() {

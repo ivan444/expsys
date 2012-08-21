@@ -15,7 +15,7 @@ public class ShopDAOImpl extends GenericDAOImpl<ShopEnt, Shop> implements ShopDA
 	
 	@Override
 	@Transactional(readOnly=false)
-	public void save(Shop gwtObject) throws InvalidDataException {
+	public Shop save(Shop gwtObject) throws InvalidDataException {
 		if (gwtObject.getId() == null) {
 			// New record
 			if (gwtObject.getEmail() == null) {
@@ -29,7 +29,8 @@ public class ShopDAOImpl extends GenericDAOImpl<ShopEnt, Shop> implements ShopDA
 				}
 			}
 		}
-		super.save(gwtObject);
+		
+		return super.save(gwtObject);
 	}
 
 	@Override

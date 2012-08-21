@@ -26,7 +26,7 @@ public class CharacteristicEnt extends BaseEntity<Characteristic> {
 	private static final long serialVersionUID = 1L;
 
 	@ManyToOne(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn(name="shop_id", updatable=false)
+	@JoinColumn(name="shop_id", nullable=false, updatable=false)
 	private ShopEnt shop;
 	
 	@Column(name="name", nullable=false)

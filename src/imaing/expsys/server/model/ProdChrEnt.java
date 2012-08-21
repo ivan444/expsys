@@ -26,11 +26,11 @@ public class ProdChrEnt extends BaseEntity<ProdChr> {
 	private static final long serialVersionUID = 1L;
 
 	@ManyToOne(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn(name="chr_id", updatable=false)
+	@JoinColumn(name="chr_id", nullable=false, updatable=false)
 	private CharacteristicEnt chr;
 	
 	@ManyToOne(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn(name="prod_id", updatable=false)
+	@JoinColumn(name="prod_id", nullable=false, updatable=false)
 	private ProductEnt product;
 	
 	@Column(name="value")

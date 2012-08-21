@@ -13,5 +13,5 @@ public interface ShopServiceAsync {
 	
 	void save(Shop shop, AsyncCallback<Shop> callback);
 	
-	void addProduct(Product p, AsyncCallback<Void> callback);
+	void addProduct(Product p, AsyncCallback<Product> callback);
 }
