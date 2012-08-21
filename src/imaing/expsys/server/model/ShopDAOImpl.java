@@ -36,7 +36,7 @@ public class ShopDAOImpl extends GenericDAOImpl<ShopEnt, Shop> implements ShopDA
 	public Shop getShopForEmail(String email) {
 		ShopEnt result = null;
 		try {
-			result = (ShopEnt) entityManager.createNamedQuery("ShopEnt.getShopForEmail")
+			result = (ShopEnt) em.createNamedQuery("ShopEnt.getShopForEmail")
 											.setParameter("email", email).getSingleResult();
 		} catch (NoResultException e) {
 			return null;

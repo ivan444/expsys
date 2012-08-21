@@ -17,7 +17,7 @@ public class FuzzyClassDAOImpl extends GenericDAOImpl<FuzzyClassEnt, FuzzyClass>
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<FuzzyClass> listFClsForCharacteristic(Characteristic chr) {
-		List<FuzzyClassEnt> ents = (List<FuzzyClassEnt>) entityManager.createNamedQuery("FuzzyClassEnt.listFClsForCharacteristic")
+		List<FuzzyClassEnt> ents = (List<FuzzyClassEnt>) em.createNamedQuery("FuzzyClassEnt.listFClsForCharacteristic")
 																		 .setParameter("chr", new CharacteristicEnt(chr)).getResultList();
 		List<FuzzyClass> flcClean = new LinkedList<FuzzyClass>();
 		if (ents != null){
@@ -32,8 +32,8 @@ public class FuzzyClassDAOImpl extends GenericDAOImpl<FuzzyClassEnt, FuzzyClass>
 	public FuzzyClass getFClsForCharacteristicAndValue(Characteristic chr, String value) {
 		FuzzyClassEnt result = null;
 		try {
-			result = (FuzzyClassEnt) entityManager.createNamedQuery("FuzzyClassEnt.getFClsForCharacteristicAndValue")
-												  .setParameter("chr", new CharacteristicEnt(chr)).setParameter("value", value).getSingleResult();
+			result = (FuzzyClassEnt) em.createNamedQuery("FuzzyClassEnt.getFClsForCharacteristicAndValue")
+										 .setParameter("chr", new CharacteristicEnt(chr)).setParameter("value", value).getSingleResult();
 		} catch (NoResultException e) {
 			return null;
 		}

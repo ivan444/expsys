@@ -3,8 +3,10 @@ package imaing.expsys.server.model;
 import imaing.expsys.client.domain.LogClause;
 import imaing.expsys.client.domain.NotClause;
 
+import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
@@ -14,8 +16,8 @@ import javax.persistence.Transient;
 public class NotClauseEnt extends LogClauseEnt<NotClause> {
 	private static final long serialVersionUID = 1L;
 	
-	@ManyToOne
-    @JoinColumn(name="left_id", nullable=false, updatable=false)
+	@ManyToOne(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name="left_id", updatable=false)
 	private LogClauseEnt<?> leftClause;
 	
 	public NotClauseEnt() {

@@ -17,7 +17,7 @@ public class CharacteristicDAOImpl extends GenericDAOImpl<CharacteristicEnt, Cha
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<Characteristic> listCharacteristicsForShop(Shop owner) {
-		List<CharacteristicEnt> ents = (List<CharacteristicEnt>) entityManager.createNamedQuery("CharacteristicEnt.getCharacteristicForShopAndName")
+		List<CharacteristicEnt> ents = (List<CharacteristicEnt>) em.createNamedQuery("CharacteristicEnt.getCharacteristicForShopAndName")
 																				  .setParameter("owner", new ShopEnt(owner)).getResultList();
 		List<Characteristic> chrsClean = new LinkedList<Characteristic>();
 		if (ents != null){
@@ -32,7 +32,7 @@ public class CharacteristicDAOImpl extends GenericDAOImpl<CharacteristicEnt, Cha
 	public Characteristic getCharacteristicForShopAndName(Shop owner, String name) {
 		CharacteristicEnt result = null;
 		try {
-			result = (CharacteristicEnt) entityManager.createNamedQuery("CharacteristicEnt.getCharacteristicForShopAndName")
+			result = (CharacteristicEnt) em.createNamedQuery("CharacteristicEnt.getCharacteristicForShopAndName")
 													  .setParameter("owner", new ShopEnt(owner)).setParameter("name", name).getSingleResult();
 		} catch (NoResultException e) {
 			return null;

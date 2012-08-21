@@ -27,8 +27,8 @@ public class ProductDAOImpl extends GenericDAOImpl<ProductEnt, Product> implemen
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Product> listProductsForShop(Shop shop) {
-		List<ProductEnt> ents = (List<ProductEnt>) entityManager.createNamedQuery("ProductEnt.listProductsForShop")
-																.setParameter("shop", new ShopEnt(shop)).getResultList();
+		List<ProductEnt> ents = (List<ProductEnt>) em.createNamedQuery("ProductEnt.listProductsForShop")
+													 .setParameter("shop", new ShopEnt(shop)).getResultList();
 		List<Product> dtos = new LinkedList<Product>();
 		if (ents != null) {
 			for (ProductEnt e : ents) {
@@ -42,7 +42,7 @@ public class ProductDAOImpl extends GenericDAOImpl<ProductEnt, Product> implemen
 	public Product getProductForShopAndIntegrationId(Shop shop, String integrationId) {
 		ProductEnt result = null;
 		try {
-			result = (ProductEnt) entityManager.createNamedQuery("ProductEnt.getProductForShopAndIntegrationId")
+			result = (ProductEnt) em.createNamedQuery("ProductEnt.getProductForShopAndIntegrationId")
 											   .setParameter("shop", new ShopEnt(shop)).setParameter("integrationId", integrationId)
 											   .getSingleResult();
 		} catch (NoResultException e) {
@@ -78,19 +78,9 @@ public class ProductDAOImpl extends GenericDAOImpl<ProductEnt, Product> implemen
 		if (g == null) throw new InvalidDataException("Trying to save null object!");
 		if (g.getShop() == null || g.getShop().getId() == null) throw new InvalidDataException("Product's shop is null object or not persisted!");
 		
-		
-		if (g.getId() == null) {
-			ProductEnt pe = new ProductEnt();
-			pe.fill(g);
-			ShopEnt shp = entityManager.find(ShopEnt.class, g.getShop().getId());
-			pe.setShop(shp);
-			entityManager.persist(pe);
-		} else {
-			ProductEnt pe = entityManager.find(ProductEnt.class, g.getId());
-			pe.setDescription(g.getDescription());
-			pe.setIntegrationId(g.getIntegrationId());
-			entityManager.merge(pe);
-		}
+		ProductEnt pe = new ProductEnt();
+		pe.fill(g);
+		em.merge(pe);
 	}
 
 }

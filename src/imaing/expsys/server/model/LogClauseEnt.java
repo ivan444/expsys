@@ -2,11 +2,13 @@ package imaing.expsys.server.model;
 
 import imaing.expsys.client.domain.DTOObject;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
@@ -24,8 +26,8 @@ import javax.persistence.UniqueConstraint;
 public abstract class LogClauseEnt<L extends DTOObject> extends BaseEntity<L> {
     private static final long serialVersionUID = 1L;
     
-    @ManyToOne
-    @JoinColumn(name="rule_id", nullable=false, updatable=false)
+    @ManyToOne(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name="rule_id", updatable=false)
 	protected RuleEnt rule;
 	
 	@Column(name="ns_left", nullable=false)

@@ -1,8 +1,10 @@
 package imaing.expsys.server.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
@@ -14,8 +16,8 @@ import imaing.expsys.client.domain.Literal;
 public class LiteralEnt extends LogClauseEnt<Literal> {
 	private static final long serialVersionUID = 1L;
 	
-	@ManyToOne
-    @JoinColumn(name="chr_id", nullable=false, updatable=false)
+	@ManyToOne(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name="chr_id", updatable=false)
 	private CharacteristicEnt chr;
 	
 	@Column(name="fuzzy_cls_idx")

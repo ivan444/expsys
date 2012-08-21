@@ -2,8 +2,10 @@ package imaing.expsys.server.model;
 
 import imaing.expsys.client.domain.Product;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -23,8 +25,8 @@ import javax.persistence.UniqueConstraint;
 public class ProductEnt extends BaseEntity<Product> {
 	private static final long serialVersionUID = 1L;
 
-	@ManyToOne
-    @JoinColumn(name="shop_id", nullable=false, updatable=false)
+	@ManyToOne(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name="shop_id", updatable=false)
 	private ShopEnt shop;
 	
 	@Column(name="description")

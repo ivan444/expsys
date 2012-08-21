@@ -18,7 +18,7 @@ public class ProdChrDAOImpl extends GenericDAOImpl<ProdChrEnt, ProdChr> implemen
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<ProdChr> listProdChrForProduct(Product product) {
-		List<ProdChrEnt> ents = (List<ProdChrEnt>) entityManager.createNamedQuery("ProdChrEnt.listProdChrForProduct")
+		List<ProdChrEnt> ents = (List<ProdChrEnt>) em.createNamedQuery("ProdChrEnt.listProdChrForProduct")
 																	  .setParameter("product", new ProductEnt(product)).getResultList();
 		List<ProdChr> dtos = new LinkedList<ProdChr>();
 		if (ents != null){
@@ -33,7 +33,7 @@ public class ProdChrDAOImpl extends GenericDAOImpl<ProdChrEnt, ProdChr> implemen
 	public ProdChr getProdChrForProductAndCharacteristic(Product product, Characteristic chr) {
 		ProdChrEnt result = null;
 		try {
-			result = (ProdChrEnt) entityManager.createNamedQuery("ProdChrEnt.getProdChrForProductAndCharacteristic")
+			result = (ProdChrEnt) em.createNamedQuery("ProdChrEnt.getProdChrForProductAndCharacteristic")
 											   .setParameter("product", new ProductEnt(product)).setParameter("chr", new CharacteristicEnt(chr)).getSingleResult();
 		} catch (NoResultException e) {
 			return null;

@@ -4,9 +4,11 @@ package imaing.expsys.server.model;
 import imaing.expsys.client.domain.Rule;
 import imaing.expsys.shared.Relevance;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -34,8 +36,8 @@ public class RuleEnt extends BaseEntity<Rule> {
 	@Enumerated
 	private Relevance rel;
 	
-	@ManyToOne
-    @JoinColumn(name="shop_id", nullable=false, updatable=false)
+	@ManyToOne(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name="shop_id", updatable=false)
 	private ShopEnt shop;
 	
 	@Column(name="desc", nullable=false)

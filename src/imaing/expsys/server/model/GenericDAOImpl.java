@@ -26,7 +26,7 @@ public class GenericDAOImpl<E extends BaseEntity<G>, G extends DTOObject>
 	
 	@Override
 	public G getById(Long id) {
-		E ent = (E) entityManager.find(type, id);
+		E ent = (E) em.find(type, id);
 		
 		if (ent == null) return null;
 		else return ent.getCleaned();
@@ -35,7 +35,7 @@ public class GenericDAOImpl<E extends BaseEntity<G>, G extends DTOObject>
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<G> list() {
-		List<E> allEnts = entityManager.createQuery("from " + type.getName()).getResultList();
+		List<E> allEnts = em.createQuery("from " + type.getName()).getResultList();
 		
 		List<G> allGs = new ArrayList<G>();
 		
@@ -103,9 +103,9 @@ public class GenericDAOImpl<E extends BaseEntity<G>, G extends DTOObject>
 		ent.fill(gwtObject);
 		try {
 			if (ent.getId() == null) {
-				entityManager.persist(ent);
+				em.persist(ent);
 			} else {
-				entityManager.merge(ent);
+				em.merge(ent);
 			}
 		} catch (Exception e) {
 			throw new InvalidDataException(e);
@@ -117,14 +117,14 @@ public class GenericDAOImpl<E extends BaseEntity<G>, G extends DTOObject>
 	public void delete(E ent) throws InvalidDataException {
 		if (ent == null) throw new InvalidDataException("Trying to delete null object!");
 		
-		entityManager.remove(ent);
+		em.remove(ent);
 	}
 	
 	@Override
 	@Transactional(readOnly=false)
 	public void delete(Long id) throws InvalidDataException {
 		if (id == null) throw new InvalidDataException("Trying to delete object with null ID!");
-		E ent = (E) entityManager.find(type, id);
+		E ent = (E) em.find(type, id);
 		
 		delete(ent);
 	}

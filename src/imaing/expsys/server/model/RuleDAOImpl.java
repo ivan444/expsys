@@ -16,7 +16,7 @@ public class RuleDAOImpl extends GenericDAOImpl<RuleEnt, Rule> implements RuleDA
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Rule> listRulesForShop(Shop shop) {
-		List<RuleEnt> ents = (List<RuleEnt>) entityManager.createNamedQuery("RuleEnt.listRulesForShop")
+		List<RuleEnt> ents = (List<RuleEnt>) em.createNamedQuery("RuleEnt.listRulesForShop")
 														  .setParameter("shop", new ShopEnt(shop)).getResultList();
 		List<Rule> dtos = new LinkedList<Rule>();
 		if (ents != null) {
@@ -30,7 +30,7 @@ public class RuleDAOImpl extends GenericDAOImpl<RuleEnt, Rule> implements RuleDA
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public List<LogClause> listLogClausesForRule(Rule rule) {
-		List<LogClauseEnt> ents = (List<LogClauseEnt>) entityManager
+		List<LogClauseEnt> ents = (List<LogClauseEnt>) em
 				.createNamedQuery("RuleEnt.listLogClausesForRule")
 				.setParameter("rule", new RuleEnt(rule)).getResultList();
 		List<LogClause> dtos = new LinkedList<LogClause>();

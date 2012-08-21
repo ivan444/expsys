@@ -12,7 +12,6 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.TableGenerator;
 import javax.persistence.Transient;
-import javax.persistence.Version;
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
@@ -27,8 +26,8 @@ public abstract class BaseEntity<G extends DTOObject> implements Serializable {
     @TableGenerator(allocationSize = 1, initialValue = 0, name = "pkGen", table = "PRIMARY_KEYS")
     protected Long id;
 
-    @Version
-    protected Integer version;
+//    @Version
+//    protected Integer version;
     
     public BaseEntity() {
     }
@@ -52,13 +51,13 @@ public abstract class BaseEntity<G extends DTOObject> implements Serializable {
 		this.id = id;
 	}
 
-	public Integer getVersion() {
-		return version;
-	}
-
-	public void setVersion(Integer version) {
-		this.version = version;
-	}
+//	public Integer getVersion() {
+//		return version;
+//	}
+//
+//	public void setVersion(Integer version) {
+//		this.version = version;
+//	}
 	
 	// Force reimplementation of hashCode and equals
 	public abstract int hashCode();
