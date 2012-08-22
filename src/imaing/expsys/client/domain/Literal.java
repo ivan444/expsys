@@ -7,6 +7,11 @@ public class Literal extends LogClause {
 	
 	public Literal() {
 	}
+	
+	public Literal(Characteristic chr, Integer fuzzyClsIdx) {
+		this.chr = chr;
+		this.fuzzyClsIdx = fuzzyClsIdx;
+	}
 
 	public Characteristic getChr() {
 		return chr;
@@ -22,5 +27,15 @@ public class Literal extends LogClause {
 
 	public void setFuzzyClsIdx(Integer fuzzyClsIdx) {
 		this.fuzzyClsIdx = fuzzyClsIdx;
+	}
+
+	@Override
+	protected int goLeft(int parentVal) {
+		return parentVal;
+	}
+
+	@Override
+	protected int goRight(int val) {
+		return val;
 	}
 }

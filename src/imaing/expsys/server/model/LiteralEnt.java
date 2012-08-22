@@ -46,6 +46,13 @@ public class LiteralEnt extends LogClauseEnt<Literal> {
 	@Transient
 	@Override
 	public void fill(Literal g) {
+		if (g.getFuzzyClsIdx() == null)
+			throw new IllegalArgumentException("Fuzzy class index mustn't be null!");
+		if (g.getFuzzyClsIdx().intValue() < 0)
+			throw new IllegalArgumentException("Fuzzy class index must be positive!");
+		if (g.getFuzzyClsIdx().intValue() >= g.getChr().getfClsNum())
+			throw new IllegalArgumentException("Fuzzy class index must be less then chr's number of fuzzy classes!");
+		
 		setId(g.getId());
 		setNsLeft(g.getNsLeft());
 		setNsRight(g.getNsRight());

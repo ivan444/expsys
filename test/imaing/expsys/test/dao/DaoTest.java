@@ -1,9 +1,19 @@
 package imaing.expsys.test.dao;
 
+import imaing.expsys.client.domain.AndClause;
+import imaing.expsys.client.domain.Characteristic;
+import imaing.expsys.client.domain.Literal;
+import imaing.expsys.client.domain.LogClause;
+import imaing.expsys.client.domain.NotClause;
+import imaing.expsys.client.domain.OrClause;
 import imaing.expsys.client.domain.Product;
+import imaing.expsys.client.domain.Rule;
 import imaing.expsys.client.domain.Shop;
+import imaing.expsys.server.model.CharacteristicDAO;
 import imaing.expsys.server.model.ProductDAO;
+import imaing.expsys.server.model.RuleDAO;
 import imaing.expsys.server.model.ShopDAO;
+import imaing.expsys.shared.Relevance;
 import imaing.expsys.shared.exceptions.InvalidDataException;
 import imaing.expsys.test.util.TestUtils;
 
@@ -45,6 +55,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class DaoTest {
 	@Autowired private ShopDAO shopDao;
 	@Autowired private ProductDAO prodDao;
+	@Autowired private CharacteristicDAO chrDao;
+	@Autowired private RuleDAO ruleDao;
 	
 	private Shop newShop() {
 		Shop shp = new Shop();
@@ -113,6 +125,80 @@ public class DaoTest {
 		List<Product> prods = prodDao.listProductsForShop(savedNs);
 		
 		Assert.assertEquals("There should be ten products", 10, prods.size());
+	}
+	
+	@Test
+	public void shouldCreateRuleWithAllTypesOfClauesAndRetrieveIt() throws InvalidDataException {
+		Shop shop = newShop();
+		shop = shopDao.save(shop);
+
+		Characteristic chr1 = new Characteristic();
+		chr1.setfClsNum(10);
+		chr1.setShop(shop);
+		chr1.setName(TestUtils.generateRandStr(10));
+		
+		Characteristic chr2 = new Characteristic();
+		chr2.setfClsNum(10);
+		chr2.setShop(shop);
+		chr2.setName(TestUtils.generateRandStr(10));
+		
+		chr1 = chrDao.save(chr1);
+		chr2 = chrDao.save(chr2);
+		
+		Rule rule = new Rule();
+		rule.setDesc(TestUtils.generateRandStr(10));
+		rule.setShop(shop);
+		rule.setRel(Relevance.REL_HIGH);
+		
+		LogClause logClause = new AndClause(
+						new OrClause(
+								new Literal(chr1, 3),
+								new NotClause(new Literal(chr2, 1))),
+						new NotClause(
+								new Literal(chr2, 3)));
+		rule.setLogClause(logClause);
+		
+		Rule savedRule = ruleDao.save(rule);
+		
+		List<LogClause> logClauses = ruleDao.listLogClausesForRule(savedRule);
+		savedRule.buildClausesTree(logClauses);
+		
+		boolean areSame = true;
+		try {
+			AndClause orgAnd = (AndClause) logClause;
+			AndClause savedAnd = (AndClause) rule.getLogClause();
+				OrClause orgOr = (OrClause) orgAnd.getLeftClause();
+				OrClause savedOr = (OrClause) savedAnd.getLeftClause();
+					int orgOrLitIdx = ((Literal)orgOr.getLeftClause()).getFuzzyClsIdx().intValue();
+					int savedOrLitIdx = ((Literal)savedOr.getLeftClause()).getFuzzyClsIdx().intValue();
+					areSame = areSame && (orgOrLitIdx == savedOrLitIdx);
+					areSame = areSame &&
+							(((Literal)orgOr.getLeftClause()).getChr().equals(
+									((Literal)savedOr.getLeftClause()).getChr()));
+					
+					NotClause orgOrNot = (NotClause) orgOr.getRightClause();
+					NotClause savedOrNot = (NotClause) savedOr.getRightClause();
+						int orgOrNotLitIdx = ((Literal)orgOrNot.getLeftClause()).getFuzzyClsIdx().intValue();
+						int savedOrNotLitIdx = ((Literal)savedOrNot.getLeftClause()).getFuzzyClsIdx().intValue();
+						areSame = areSame && (orgOrNotLitIdx == savedOrNotLitIdx);
+						areSame = areSame &&
+								(((Literal)orgOrNot.getLeftClause()).getChr().equals(
+										((Literal)savedOrNot.getLeftClause()).getChr()));
+			
+				NotClause orgNot = (NotClause) orgAnd.getRightClause();
+				NotClause savedNot = (NotClause) savedAnd.getRightClause();
+					int orgNotLitIdx = ((Literal)orgNot.getLeftClause()).getFuzzyClsIdx().intValue();
+					int savedNotLitIdx = ((Literal)savedNot.getLeftClause()).getFuzzyClsIdx().intValue();
+					areSame = areSame && (orgNotLitIdx == savedNotLitIdx);
+					areSame = areSame &&
+							(((Literal)orgNot.getLeftClause()).getChr().equals(
+									((Literal)savedNot.getLeftClause()).getChr()));
+					
+		} catch(ClassCastException e) {
+			areSame = false;
+		}
+		
+		Assert.assertTrue("Original and retrieved logical clauses are the same", areSame);
 	}
 
 }

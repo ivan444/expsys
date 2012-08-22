@@ -1,5 +1,11 @@
 package imaing.expsys.client.domain;
 
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+import imaing.expsys.client.domain.LogClause.HasLeft;
+import imaing.expsys.client.domain.LogClause.HasRight;
 import imaing.expsys.shared.Relevance;
 
 public class Rule extends DTOObject {
@@ -8,6 +14,11 @@ public class Rule extends DTOObject {
 	private Relevance rel;
 	private LogClause logClause;
 	private Integer nsRoot;
+	
+	public void determineNSetVals() {
+		int rootNsRight = logClause.determineNSetVals(0);
+		setNsRoot(Integer.valueOf(rootNsRight+1));
+	}
 	
 	public Rule() {
 	}
@@ -42,6 +53,7 @@ public class Rule extends DTOObject {
 
 	public void setLogClause(LogClause logClause) {
 		this.logClause = logClause;
+		determineNSetVals();
 	}
 
 	@Override
@@ -84,6 +96,59 @@ public class Rule extends DTOObject {
 
 	public void setNsRoot(Integer nsRoot) {
 		this.nsRoot = nsRoot;
+	}
+
+	public void buildClausesTree(List<LogClause> logClauses) {
+		if (logClauses.size() == 0) {
+//			throw new IllegalArgumentException("Can't build empty tree!");
+			return;
+		}
+		
+		Collections.sort(logClauses, new Comparator<LogClause>() {
+			@Override
+			public int compare(LogClause o1, LogClause o2) {
+				return o1.getNsLeft().intValue()-o2.getNsLeft().intValue();
+			}
+		});
+		
+		
+		LogClause parent = logClauses.get(0);
+		recursiveTreeBuild(logClauses, 0);
+		setLogClause(parent);
+	}
+	
+	private int recursiveTreeBuild(List<LogClause> logClauses, int curIdx) {
+		int lcSize = logClauses.size();
+		if (curIdx >= lcSize) return curIdx;
+		LogClause lc = logClauses.get(curIdx);
+		
+		if (lc.getNsRight().intValue()-lc.getNsLeft().intValue() == 1) {
+			// Literal
+			return curIdx;
+		}
+		
+		if (curIdx+1 < lcSize) {
+			// not last one
+			LogClause lcNext = logClauses.get(curIdx+1);
+			if (lcNext.getNsLeft().intValue() > lc.getNsRight().intValue()) {
+				// end of branch
+				return curIdx;
+			}
+			
+			
+			HasLeft lcHl = (HasLeft) lc;
+			lcHl.setLeftClause(logClauses.get(curIdx+1));
+			curIdx = recursiveTreeBuild(logClauses, curIdx+1);
+			
+			
+			if (lcNext.getNsLeft().intValue() > lc.getNsRight().intValue()) {
+				HasRight lcHr = (HasRight) lc;
+				lcHr.setRightClause(logClauses.get(curIdx+1));
+				curIdx = recursiveTreeBuild(logClauses, curIdx+1);
+			}
+		}
+		
+		return curIdx;
 	}
 
 }

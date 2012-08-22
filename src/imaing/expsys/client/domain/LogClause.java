@@ -11,6 +11,18 @@ public abstract class LogClause extends DTOObject {
 	public Rule getRule() {
 		return rule;
 	}
+	
+	public int determineNSetVals(int parentVal) {
+		setNsLeft(Integer.valueOf(parentVal+1));
+		int leftVal = goLeft(getNsLeft().intValue());
+		int rightVal = goRight(leftVal);
+		setNsRight(Integer.valueOf(rightVal+1));
+		
+		return getNsRight().intValue();
+	}
+
+	protected abstract int goLeft(int parentVal);
+	protected abstract int goRight(int val);
 
 	public void setRule(Rule rule) {
 		this.rule = rule;
@@ -67,5 +79,15 @@ public abstract class LogClause extends DTOObject {
 		} else if (!rule.equals(other.rule))
 			return false;
 		return true;
+	}
+	
+	public interface HasLeft {
+		LogClause getLeftClause();
+		void setLeftClause(LogClause clause);
+	}
+	
+	public interface HasRight {
+		LogClause getRightClause();
+		void setRightClause(LogClause clause);
 	}
 }
