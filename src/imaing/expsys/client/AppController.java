@@ -1,9 +1,11 @@
 package imaing.expsys.client;
 
 import imaing.expsys.client.domain.Shop;
+import imaing.expsys.client.presenter.AdminPagePresenter;
 import imaing.expsys.client.presenter.Presenter;
 import imaing.expsys.client.presenter.WelcomePagePresenter;
 import imaing.expsys.client.services.ShopServiceAsync;
+import imaing.expsys.client.view.AdminPageView;
 import imaing.expsys.client.view.WelcomePage;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -68,14 +70,13 @@ public class AppController implements Presenter, ValueChangeHandler<String> {
 
 		Presenter presenter = null;
 
-		if (token.equals("register")) {
-//			presenter = new RegistrationPresenter(shopOwnerRpcSrv, eventBus, new RegistrationView());
+		if (token.equals("admin")) {
+			presenter = new AdminPagePresenter(shopOwnerRpcSrv, eventBus, new AdminPageView());
 		} else if (token.equals("welcome")) {
 			presenter = new WelcomePagePresenter(shopOwnerRpcSrv, eventBus, new WelcomePage());
 		}	
 
 		if (presenter != null) {
-//			activatePresenter(presenter);
 			presenter.go(container);
 		}
 	}
@@ -86,16 +87,6 @@ public class AppController implements Presenter, ValueChangeHandler<String> {
 		onHistoryChange(token);
 	}
 	
-//	/**
-//	 * Method for activating the presenter. The active presenter should only be
-//	 * set through this method to ensure consistency of the object.
-//	 * 
-//	 * @param presenter The new active presenter
-//	 */
-//	private void activatePresenter(Presenter presenter) {
-//		presenter.go(container);
-//	}
-
 	void disableLogoutLink(){
 		DOM.getElementById("upperBar").setInnerHTML("<br/>");
 	}

@@ -15,7 +15,9 @@ public interface ShopService extends RemoteService {
 
 	List<Shop> list();
 	
+	// TODO: move to AdminService!!
 	Shop save(Shop shop) throws InvalidDataException;
+	void deleteShop(long shopId) throws InvalidDataException;
 	
 	Product addProduct(Product p) throws InvalidDataException;
 }

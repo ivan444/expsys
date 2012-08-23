@@ -42,4 +42,9 @@ public class ShopServiceImpl implements ShopService, SessionAware {
 		return prodDao.save(p);
 	}
 
+	@Override
+	public void deleteShop(long shopId) throws InvalidDataException {
+		shpDao.delete(Long.valueOf(shopId));
+	}
+
 }
