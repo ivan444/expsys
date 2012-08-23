@@ -59,13 +59,8 @@ public class AdminPageView extends Composite implements AdminPagePresenter.Displ
 
 	@Override
 	public void listShops(List<Shop> shops) {
-	    // Set the total row count. This isn't strictly necessary, but it affects
-	    // paging calculations, so its good habit to keep the row count up to date.
 		shopsTable.setRowCount(shops.size(), true);
-
-	    // Push the data into the widget.
 		shopsTable.setRowData(0, shops);
-		
 		shopsTable.redraw();
 		
 		selectedShop = null;
@@ -139,8 +134,9 @@ public class AdminPageView extends Composite implements AdminPagePresenter.Displ
 	@Override
 	public long getSelectedShopId() {
 		if (selectedShop == null) {
-			Window.alert("No shop is selected!");
-			return -1;
+			String errMsg = "No shop is selected!";
+			Window.alert(errMsg);
+			throw new IllegalStateException(errMsg);
 		}
 		
 		return selectedShop.getId().longValue();

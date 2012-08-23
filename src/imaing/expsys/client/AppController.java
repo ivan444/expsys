@@ -1,30 +1,34 @@
 package imaing.expsys.client;
 
+import java.util.List;
+
 import imaing.expsys.client.domain.Shop;
 import imaing.expsys.client.presenter.AdminPagePresenter;
 import imaing.expsys.client.presenter.Presenter;
+import imaing.expsys.client.presenter.ShopPresenter;
 import imaing.expsys.client.presenter.WelcomePagePresenter;
 import imaing.expsys.client.services.ShopServiceAsync;
 import imaing.expsys.client.view.AdminPageView;
+import imaing.expsys.client.view.ShopView;
 import imaing.expsys.client.view.WelcomePage;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.web.bindery.event.shared.EventBus;
 
 public class AppController implements Presenter, ValueChangeHandler<String> {
 	
 	public final EventBus eventBus;
-	private final ShopServiceAsync shopOwnerRpcSrv;
+	private final ShopServiceAsync shopRpcSrv;
 	private HasWidgets container;
-//	private Shop activeUser;
 	
-	public AppController(ShopServiceAsync shopOwnerRpcSrv, EventBus eventBus) {
+	public AppController(ShopServiceAsync shopRpcSrv, EventBus eventBus) {
 		this.eventBus = eventBus;
-		this.shopOwnerRpcSrv = shopOwnerRpcSrv;
+		this.shopRpcSrv = shopRpcSrv;
 		
 		bind();
 	}
@@ -71,9 +75,23 @@ public class AppController implements Presenter, ValueChangeHandler<String> {
 		Presenter presenter = null;
 
 		if (token.equals("admin")) {
-			presenter = new AdminPagePresenter(shopOwnerRpcSrv, eventBus, new AdminPageView());
+			presenter = new AdminPagePresenter(shopRpcSrv, eventBus, new AdminPageView());
 		} else if (token.equals("welcome")) {
-			presenter = new WelcomePagePresenter(shopOwnerRpcSrv, eventBus, new WelcomePage());
+			presenter = new WelcomePagePresenter(shopRpcSrv, eventBus, new WelcomePage());
+		} else if (token.equals("shop")) {
+			//@TEST!!!! TODO: REMOVE
+			shopRpcSrv.listShops(new AsyncCallback<List<Shop>>() {
+				@Override
+				public void onSuccess(List<Shop> result) {
+					Presenter p = new ShopPresenter(shopRpcSrv, eventBus, new ShopView(), result.get(0)); // TODO remove test shop!!
+					p.go(container);
+				}
+				
+				@Override
+				public void onFailure(Throwable caught) {
+					
+				}
+			});
 		}	
 
 		if (presenter != null) {

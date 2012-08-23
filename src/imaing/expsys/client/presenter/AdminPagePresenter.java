@@ -81,8 +81,14 @@ public class AdminPagePresenter implements Presenter {
 	 * 
 	 */
 	private void deleteShop() {
-		final long selShopId = display.getSelectedShopId();
-		if (selShopId == -1) return;
+		long selId;
+		try {
+			selId = display.getSelectedShopId();
+		} catch (IllegalStateException e) {
+			return;
+		}
+		
+		final long selShopId = selId;
 		
 		shopSrv.deleteShop(selShopId, new AsyncCallback<Void>() {
 			@Override
@@ -120,7 +126,7 @@ public class AdminPagePresenter implements Presenter {
 		shop.setShopName(display.getShopName());
 		shop.setPassword(display.getShopPassword());
 		
-		shopSrv.save(shop, new AsyncCallback<Shop>() {
+		shopSrv.saveShop(shop, new AsyncCallback<Shop>() {
 			@Override
 			public void onSuccess(Shop result) {
 				shops.add(result);
@@ -138,7 +144,7 @@ public class AdminPagePresenter implements Presenter {
 	 * Load full list of shops and show them on display.
 	 */
 	private void listShops() {
-		shopSrv.list(new AsyncCallback<List<Shop>>() {
+		shopSrv.listShops(new AsyncCallback<List<Shop>>() {
 			@Override
 			public void onSuccess(List<Shop> allShops) {
 				shops.addAll(allShops);

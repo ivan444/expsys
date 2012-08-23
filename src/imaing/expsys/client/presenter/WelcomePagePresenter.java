@@ -83,7 +83,7 @@ public class WelcomePagePresenter implements Presenter {
 		shp.setEmail(display.getEmailField().getText());
 		shp.setShopName(display.getTitleField().getText());
 		
-		shopSrv.save(shp, new AsyncCallback<Shop>() {
+		shopSrv.saveShop(shp, new AsyncCallback<Shop>() {
 			@Override
 			public void onSuccess(Shop result) {
 				addProducts(result);
@@ -132,7 +132,7 @@ public class WelcomePagePresenter implements Presenter {
 	}
 
 	private void listOwners() {
-		shopSrv.list(new AsyncCallback<List<Shop>>() {
+		shopSrv.listShops(new AsyncCallback<List<Shop>>() {
 			@Override
 			public void onSuccess(List<Shop> owners) {
 				display.listShopOwners(owners);

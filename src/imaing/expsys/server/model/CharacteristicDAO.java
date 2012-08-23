@@ -6,6 +6,6 @@ import imaing.expsys.client.domain.Shop;
 import java.util.List;
 
 public interface CharacteristicDAO extends GenericDAO<CharacteristicEnt, Characteristic> {
-	List<Characteristic> listCharacteristicsForShop(Shop owner);
-	Characteristic getCharacteristicForShopAndName(Shop owner, String name);
+	List<Characteristic> listCharacteristicsForShop(Shop shop);
+	Characteristic getCharacteristicForShopAndName(Shop shop, String name);
 }

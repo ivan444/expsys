@@ -13,7 +13,7 @@ import javax.persistence.UniqueConstraint;
 
 @Entity
 @Table(name="shop",uniqueConstraints=@UniqueConstraint(
-		columnNames={"shopEmail"}
+		columnNames={"email"}
 ))
 @NamedQueries({
     @NamedQuery(name="ShopEnt.getShopForEmail",query="select o from ShopEnt as o where o.email=:shopEmail")
@@ -24,10 +24,10 @@ public class ShopEnt extends BaseEntity<Shop> {
 	@Column(name="password")
 	private String password;
 	
-	@Column(name="shopEmail")
+	@Column(name="email")
 	private String email;
 	
-	@Column(name="shopName")
+	@Column(name="name")
 	private String shopName;
 	
 	public ShopEnt() {}

@@ -1,0 +1,14 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+
+	<g:HTMLPanel>
+	  <g:TextBox ui:field="chrName" text="Name" width="200" />
+	  <g:IntegerBox ui:field="chrFCls" text="Number of fuzzy classes" width="200" />  
+	  <g:Button ui:field="btnAddChr" text="Add characteristic"/>
+	  
+	  <g:HTMLPanel ui:field="chrsPanel"/>
+	  <g:Button ui:field="btnDelChr" text="Delete characteristic"/>
+	  
+	</g:HTMLPanel>
+</ui:UiBinder> 
