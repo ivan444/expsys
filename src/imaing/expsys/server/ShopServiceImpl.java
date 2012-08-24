@@ -1,5 +1,6 @@
 package imaing.expsys.server;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -7,10 +8,12 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import imaing.expsys.client.domain.Characteristic;
+import imaing.expsys.client.domain.ProdChr;
 import imaing.expsys.client.domain.Product;
 import imaing.expsys.client.domain.Shop;
 import imaing.expsys.client.services.ShopService;
 import imaing.expsys.server.model.CharacteristicDAO;
+import imaing.expsys.server.model.ProdChrDAO;
 import imaing.expsys.server.model.ProductDAO;
 import imaing.expsys.server.model.ShopDAO;
 import imaing.expsys.shared.exceptions.InvalidDataException;
@@ -19,6 +22,7 @@ public class ShopServiceImpl implements ShopService, SessionAware {
 	
 	@Autowired private ShopDAO shpDao;
 	@Autowired private ProductDAO prodDao;
+	@Autowired private ProdChrDAO prodChrDao;
 	@Autowired private CharacteristicDAO chrDao;
 	
 	public ShopServiceImpl() {
@@ -42,7 +46,17 @@ public class ShopServiceImpl implements ShopService, SessionAware {
 
 	@Override
 	public Product addProduct(Product p) throws InvalidDataException {
-		return prodDao.save(p);
+		Product savedProd = prodDao.save(p);
+		
+		List<ProdChr> savedProdChars = new ArrayList<ProdChr>();
+		for (ProdChr pc : p.getCharacteristics()) {
+			pc.setProd(savedProd);
+			savedProdChars.add(prodChrDao.save(pc));
+		}
+		
+		savedProd.setCharacteristics(savedProdChars);
+		
+		return savedProd;
 	}
 
 	@Override
@@ -64,6 +78,16 @@ public class ShopServiceImpl implements ShopService, SessionAware {
 	@Override
 	public void deleteCharacteristic(long chrId) throws InvalidDataException {
 		chrDao.delete(Long.valueOf(chrId));
+	}
+
+	@Override
+	public List<Product> listProducts(Shop shop) {
+		return prodDao.listProductsWCharsForShop(shop);
+	}
+
+	@Override
+	public void deleteProduct(long prodId) throws InvalidDataException {
+		prodDao.delete(Long.valueOf(prodId));
 	}
 
 }

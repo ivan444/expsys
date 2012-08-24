@@ -1,6 +1,8 @@
 package imaing.expsys.client.view;
 
 import imaing.expsys.client.domain.Characteristic;
+import imaing.expsys.client.domain.ProdChr;
+import imaing.expsys.client.domain.Product;
 import imaing.expsys.client.presenter.ShopPresenter;
 
 import java.text.ParseException;
@@ -18,6 +20,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.IntegerBox;
+import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.SelectionChangeEvent;
@@ -45,9 +48,23 @@ public class ShopView extends Composite implements ShopPresenter.Display {
 	@UiField
 	HTMLPanel chrsPanel;
 	
+	@UiField
+	Button btnAddProds;
+	
+	@UiField
+	Button btnDelProd;
+	
+	@UiField
+	TextArea newProdsJson;
+	
+	@UiField
+	HTMLPanel prodsPanel;
+	
 	private CellTable<Characteristic> chrsTable;
+	private CellTable<Product> prodsTable;
 	
 	private Characteristic selectedChr = null;
+	private Product selectedProd = null;
 	
 	public ShopView() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -55,6 +72,11 @@ public class ShopView extends Composite implements ShopPresenter.Display {
 	}
 
 	private void init() {
+		initCharacteristics();
+		initProducts();
+	}
+	
+	private void initCharacteristics() {
 		chrsTable = new CellTable<Characteristic>();
 
 	    // Create name column.
@@ -92,6 +114,58 @@ public class ShopView extends Composite implements ShopPresenter.Display {
 	    });
 	    
 	    this.chrsPanel.add(chrsTable);
+	}
+	
+	private void initProducts() {
+		prodsTable = new CellTable<Product>();
+
+		TextColumn<Product> descColumn = new TextColumn<Product>() {
+			@Override
+			public String getValue(Product p) {
+				return p.getDescription();
+			}
+		};
+
+		TextColumn<Product> integColumn = new TextColumn<Product>() {
+			@Override
+			public String getValue(Product p) {
+				return p.getIntegrationId();
+			}
+		};
+
+		TextColumn<Product> charsColumn = new TextColumn<Product>() {
+			@Override
+			public String getValue(Product p) {
+				StringBuilder sb = new StringBuilder();
+				for (ProdChr pc : p.getCharacteristics()) {
+					sb.append(pc.getChr().getName())
+					  .append(": ")
+					  .append(pc.getValue())
+					  .append(", ");
+				}
+				return sb.toString();
+			}
+		};
+
+	    prodsTable.addColumn(descColumn, "Description");
+	    prodsTable.addColumn(integColumn, "Integration ID");
+	    prodsTable.addColumn(charsColumn, "Characteristics");
+	    
+	    prodsTable.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
+
+	    // Add a selection model to handle user selection.
+	    final SingleSelectionModel<Product> selectionModel = new SingleSelectionModel<Product>();
+	    prodsTable.setSelectionModel(selectionModel);
+	    selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
+	    	public void onSelectionChange(SelectionChangeEvent event) {
+	    		Product selected = selectionModel.getSelectedObject();
+	    		if (selected != null) {
+	    			selectedProd = selected;
+	    		}
+	    	}
+	    });
+	    
+	    this.prodsPanel.add(prodsTable);
 	}
 	
 	@Override
@@ -133,6 +207,46 @@ public class ShopView extends Composite implements ShopPresenter.Display {
 	@Override
 	public int getCharacteristicFClsNum() throws ParseException {
 		return this.chrFCls.getValueOrThrow();
+	}
+
+	@Override
+	public void reportError(String errorMsg) {
+		Window.alert(errorMsg);
+	}
+
+	@Override
+	public HasClickHandlers getAddProducts() {
+		return btnAddProds;
+	}
+
+	@Override
+	public String getNewProductsJSON() {
+		return newProdsJson.getText();
+	}
+
+	@Override
+	public HasClickHandlers getDeleteProduct() {
+		return btnDelProd;
+	}
+
+	@Override
+	public long getSelectedProductId() {
+		if (selectedProd == null) {
+			String errMsg = "No product is selected!";
+			Window.alert(errMsg);
+			throw new IllegalStateException(errMsg);
+		}
+		
+		return selectedProd.getId().longValue();
+	}
+
+	@Override
+	public void listProducts(List<Product> prods) {
+		prodsTable.setRowCount(prods.size(), true);
+		prodsTable.setRowData(0, prods);
+		prodsTable.redraw();
+		
+		selectedProd = null;
 	}
 
 }

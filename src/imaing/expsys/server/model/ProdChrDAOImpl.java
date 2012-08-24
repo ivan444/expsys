@@ -3,6 +3,7 @@ package imaing.expsys.server.model;
 import imaing.expsys.client.domain.Characteristic;
 import imaing.expsys.client.domain.ProdChr;
 import imaing.expsys.client.domain.Product;
+import imaing.expsys.shared.exceptions.InvalidDataException;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -41,6 +42,16 @@ public class ProdChrDAOImpl extends GenericDAOImpl<ProdChrEnt, ProdChr> implemen
 		
 		if (result == null) return null;
 		else return result.getCleaned();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public void deleteAllForProduct(Product product) throws InvalidDataException {
+		List<ProdChrEnt> ents = (List<ProdChrEnt>) em.createNamedQuery("ProdChrEnt.listProdChrForProduct")
+				  .setParameter("product", new ProductEnt(product)).getResultList();
+		for (ProdChrEnt pce : ents) {
+			delete(pce);
+		}
 	}
 
 }

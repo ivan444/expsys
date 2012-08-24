@@ -83,5 +83,17 @@ public class ProductDAOImpl extends GenericDAOImpl<ProductEnt, Product> implemen
 		pe = em.merge(pe);
 		return pe.getCleaned();
 	}
+	
+	@Override
+	@Transactional(readOnly=false)
+	public void delete(Long id) throws InvalidDataException {
+		if (id == null) throw new InvalidDataException("Trying to delete object with null ID!");
+		ProductEnt ent = em.find(ProductEnt.class, id);
+		Product p = ent.getCleaned();
+		
+		prodChrDao.deleteAllForProduct(p);
+		
+		delete(ent);
+	}
 
 }
