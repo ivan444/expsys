@@ -25,7 +25,7 @@ import javax.persistence.UniqueConstraint;
 public class ProductEnt extends BaseEntity<Product> {
 	private static final long serialVersionUID = 1L;
 
-	@ManyToOne(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToOne(fetch=FetchType.EAGER, cascade = CascadeType.REFRESH)
     @JoinColumn(name="shop_id", nullable=false, updatable=false)
 	private ShopEnt shop;
 	

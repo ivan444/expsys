@@ -36,7 +36,7 @@ public class RuleEnt extends BaseEntity<Rule> {
 	@Enumerated
 	private Relevance rel;
 	
-	@ManyToOne(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToOne(fetch=FetchType.EAGER, cascade = CascadeType.REFRESH)
     @JoinColumn(name="shop_id", nullable=false, updatable=false)
 	private ShopEnt shop;
 	

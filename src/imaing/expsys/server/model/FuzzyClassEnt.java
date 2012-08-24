@@ -25,7 +25,7 @@ import javax.persistence.UniqueConstraint;
 public class FuzzyClassEnt extends BaseEntity<FuzzyClass> {
 	private static final long serialVersionUID = 1L;
 	
-	@ManyToOne(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToOne(fetch=FetchType.EAGER, cascade = CascadeType.REFRESH)
 	@JoinColumn(name="chr_id", nullable=false, updatable=false)
 	private CharacteristicEnt chr;
 	

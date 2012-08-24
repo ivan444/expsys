@@ -25,11 +25,11 @@ import javax.persistence.UniqueConstraint;
 public class ProdChrEnt extends BaseEntity<ProdChr> {
 	private static final long serialVersionUID = 1L;
 
-	@ManyToOne(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToOne(fetch=FetchType.EAGER, cascade = CascadeType.REFRESH)
 	@JoinColumn(name="chr_id", nullable=false, updatable=false)
 	private CharacteristicEnt chr;
 	
-	@ManyToOne(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToOne(fetch=FetchType.EAGER, cascade = CascadeType.REFRESH)
 	@JoinColumn(name="prod_id", nullable=false, updatable=false)
 	private ProductEnt product;
 	

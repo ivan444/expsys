@@ -26,7 +26,7 @@ import javax.persistence.UniqueConstraint;
 public abstract class LogClauseEnt<L extends DTOObject> extends BaseEntity<L> {
     private static final long serialVersionUID = 1L;
     
-    @ManyToOne(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch=FetchType.EAGER, cascade = CascadeType.REFRESH)
     @JoinColumn(name="rule_id", nullable=false, updatable=false)
 	protected RuleEnt rule;
 	
