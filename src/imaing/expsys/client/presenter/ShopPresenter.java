@@ -2,7 +2,7 @@ package imaing.expsys.client.presenter;
 
 
 import imaing.expsys.client.domain.Characteristic;
-import imaing.expsys.client.domain.ProdChr;
+import imaing.expsys.client.domain.FuzzyClass;
 import imaing.expsys.client.domain.Product;
 import imaing.expsys.client.domain.Shop;
 import imaing.expsys.client.services.ShopServiceAsync;
@@ -16,9 +16,6 @@ import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
@@ -36,6 +33,7 @@ public class ShopPresenter implements Presenter {
 	
 	private List<Characteristic> characteristics;
 	private List<Product> products;
+	private List<FuzzyClass> fuzzClasses;
 	
 	public interface Display extends BasicDisplay {
 		HasClickHandlers getAddCharacteristic();
@@ -44,6 +42,8 @@ public class ShopPresenter implements Presenter {
 		int getCharacteristicFClsNum() throws ParseException;
 		long getSelectedCharacteristicId();
 		void listCharacteristics(List<Characteristic> chrs);
+		
+		void listFuzzyClasses(List<FuzzyClass> fcls);
 		
 		HasClickHandlers getAddProducts();
 		String getNewProductsJSON();
@@ -60,6 +60,7 @@ public class ShopPresenter implements Presenter {
 		
 		this.characteristics = new ArrayList<Characteristic>();
 		this.products = new ArrayList<Product>();
+		this.fuzzClasses = new ArrayList<FuzzyClass>();
 	}
 	
 	@Override
@@ -73,8 +74,9 @@ public class ShopPresenter implements Presenter {
 	private void init() {
 		listCharacteristics();
 		listProducts();
+		listFuzzyClasses();
 	}
-	
+
 	private void bind() {
 		display.getAddCharacteristic().addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
@@ -141,60 +143,12 @@ public class ShopPresenter implements Presenter {
 	}
 
 	protected void addProducts(String prodsJson) {
-		JSONArray jsonProds = null;
+		List<Product> parsedProds = null;
 		try {
-			jsonProds = JSONParser.parseStrict(prodsJson).isObject().get("products").isArray();
-			if (jsonProds == null) {
-				display.reportError("Products JSON is not an JSON array as it should be!");
-				return;
-			}
-		} catch (NullPointerException e) {
-			display.reportError("Malformed products JSON!");
+			parsedProds = Product.parseProductsJSON(prodsJson, shop, characteristics);
+		} catch (ParseException e) {
+			display.reportError(e.getMessage());
 			return;
-		}
-		
-		int prodsNum = jsonProds.size();
-		List<Product> parsedProds = new ArrayList<Product>(prodsNum);
-		for (int i = 0; i < prodsNum; i++) {
-			JSONObject prod = jsonProds.get(i).isObject();
-			if (prod == null) {
-				display.reportError("Product JSON is not an JSON object as it should be!");
-				return;
-			}
-			
-			try {
-				String desc = prod.get("desc").isString().stringValue();
-				String integId = prod.get("integid").isString().stringValue();
-				
-				Product p = new Product();
-				p.setShop(shop);
-				p.setDescription(desc);
-				p.setIntegrationId(integId);
-				
-				JSONObject prodChrs = prod.get("chrs").isObject();
-				List<ProdChr> parsedProdChrs = new ArrayList<ProdChr>(prodChrs.size());
-				for (Characteristic c : characteristics) {
-					if (prodChrs.containsKey(c.getName())) {
-						String value = prodChrs.get(c.getName()).isString().stringValue();
-						
-						ProdChr pc = new ProdChr();
-						pc.setChr(c);
-						pc.setProd(p);
-						pc.setValue(value);
-						
-						parsedProdChrs.add(pc);
-					}
-				}
-				
-				p.setCharacteristics(parsedProdChrs);
-				
-				parsedProds.add(p);
-				
-			} catch (NullPointerException e) {
-				display.reportError("Malformed products JSON!");
-				return;
-			}
-			
 		}
 		
 		for (Product p : parsedProds) {
@@ -281,6 +235,7 @@ public class ShopPresenter implements Presenter {
 		shopSrv.listCharacteristics(shop, new AsyncCallback<List<Characteristic>>() {
 			@Override
 			public void onSuccess(List<Characteristic> result) {
+				characteristics.clear();
 				characteristics.addAll(result);
 				display.listCharacteristics(result);
 			}
@@ -299,6 +254,7 @@ public class ShopPresenter implements Presenter {
 		shopSrv.listProducts(shop, new AsyncCallback<List<Product>>() {
 			@Override
 			public void onSuccess(List<Product> result) {
+				products.clear();
 				products.addAll(result);
 				display.listProducts(result);
 			}
@@ -310,8 +266,25 @@ public class ShopPresenter implements Presenter {
 				Window.alert(errMsg);
 			}
 		});
-		
 	}
-	
+
+
+	private void listFuzzyClasses() {
+		shopSrv.listFuzzyClassesForShop(shop, new AsyncCallback<List<FuzzyClass>>() {
+			@Override
+			public void onSuccess(List<FuzzyClass> result) {
+				fuzzClasses.clear();
+				fuzzClasses.addAll(result);
+				display.listFuzzyClasses(result);
+			}
+			
+			@Override
+			public void onFailure(Throwable caught) {
+				String errMsg = "Failed to list fuzzy classes";
+				GWT.log(errMsg, caught);
+				Window.alert(errMsg);
+			}
+		});
+	}
 	
 }

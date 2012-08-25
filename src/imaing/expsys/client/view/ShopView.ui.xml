@@ -3,12 +3,14 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
 
 	<g:HTMLPanel>
-	  <g:TextBox ui:field="chrName" text="Name" width="200" />
-	  <g:IntegerBox ui:field="chrFCls" text="Number of fuzzy classes" width="200" />  
-	  <g:Button ui:field="btnAddChr" text="Add characteristic"/>
-	  
-	  <g:HTMLPanel ui:field="chrsPanel"/>
-	  <g:Button ui:field="btnDelChr" text="Delete characteristic"/>
+	  <p>
+		  <g:TextBox ui:field="chrName" text="Name" width="200" />
+		  <g:IntegerBox ui:field="chrFCls" text="Number of fuzzy classes" width="200" />  
+		  <g:Button ui:field="btnAddChr" text="Add characteristic"/>
+		  
+		  <g:HTMLPanel ui:field="chrsPanel"/>
+		  <g:Button ui:field="btnDelChr" text="Delete characteristic"/>
+	  </p>
 	  
 	  <p>
 	      <g:TextArea ui:field="newProdsJson" />
@@ -16,6 +18,10 @@
     
         <g:HTMLPanel ui:field="prodsPanel"/>
         <g:Button ui:field="btnDelProd" text="Delete product"/>
+	  </p>
+	  
+	  <p>
+	      <g:VerticalPanel ui:field="fclsPane" />
 	  </p>
 	  
 	</g:HTMLPanel>

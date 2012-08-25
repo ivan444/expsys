@@ -2,8 +2,12 @@ package imaing.expsys.server.model;
 
 import imaing.expsys.client.domain.FuzzyClass;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -20,6 +24,7 @@ import javax.persistence.UniqueConstraint;
 ))
 @NamedQueries({
     @NamedQuery(name="FuzzyClassEnt.listFClsForCharacteristic",query="select c from FuzzyClassEnt as c where c.chr=:chr"),
+    @NamedQuery(name="FuzzyClassEnt.listFClsForShop",query="select c from FuzzyClassEnt as c where c.chr.shop=:shop"),
     @NamedQuery(name="FuzzyClassEnt.getFClsForCharacteristicAndValue",query="select c from FuzzyClassEnt as c where c.chr=:chr and c.value=:value")
 })
 public class FuzzyClassEnt extends BaseEntity<FuzzyClass> {
@@ -33,7 +38,8 @@ public class FuzzyClassEnt extends BaseEntity<FuzzyClass> {
 	private String value;
 	
 	@Column(name="membershipval")
-	private double[] membershipVal;
+	@ElementCollection(fetch=FetchType.EAGER)
+	private List<Double> membershipVal = new ArrayList<Double>();
 	
 	public FuzzyClassEnt() {
 	}
@@ -48,8 +54,14 @@ public class FuzzyClassEnt extends BaseEntity<FuzzyClass> {
 		FuzzyClass fc = new FuzzyClass();
 		fc.setId(getId());
 		fc.setChr(getChr().getCleaned());
-		fc.setMembershipVal(getMembershipVal());
 		fc.setValue(getValue());
+		
+		List<Double> mvalEnt = getMembershipVal();
+		double[] mvalClean = new double[mvalEnt.size()];
+		for (int i = 0; i < mvalClean.length; i++) {
+			mvalClean[i] = mvalEnt.get(i).doubleValue();
+		}
+		fc.setMembershipVal(mvalClean);
 		return fc;
 	}
 
@@ -58,8 +70,12 @@ public class FuzzyClassEnt extends BaseEntity<FuzzyClass> {
 	public void fill(FuzzyClass g) {
 		setId(g.getId());
 		setChr(new CharacteristicEnt(g.getChr()));
-		setMembershipVal(g.getMembershipVal());
 		setValue(g.getValue());
+		
+		double[] mval = g.getMembershipVal();
+		for (int i = 0; i < mval.length; i++) {
+			getMembershipVal().add(Double.valueOf(mval[i]));
+		}
 	}
 
 	public CharacteristicEnt getChr() {
@@ -78,11 +94,11 @@ public class FuzzyClassEnt extends BaseEntity<FuzzyClass> {
 		this.value = value;
 	}
 
-	public double[] getMembershipVal() {
+	public List<Double> getMembershipVal() {
 		return membershipVal;
 	}
 
-	public void setMembershipVal(double[] membershipVal) {
+	public void setMembershipVal(List<Double> membershipVal) {
 		this.membershipVal = membershipVal;
 	}
 

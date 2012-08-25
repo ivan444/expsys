@@ -1,0 +1,10 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+
+	<g:HTMLPanel>
+	  Characteristic: <g:Label ui:field="chrName" text="" width="200" />
+	  <g:VerticalPanel ui:field="valuesPane" />
+	  <g:Button ui:field="btnSave" text="Save"/>
+	</g:HTMLPanel>
+</ui:UiBinder> 

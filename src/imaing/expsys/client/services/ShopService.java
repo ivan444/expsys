@@ -1,6 +1,7 @@
 package imaing.expsys.client.services;
 
 import imaing.expsys.client.domain.Characteristic;
+import imaing.expsys.client.domain.FuzzyClass;
 import imaing.expsys.client.domain.Product;
 import imaing.expsys.client.domain.Shop;
 import imaing.expsys.shared.exceptions.InvalidDataException;
@@ -24,4 +25,6 @@ public interface ShopService extends RemoteService {
 	List<Product> listProducts(Shop shop);
 	void deleteProduct(long prodId) throws InvalidDataException;
 	Product addProduct(Product p) throws InvalidDataException;
+	
+	List<FuzzyClass> listFuzzyClassesForShop(Shop shop);
 }

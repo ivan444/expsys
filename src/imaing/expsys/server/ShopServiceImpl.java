@@ -1,22 +1,27 @@
 package imaing.expsys.server;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.servlet.http.HttpSession;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
 import imaing.expsys.client.domain.Characteristic;
+import imaing.expsys.client.domain.FuzzyClass;
 import imaing.expsys.client.domain.ProdChr;
 import imaing.expsys.client.domain.Product;
 import imaing.expsys.client.domain.Shop;
 import imaing.expsys.client.services.ShopService;
 import imaing.expsys.server.model.CharacteristicDAO;
+import imaing.expsys.server.model.FuzzyClassDAO;
 import imaing.expsys.server.model.ProdChrDAO;
 import imaing.expsys.server.model.ProductDAO;
 import imaing.expsys.server.model.ShopDAO;
 import imaing.expsys.shared.exceptions.InvalidDataException;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class ShopServiceImpl implements ShopService, SessionAware {
 	
@@ -24,6 +29,7 @@ public class ShopServiceImpl implements ShopService, SessionAware {
 	@Autowired private ProductDAO prodDao;
 	@Autowired private ProdChrDAO prodChrDao;
 	@Autowired private CharacteristicDAO chrDao;
+	@Autowired private FuzzyClassDAO fclsDao;
 	
 	public ShopServiceImpl() {
 	}
@@ -56,7 +62,46 @@ public class ShopServiceImpl implements ShopService, SessionAware {
 		
 		savedProd.setCharacteristics(savedProdChars);
 		
+		createFuzzyClasses(savedProd.getShop(), savedProdChars);
+		
 		return savedProd;
+	}
+
+	/**
+	 * Create new (unique) fuzzy classes from new ProdChar objects.
+	 * 
+	 * @param savedProdChars New ProdChar objects that maybe don't have appropriate fuzzy classes.
+	 * @throws InvalidDataException If error during FuzzyClass object save occurs.
+	 */
+	private void createFuzzyClasses(Shop shop, List<ProdChr> savedProdChars) throws InvalidDataException {
+		final String MOSTLIKELY_UNIQ = "<$>";
+		List<FuzzyClass> existingFcls = fclsDao.listFClsForShop(shop);
+//		Map<Characteristic, List<FuzzyClass>> existingFclsByChr = new HashMap<Characteristic, List<FuzzyClass>>();
+		Set<String> existingFclsKeys = new HashSet<String>();
+		
+		for (FuzzyClass fc : existingFcls) {
+			existingFclsKeys.add(fc.getChr().getName()+MOSTLIKELY_UNIQ+fc.getValue()); // DANGEROUS: suppose that "<$>" won't collide...
+		}
+		
+		List<FuzzyClass> newFcls = new LinkedList<FuzzyClass>();
+		for (ProdChr pc : savedProdChars) {
+			String chr = pc.getChr().getName();
+			String val = pc.getValue();
+			String key = chr+MOSTLIKELY_UNIQ+val;
+			if (!existingFclsKeys.contains(key)) {
+				FuzzyClass fc = new FuzzyClass();
+				fc.setChr(pc.getChr());
+				fc.setMembershipVal(new double[pc.getChr().getfClsNum()]);
+				fc.setValue(val);
+				
+				newFcls.add(fc);
+				existingFclsKeys.add(key);
+			}
+		}
+		
+		for (FuzzyClass fc : newFcls) {
+			fclsDao.save(fc);
+		}
 	}
 
 	@Override
@@ -88,6 +133,12 @@ public class ShopServiceImpl implements ShopService, SessionAware {
 	@Override
 	public void deleteProduct(long prodId) throws InvalidDataException {
 		prodDao.delete(Long.valueOf(prodId));
+	}
+
+	@Override
+	public List<FuzzyClass> listFuzzyClassesForShop(Shop shop) {
+//		return fclsDao.listFClsForShop(shop);
+		return fclsDao.list();
 	}
 
 }

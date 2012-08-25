@@ -1,6 +1,7 @@
 package imaing.expsys.client.services;
 
 import imaing.expsys.client.domain.Characteristic;
+import imaing.expsys.client.domain.FuzzyClass;
 import imaing.expsys.client.domain.Product;
 import imaing.expsys.client.domain.Shop;
 import java.util.List;
@@ -20,4 +21,6 @@ public interface ShopServiceAsync {
 	void listProducts(Shop shop, AsyncCallback<List<Product>> callback);
 	void deleteProduct(long prodId, AsyncCallback<Void> callback);
 	void addProduct(Product p, AsyncCallback<Product> callback);
+	
+	void listFuzzyClassesForShop(Shop shop, AsyncCallback<List<FuzzyClass>> callback);
 }

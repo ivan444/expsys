@@ -200,5 +200,5 @@ public class DaoTest {
 		
 		Assert.assertTrue("Original and retrieved logical clauses are the same", areSame);
 	}
-
+	
 }

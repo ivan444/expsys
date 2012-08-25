@@ -2,6 +2,7 @@ package imaing.expsys.server.model;
 
 import imaing.expsys.client.domain.Characteristic;
 import imaing.expsys.client.domain.FuzzyClass;
+import imaing.expsys.client.domain.Shop;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -40,5 +41,19 @@ public class FuzzyClassDAOImpl extends GenericDAOImpl<FuzzyClassEnt, FuzzyClass>
 		
 		if (result == null) return null;
 		else return result.getCleaned();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<FuzzyClass> listFClsForShop(Shop shop) {
+		List<FuzzyClassEnt> ents = (List<FuzzyClassEnt>) em.createNamedQuery("FuzzyClassEnt.listFClsForShop")
+				 										   .setParameter("shop", new ShopEnt(shop)).getResultList();
+		List<FuzzyClass> flcClean = new LinkedList<FuzzyClass>();
+		if (ents != null) {
+			for (FuzzyClassEnt fc : ents) {
+				flcClean.add(fc.getCleaned());
+			}
+		}
+		return flcClean;
 	}
 }
