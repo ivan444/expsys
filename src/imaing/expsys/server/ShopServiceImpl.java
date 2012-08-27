@@ -2,14 +2,18 @@ package imaing.expsys.server;
 
 import imaing.expsys.client.domain.Characteristic;
 import imaing.expsys.client.domain.FuzzyClass;
+import imaing.expsys.client.domain.LogClause;
 import imaing.expsys.client.domain.ProdChr;
 import imaing.expsys.client.domain.Product;
+import imaing.expsys.client.domain.Rule;
 import imaing.expsys.client.domain.Shop;
 import imaing.expsys.client.services.ShopService;
 import imaing.expsys.server.model.CharacteristicDAO;
 import imaing.expsys.server.model.FuzzyClassDAO;
 import imaing.expsys.server.model.ProdChrDAO;
 import imaing.expsys.server.model.ProductDAO;
+import imaing.expsys.server.model.RuleDAO;
+import imaing.expsys.server.model.RuleEnt;
 import imaing.expsys.server.model.ShopDAO;
 import imaing.expsys.shared.exceptions.InvalidDataException;
 
@@ -30,6 +34,7 @@ public class ShopServiceImpl implements ShopService, SessionAware {
 	@Autowired private ProdChrDAO prodChrDao;
 	@Autowired private CharacteristicDAO chrDao;
 	@Autowired private FuzzyClassDAO fclsDao;
+	@Autowired private RuleDAO ruleDao;
 	
 	public ShopServiceImpl() {
 	}
@@ -139,6 +144,33 @@ public class ShopServiceImpl implements ShopService, SessionAware {
 	public List<FuzzyClass> listFuzzyClassesForShop(Shop shop) {
 //		return fclsDao.listFClsForShop(shop);
 		return fclsDao.list();
+	}
+
+	@Override
+	public void updateFuzzyClasses(List<FuzzyClass> fcls) throws InvalidDataException {
+		for (FuzzyClass fc : fcls) {
+			if (fc.getId() == null) throw new InvalidDataException("Some FuzzyClasses doesn't have ID set!");
+		}
+		
+		for (FuzzyClass fc : fcls) {
+			fclsDao.save(fc);
+		}
+		
+	}
+
+	@Override
+	public List<Rule> listRulesForShop(Shop shop) {
+		return ruleDao.listRulesForShop(shop);
+	}
+
+	@Override
+	public Rule saveRule(Rule rule) throws InvalidDataException {
+		return ruleDao.save(rule);
+	}
+
+	@Override
+	public void deleteRule(Rule rule) throws InvalidDataException {
+		ruleDao.delete(new RuleEnt(rule));
 	}
 
 }

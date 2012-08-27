@@ -163,10 +163,12 @@ public class DaoTest {
 		List<LogClause> logClauses = ruleDao.listLogClausesForRule(savedRule);
 		savedRule.buildClausesTree(logClauses);
 		
+		Assert.assertNotNull("savedRule should have non-null log clause", savedRule.getLogClause());
+		
 		boolean areSame = true;
 		try {
 			AndClause orgAnd = (AndClause) logClause;
-			AndClause savedAnd = (AndClause) rule.getLogClause();
+			AndClause savedAnd = (AndClause) savedRule.getLogClause();
 				OrClause orgOr = (OrClause) orgAnd.getLeftClause();
 				OrClause savedOr = (OrClause) savedAnd.getLeftClause();
 					int orgOrLitIdx = ((Literal)orgOr.getLeftClause()).getFuzzyClsIdx().intValue();

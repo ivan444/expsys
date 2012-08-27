@@ -39,4 +39,9 @@ public class AndClause extends LogClause implements LogClause.HasLeft, LogClause
 		return rightClause.determineNSetVals(val);
 	}
 
+	@Override
+	public String toString() {
+		return "AND( " + leftClause + ", "+ rightClause + " )";
+	}
+
 }

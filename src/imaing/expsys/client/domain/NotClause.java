@@ -28,5 +28,10 @@ public class NotClause extends LogClause implements LogClause.HasLeft {
 	public void setLeftClause(LogClause leftClause) {
 		this.leftClause = leftClause;
 	}
+	
+	@Override
+	public String toString() {
+		return "NOT( " + leftClause + " )";
+	}
 
 }

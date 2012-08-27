@@ -3,8 +3,9 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
 
 	<g:HTMLPanel>
-	  Characteristic: <g:Label ui:field="chrName" width="200" />
-	  <g:VerticalPanel ui:field="valuesPane" />
+	  <g:HTMLPanel ui:field="descPane" />
+	  <g:HTMLPanel ui:field="rulePane" />
 	  <g:Button ui:field="btnSave" text="Save"/>
+	  <g:Button ui:field="btnDelete" text="Delete"/>
 	</g:HTMLPanel>
 </ui:UiBinder> 

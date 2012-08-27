@@ -20,7 +20,6 @@ public class FuzzyClsTxtBox extends Composite {
 	interface FuzzyClsTxtBoxUiBinder extends UiBinder<Widget, FuzzyClsTxtBox> {
 	}
 	
-	
 	@UiField(provided=true)
 	Label value;
 	
@@ -43,6 +42,7 @@ public class FuzzyClsTxtBox extends Composite {
 		for (int i = 0; i < fcls.getMembershipVal().length; i++) {
 			DoubleBox box = new DoubleBox();
 			box.addChangeHandler(instanceMValChangeHandl(i));
+			box.setValue(fcls.getMembershipVal()[i], true);
 			valuesPane.add(box);
 		}
 	}

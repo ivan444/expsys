@@ -38,4 +38,9 @@ public class Literal extends LogClause {
 	protected int goRight(int val) {
 		return val;
 	}
+	
+	@Override
+	public String toString() {
+		return chr.getName() + " is " + fuzzyClsIdx.intValue();
+	}
 }

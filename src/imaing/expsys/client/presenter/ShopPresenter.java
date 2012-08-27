@@ -4,6 +4,7 @@ package imaing.expsys.client.presenter;
 import imaing.expsys.client.domain.Characteristic;
 import imaing.expsys.client.domain.FuzzyClass;
 import imaing.expsys.client.domain.Product;
+import imaing.expsys.client.domain.Rule;
 import imaing.expsys.client.domain.Shop;
 import imaing.expsys.client.services.ShopServiceAsync;
 import imaing.expsys.client.view.BasicDisplay;
@@ -44,12 +45,27 @@ public class ShopPresenter implements Presenter {
 		void listCharacteristics(List<Characteristic> chrs);
 		
 		void listFuzzyClasses(List<FuzzyClass> fcls);
+		void setFuzzyClassUpdateHandler(FuzzyClassUpdateHandler handl);
+		
+		void setRuleManager(RuleManager man);
+		void listRules(List<Rule> rules);
 		
 		HasClickHandlers getAddProducts();
 		String getNewProductsJSON();
 		HasClickHandlers getDeleteProduct();
 		long getSelectedProductId();
 		void listProducts(List<Product> prods);
+		
+		void reportSuccess(String string);
+	}
+	
+	public interface FuzzyClassUpdateHandler {
+		void doUpdate(List<FuzzyClass> fcls);
+	}
+	
+	public interface RuleManager {
+		void doDelete(Rule rule);
+		void doSave(Rule rule);
 	}
 	
 	public ShopPresenter(ShopServiceAsync rpcService, EventBus eventBus, Display view, Shop shop){
@@ -75,6 +91,54 @@ public class ShopPresenter implements Presenter {
 		listCharacteristics();
 		listProducts();
 		listFuzzyClasses();
+		listRules();
+		
+		display.setFuzzyClassUpdateHandler(new FuzzyClassUpdateHandler() {
+			@Override
+			public void doUpdate(List<FuzzyClass> fcls) {
+				updateFuzzyClasses(fcls);
+			}
+		});
+		
+		display.setRuleManager(new RuleManager() {
+			@Override
+			public void doSave(Rule rule) {
+				saveRule(rule);
+			}
+			
+			@Override
+			public void doDelete(Rule rule) {
+				deleteRule(rule);
+			}
+		});
+	}
+
+	protected void deleteRule(Rule rule) {
+		shopSrv.deleteRule(rule, new AsyncCallback<Void>() {
+			@Override
+			public void onSuccess(Void result) {
+				display.reportSuccess("Rule deleted");
+			}
+			
+			@Override
+			public void onFailure(Throwable caught) {
+				display.reportError("Failed to delete rule");
+			}
+		});
+	}
+
+	protected void saveRule(Rule rule) {
+		shopSrv.saveRule(rule, new AsyncCallback<Rule>() {
+			@Override
+			public void onSuccess(Rule result) {
+				display.reportSuccess("Rule saved");
+			}
+			
+			@Override
+			public void onFailure(Throwable caught) {
+				display.reportError("Failed to save rule");
+			}
+		});
 	}
 
 	private void bind() {
@@ -140,6 +204,21 @@ public class ShopPresenter implements Presenter {
 				Window.alert("Failed to delete product");
 			}
 		});
+	}
+	
+	protected void updateFuzzyClasses(List<FuzzyClass> fcls) {
+		shopSrv.updateFuzzyClasses(fcls, new AsyncCallback<Void>() {
+			@Override
+			public void onSuccess(Void result) {
+				display.reportSuccess("Fuzzy classes updated!");
+			}
+			
+			@Override
+			public void onFailure(Throwable caught) {
+				display.reportError("Failed to update fuzzy classes");
+			}
+		});
+		
 	}
 
 	protected void addProducts(String prodsJson) {
@@ -229,6 +308,22 @@ public class ShopPresenter implements Presenter {
 				Window.alert("Failed to add characteristic");
 			}
 		});
+	}
+	
+
+	private void listRules() {
+		shopSrv.listRulesForShop(shop, new AsyncCallback<List<Rule>>() {
+			@Override
+			public void onSuccess(List<Rule> result) {
+				display.listRules(result);
+			}
+			
+			@Override
+			public void onFailure(Throwable caught) {
+				display.reportError("Failed to load rules");
+			}
+		});
+		
 	}
 	
 	private void listCharacteristics() {

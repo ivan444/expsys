@@ -4,8 +4,15 @@ import imaing.expsys.client.domain.Characteristic;
 import imaing.expsys.client.domain.FuzzyClass;
 import imaing.expsys.client.domain.ProdChr;
 import imaing.expsys.client.domain.Product;
+import imaing.expsys.client.domain.Rule;
+import imaing.expsys.client.domain.Shop;
 import imaing.expsys.client.presenter.ShopPresenter;
+import imaing.expsys.client.presenter.ShopPresenter.FuzzyClassUpdateHandler;
+import imaing.expsys.client.presenter.ShopPresenter.RuleManager;
 import imaing.expsys.client.view.widgets.FuzzyClassesWidget;
+import imaing.expsys.client.view.widgets.FuzzyClassesWidget.SaveHandler;
+import imaing.expsys.client.view.widgets.RuleWidget;
+import imaing.expsys.client.view.widgets.RuleWidget.WidgetRuleManager;
 
 import java.text.ParseException;
 import java.util.HashMap;
@@ -14,9 +21,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
 import com.google.gwt.user.cellview.client.TextColumn;
@@ -69,14 +78,25 @@ public class ShopView extends Composite implements ShopPresenter.Display {
 	@UiField
 	VerticalPanel fclsPane;
 	
+	@UiField
+	VerticalPanel rulesPane;
+	
+	@UiField
+	Button btnNewRule;
+	
 	private CellTable<Characteristic> chrsTable;
 	private CellTable<Product> prodsTable;
 	
 	private Characteristic selectedChr = null;
 	private Product selectedProd = null;
+	private FuzzyClassUpdateHandler fclsUpdateHandl;
+	private RuleManager ruleManager;
+	private final Shop shop;
+	private List<Characteristic> chrs;
 	
-	public ShopView() {
+	public ShopView(Shop shop) {
 		initWidget(uiBinder.createAndBindUi(this));
+		this.shop = shop;
 		init();
 	}
 
@@ -179,6 +199,8 @@ public class ShopView extends Composite implements ShopPresenter.Display {
 	
 	@Override
 	public void listCharacteristics(List<Characteristic> chrs) {
+		this.chrs = chrs;
+		
 		chrsTable.setRowCount(chrs.size(), true);
 		chrsTable.setRowData(0, chrs);
 		chrsTable.redraw();
@@ -271,9 +293,55 @@ public class ShopView extends Composite implements ShopPresenter.Display {
 		}
 		
 		for (Characteristic c : fclsByChr.keySet()) {
-			this.fclsPane.add(new FuzzyClassesWidget(c, fclsByChr.get(c)));
+			FuzzyClassesWidget fcWdgt = new FuzzyClassesWidget(c, fclsByChr.get(c));
+			fcWdgt.setSaveHandl(new SaveHandler() {
+				@Override
+				public void doSave(List<FuzzyClass> fcls) {
+					fclsUpdateHandl.doUpdate(fcls);
+				}
+			});
+			this.fclsPane.add(fcWdgt);
 		}
 		
+	}
+
+	@Override
+	public void setFuzzyClassUpdateHandler(FuzzyClassUpdateHandler handl) {
+		this.fclsUpdateHandl = handl;
+	}
+
+	@Override
+	public void reportSuccess(String string) {
+	}
+
+	@Override
+	public void setRuleManager(RuleManager man) {
+		this.ruleManager = man;
+	}
+
+	@Override
+	public void listRules(List<Rule> rules) {
+		for (Rule r : rules) {
+			RuleWidget rWdgt = new RuleWidget(r);
+			rWdgt.setwRuleMan(new WidgetRuleManager() {
+				@Override
+				public void saveRule(Rule r) {
+					ruleManager.doSave(r);
+				}
+				
+				@Override
+				public void deleteRule(Rule r) {
+					ruleManager.doDelete(r);
+				}
+			});
+			
+			this.rulesPane.add(rWdgt);
+		}
+	}
+	
+	@UiHandler("btnNewRule")
+	void handleNewRuleClick(ClickEvent e) {
+		this.rulesPane.add(new RuleWidget(shop, chrs));
 	}
 
 }

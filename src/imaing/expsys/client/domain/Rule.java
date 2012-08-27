@@ -150,5 +150,10 @@ public class Rule extends DTOObject {
 		
 		return curIdx;
 	}
+	
+	@Override
+	public String toString() {
+		return logClause + " => " + rel;
+	}
 
 }

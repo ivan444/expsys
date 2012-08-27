@@ -24,5 +24,10 @@
 	      <g:VerticalPanel ui:field="fclsPane" />
 	  </p>
 	  
+	  <p>
+	      <g:VerticalPanel ui:field="rulesPane" />
+	      <g:Button ui:field="btnNewRule" text="New rule" />
+	  </p>
+	  
 	</g:HTMLPanel>
 </ui:UiBinder> 

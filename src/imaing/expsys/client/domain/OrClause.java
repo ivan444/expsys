@@ -38,5 +38,10 @@ public class OrClause extends LogClause implements LogClause.HasLeft, LogClause.
 	public void setRightClause(LogClause rightClause) {
 		this.rightClause = rightClause;
 	}
+	
+	@Override
+	public String toString() {
+		return "OR( " + leftClause + ", "+ rightClause + " )";
+	}
 
 }
