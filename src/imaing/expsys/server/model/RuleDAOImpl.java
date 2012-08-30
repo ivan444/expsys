@@ -68,4 +68,34 @@ public class RuleDAOImpl extends GenericDAOImpl<RuleEnt, Rule> implements RuleDA
 		em.remove(ent);
 	}
 	
+	@Override
+	@Transactional(readOnly=false)
+	public Rule save(Rule gRule) throws InvalidDataException {
+		if (gRule == null) throw new InvalidDataException("Trying to save null object!");
+		RuleEnt ent = new RuleEnt();
+		
+		gRule.determineNSetVals();
+		
+		ent.fill(gRule);
+		
+		try {
+			ent = em.merge(ent);
+		} catch (Exception e) {
+			throw new InvalidDataException(e);
+		}
+		
+		Rule savedRule = ent.getCleaned();
+		LogClause rootClause = gRule.getLogClause();
+		for (LogClause lc : rootClause) {
+			lc.setRule(savedRule);
+		}
+
+		// very ugly :(
+		em.merge(LogClauseEnt.instanceEntity(rootClause));
+		
+		List<LogClause> clauses = listLogClausesForRule(savedRule);
+		savedRule.buildClausesTree(clauses);
+		return savedRule;
+	}
+	
 }

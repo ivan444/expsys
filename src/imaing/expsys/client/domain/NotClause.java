@@ -13,8 +13,9 @@ public class NotClause extends LogClause implements LogClause.HasLeft {
 
 	@Override
 	protected int goRight(int val) {
-		setNsRight(Integer.valueOf(val+1));
-		return getNsRight().intValue();
+//		setNsRight(Integer.valueOf(val+1));
+//		return getNsRight().intValue();
+		return val;
 	}
 	
 	public NotClause(LogClause leftClause) {

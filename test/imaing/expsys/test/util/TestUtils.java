@@ -1,5 +1,7 @@
 package imaing.expsys.test.util;
 
+import imaing.expsys.client.domain.Shop;
+
 import java.util.Random;
 
 public class TestUtils {
@@ -26,5 +28,13 @@ public class TestUtils {
 	
 	public static String generateRandStr(String prefix, int length) {
 		return prefix + generateRandStr(length);
+	}
+	
+	public static Shop newShop() {
+		Shop shp = new Shop();
+		shp.setEmail(TestUtils.generateRandEmail());
+		shp.setPassword(TestUtils.generateRandStr(10));
+		shp.setShopName(TestUtils.generateRandStr("shop_", 4));
+		return shp;
 	}
 }

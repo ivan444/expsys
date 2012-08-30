@@ -58,14 +58,6 @@ public class DaoTest {
 	@Autowired private CharacteristicDAO chrDao;
 	@Autowired private RuleDAO ruleDao;
 	
-	private Shop newShop() {
-		Shop shp = new Shop();
-		shp.setEmail(TestUtils.generateRandEmail());
-		shp.setPassword(TestUtils.generateRandStr(10));
-		shp.setShopName(TestUtils.generateRandStr("shop_", 4));
-		return shp;
-	}
-	
 	private Product newProduct() {
 		Product p = new Product();
 		p.setDescription(TestUtils.generateRandStr(10));
@@ -76,7 +68,7 @@ public class DaoTest {
 	
 	@Test
 	public void shouldCreateNewShop() throws InvalidDataException {
-		Shop ns = newShop();
+		Shop ns = TestUtils.newShop();
 		
 		shopDao.save(ns);
 		List<Shop> shops = shopDao.list();
@@ -88,7 +80,7 @@ public class DaoTest {
 	@Test
 	public void shouldCreateTenNewShops() throws InvalidDataException {
 		for (int i = 0; i < 10; i++) {
-			shopDao.save(newShop());
+			shopDao.save(TestUtils.newShop());
 		}
 		List<Shop> shops = shopDao.list();
 		
@@ -97,8 +89,8 @@ public class DaoTest {
 	
 	@Test(expected=InvalidDataException.class)
 	public void shouldNotCreateTwoShopsWithSameEmail() throws InvalidDataException {
-		Shop ns1 = newShop();
-		Shop ns2 = newShop();
+		Shop ns1 = TestUtils.newShop();
+		Shop ns2 = TestUtils.newShop();
 		
 		ns2.setEmail(ns1.getEmail());
 		
@@ -110,7 +102,7 @@ public class DaoTest {
 	
 	@Test
 	public void shouldCreateNewShopWithTenProducts() throws InvalidDataException {
-		Shop ns = newShop();
+		Shop ns = TestUtils.newShop();
 		
 		shopDao.save(ns);
 		Shop savedNs = shopDao.getShopForEmail(ns.getEmail());
@@ -129,7 +121,7 @@ public class DaoTest {
 	
 	@Test
 	public void shouldCreateRuleWithAllTypesOfClauesAndRetrieveIt() throws InvalidDataException {
-		Shop shop = newShop();
+		Shop shop = TestUtils.newShop();
 		shop = shopDao.save(shop);
 
 		Characteristic chr1 = new Characteristic();

@@ -1,6 +1,11 @@
 package imaing.expsys.server.model;
 
+import imaing.expsys.client.domain.AndClause;
 import imaing.expsys.client.domain.DTOObject;
+import imaing.expsys.client.domain.Literal;
+import imaing.expsys.client.domain.LogClause;
+import imaing.expsys.client.domain.NotClause;
+import imaing.expsys.client.domain.OrClause;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -41,6 +46,29 @@ public abstract class LogClauseEnt<L extends DTOObject> extends BaseEntity<L> {
 	
 	public LogClauseEnt(L g) {
 		super(g);
+	}
+	
+	/**
+	 * A very ugly piece of code...
+	 * 
+	 * Instances and fills concrete clause entity (AndClauseEnt, LiteralEnt, etc.)
+	 * based on provided DTO object.
+	 * 
+	 * @param dto DTO object for which we want to instance an entity.
+	 * @return Filled clause entity.
+	 */
+	public static <L extends LogClause> LogClauseEnt<?> instanceEntity(L dto) {
+		if (dto instanceof Literal) {
+			return new LiteralEnt((Literal)dto);
+		} else if (dto instanceof AndClause) {
+			return new AndClauseEnt((AndClause)dto);
+		} else if (dto instanceof OrClause) {
+			return new OrClauseEnt((OrClause)dto);
+		} else if (dto instanceof NotClause) {
+			return new NotClauseEnt((NotClause)dto);
+		} else {
+			throw new IllegalStateException("Unknown type! This is a bug!");
+		}
 	}
 
 	public RuleEnt getRule() {

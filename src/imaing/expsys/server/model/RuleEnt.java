@@ -22,8 +22,8 @@ import javax.persistence.UniqueConstraint;
  *
  */
 @Entity
-@Table(name="rule",uniqueConstraints=@UniqueConstraint(
-		columnNames={"rel", "shop_id", "desc"}
+@Table(name="fuzzy_rule",uniqueConstraints=@UniqueConstraint(
+		columnNames={"rel", "shop_id", "description"}
 ))
 @NamedQueries({
     @NamedQuery(name="RuleEnt.listRulesForShop",query="select e from RuleEnt as e where e.shop=:shop"),
@@ -40,7 +40,7 @@ public class RuleEnt extends BaseEntity<Rule> {
     @JoinColumn(name="shop_id", nullable=false, updatable=false)
 	private ShopEnt shop;
 	
-	@Column(name="desc", nullable=false)
+	@Column(name="description", nullable=false)
 	private String desc;
 	
 	@Column(name="ns_root")

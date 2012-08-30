@@ -47,8 +47,7 @@ public class NotClauseEnt extends LogClauseEnt<NotClause> {
 		setNsLeft(g.getNsLeft());
 		setNsRight(g.getNsRight());
 		setRule(new RuleEnt(g.getRule()));
-//		setLeftClause(leftClause)
-		throw new IllegalStateException("Don't know how to cast leftClause, type is ambiguous"); //FIXME: make the exception disappear
+		setLeftClause(LogClauseEnt.instanceEntity(g.getLeftClause()));
 	}
 
 	public LogClauseEnt<?> getLeftClause() {

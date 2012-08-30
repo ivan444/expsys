@@ -9,7 +9,6 @@ import imaing.expsys.client.services.ShopService;
 import imaing.expsys.shared.exceptions.InvalidDataException;
 import imaing.expsys.test.util.TestUtils;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Assert;
@@ -48,17 +47,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class ServiceTest {
 	@Autowired private ShopService shopSrv;
 	
-	private Shop newShop() {
-		Shop shp = new Shop();
-		shp.setEmail(TestUtils.generateRandEmail());
-		shp.setPassword(TestUtils.generateRandStr(10));
-		shp.setShopName(TestUtils.generateRandStr("shop_", 4));
-		return shp;
-	}
-	
 	@Test
 	public void shouldSaveProductsAndBuildFuzzyClasses() throws InvalidDataException {
-		Shop shop = newShop();
+		Shop shop = TestUtils.newShop();
 		shop = shopSrv.saveShop(shop);
 		
 		Characteristic proc = new Characteristic();
