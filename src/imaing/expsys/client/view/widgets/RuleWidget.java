@@ -19,6 +19,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -88,6 +89,7 @@ public class RuleWidget extends Composite {
 		this.clauseBuilder = new ClauseWidget(this);
 		
 		final ListBox relLst = new ListBox();
+		relLst.addItem("Priority");
 		relLst.addItem(REL_HIGH);
 		relLst.addItem(REL_MID);
 		relLst.addItem(REL_LOW);
@@ -106,6 +108,7 @@ public class RuleWidget extends Composite {
 		
 		ruleParts.add(clauseBuilder);
 		ruleParts.add(new Label(", Priority: "));
+		ruleParts.add(relLst);
 		
 		this.rulePane.add(ruleParts);
 	}
@@ -133,8 +136,12 @@ public class RuleWidget extends Composite {
 	@UiHandler("btnDelete")
 	void handleDelClick(ClickEvent e) {
 		if (wRuleMan != null) {
-			wRuleMan.deleteRule(rule);
+			if (rule.getId() != null) {
+				wRuleMan.deleteRule(rule);
+			}
 			this.removeFromParent();
+		} else {
+			GWT.log("WidgetRuleManager is not set!");
 		}
 	}
 	
@@ -146,6 +153,8 @@ public class RuleWidget extends Composite {
 			this.rulePane.clear();
 			this.btnSave.setVisible(false);
 			showRule(rule);
+		} else {
+			GWT.log("WidgetRuleManager is not set!");
 		}
 	}
 	
@@ -168,6 +177,7 @@ public class RuleWidget extends Composite {
 		
 		protected void init() {
 			final ListBox clauses = new ListBox();
+			clauses.addItem("Operator");
 			clauses.addItem(AND);
 			clauses.addItem(OR);
 			clauses.addItem(NOT);
@@ -187,18 +197,20 @@ public class RuleWidget extends Composite {
 					}
 				}
 			});
+			
+			me.add(clauses);
 		}
 		
 		protected ClauseWidget buildClauseInstanceWidget(String oper) {
 			if (AND.equals(oper)) {
 				return new ClauseWidget(topWidget) {
-					protected ClauseWidget secondChild = null;
+					private ClauseWidget secondChild;
 					
 					protected void init() {
 						HorizontalPanel clausePane = new HorizontalPanel();
 						
-						this.firstChild = new ClauseWidget(topWidget);
-						this.secondChild = new ClauseWidget(topWidget);
+						firstChild = new ClauseWidget(topWidget);
+						secondChild = new ClauseWidget(topWidget);
 						
 						clausePane.add(new Label("AND( "));
 						clausePane.add(firstChild);
@@ -221,13 +233,13 @@ public class RuleWidget extends Composite {
 				
 			} else if (OR.equals(oper)) {
 				return new ClauseWidget(topWidget) {
-					protected ClauseWidget secondChild = null;
+					private ClauseWidget secondChild;
 					
 					protected void init() {
 						HorizontalPanel clausePane = new HorizontalPanel();
 						
-						this.firstChild = new ClauseWidget(topWidget);
-						this.secondChild = new ClauseWidget(topWidget);
+						firstChild = new ClauseWidget(topWidget);
+						secondChild = new ClauseWidget(topWidget);
 						
 						clausePane.add(new Label("OR( "));
 						clausePane.add(firstChild);
@@ -239,8 +251,14 @@ public class RuleWidget extends Composite {
 					}
 					
 					public boolean isComplete() {
-						return firstChild != null && secondChild != null
+						boolean ret= firstChild != null && secondChild != null
 								&& firstChild.isComplete() && secondChild.isComplete();
+						Window.alert("OR is " + ret
+								+ "\n" + (firstChild != null)
+								+ "\n" + (secondChild != null)
+								+ "\n" + (firstChild == null ? false : firstChild.isComplete())
+								+ "\n" + (secondChild == null ? false : secondChild.isComplete()));
+						return ret;
 					}
 					
 					public LogClause buildLogClause() {
@@ -254,13 +272,17 @@ public class RuleWidget extends Composite {
 					protected void init() {
 						HorizontalPanel clausePane = new HorizontalPanel();
 						
-						this.firstChild = new ClauseWidget(topWidget);
+						firstChild = new ClauseWidget(topWidget);
 						
 						clausePane.add(new Label("NOT( "));
 						clausePane.add(firstChild);
 						clausePane.add(new Label(" )"));
 						
 						add(clausePane);
+					}
+					
+					public boolean isComplete() {
+						return firstChild != null && firstChild.isComplete();
 					}
 					
 					public LogClause buildLogClause() {
@@ -276,8 +298,8 @@ public class RuleWidget extends Composite {
 					
 					protected void init() {
 						clausePane = new HorizontalPanel();
-						
 						final ListBox chrList = new ListBox();
+						chrList.addItem("Characteristic");
 						for (int i = 0; i < characteristics.size(); i++) {
 							chrList.addItem(characteristics.get(i).getName(), String.valueOf(i));
 						}
@@ -295,6 +317,7 @@ public class RuleWidget extends Composite {
 								clausePane.add(new Label(" = "));
 								
 								final ListBox fclsList = new ListBox();
+								fclsList.addItem("Class");
 								for (int i = 0; i < chr.getfClsNum(); i++) {
 									fclsList.addItem(String.valueOf(i));
 								}
@@ -355,6 +378,7 @@ public class RuleWidget extends Composite {
 	
 	private void buildRuleLogClause() {
 		rule.setLogClause(clauseBuilder.buildLogClause());
+		Window.alert("Log clause is built! " + rule.getLogClause());
 		clauseBuilder = null;
 	}
 	

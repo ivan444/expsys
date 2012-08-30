@@ -81,11 +81,10 @@ public class ShopServiceImpl implements ShopService, SessionAware {
 	private void createFuzzyClasses(Shop shop, List<ProdChr> savedProdChars) throws InvalidDataException {
 		final String MOSTLIKELY_UNIQ = "<$>";
 		List<FuzzyClass> existingFcls = fclsDao.listFClsForShop(shop);
-//		Map<Characteristic, List<FuzzyClass>> existingFclsByChr = new HashMap<Characteristic, List<FuzzyClass>>();
 		Set<String> existingFclsKeys = new HashSet<String>();
 		
 		for (FuzzyClass fc : existingFcls) {
-			existingFclsKeys.add(fc.getChr().getName()+MOSTLIKELY_UNIQ+fc.getValue()); // DANGEROUS: suppose that "<$>" won't collide...
+			existingFclsKeys.add(fc.getChr().getName()+MOSTLIKELY_UNIQ+fc.getValue()); // DANGEROUS: assumes that "<$>" won't collide...
 		}
 		
 		List<FuzzyClass> newFcls = new LinkedList<FuzzyClass>();
@@ -142,8 +141,7 @@ public class ShopServiceImpl implements ShopService, SessionAware {
 
 	@Override
 	public List<FuzzyClass> listFuzzyClassesForShop(Shop shop) {
-//		return fclsDao.listFClsForShop(shop);
-		return fclsDao.list();
+		return fclsDao.listFClsForShop(shop);
 	}
 
 	@Override

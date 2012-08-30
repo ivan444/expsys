@@ -27,6 +27,12 @@ public class RuleDAOImpl extends GenericDAOImpl<RuleEnt, Rule> implements RuleDA
 				dtos.add(e.getCleaned());
 			}
 		}
+		
+		for (Rule r : dtos) {
+			List<LogClause> clauses = listLogClausesForRule(r);
+			r.buildClausesTree(clauses);
+		}
+		
 		return dtos;
 	}
 

@@ -341,7 +341,29 @@ public class ShopView extends Composite implements ShopPresenter.Display {
 	
 	@UiHandler("btnNewRule")
 	void handleNewRuleClick(ClickEvent e) {
-		this.rulesPane.add(new RuleWidget(shop, chrs));
+		RuleWidget freshRWdgt = new RuleWidget(shop, chrs);
+		freshRWdgt.setwRuleMan(new WidgetRuleManager() {
+			
+			@Override
+			public void saveRule(Rule r) {
+				if (ruleManager != null) {
+					ruleManager.doSave(r);
+				} else {
+					GWT.log("ruleManager is not set!");
+				}
+			}
+			
+			@Override
+			public void deleteRule(Rule r) {
+				if (ruleManager != null) {
+					ruleManager.doDelete(r);
+				} else {
+					GWT.log("ruleManager is not set!");
+				}
+			}
+		});
+		
+		this.rulesPane.add(freshRWdgt);
 	}
 
 }
