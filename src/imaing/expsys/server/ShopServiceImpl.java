@@ -168,7 +168,7 @@ public class ShopServiceImpl implements ShopService, SessionAware {
 
 	@Override
 	public void deleteRule(Rule rule) throws InvalidDataException {
-		ruleDao.delete(new RuleEnt(rule));
+		ruleDao.delete(rule);
 	}
 
 }

@@ -8,6 +8,8 @@ import imaing.expsys.shared.exceptions.InvalidDataException;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.persistence.NoResultException;
+
 import org.springframework.transaction.annotation.Transactional;
 
 public class RuleDAOImpl extends GenericDAOImpl<RuleEnt, Rule> implements RuleDAO {
@@ -53,18 +55,13 @@ public class RuleDAOImpl extends GenericDAOImpl<RuleEnt, Rule> implements RuleDA
 	
 	@Override
 	@Transactional(readOnly=false)
-	public void delete(RuleEnt ent) throws InvalidDataException {
-		if (ent == null) throw new InvalidDataException("Trying to delete null object!");
+	public void delete(Rule dto) throws InvalidDataException {
+		if (dto == null) throw new InvalidDataException("Trying to delete null object!");
+		else if (dto.getId() == null) throw new InvalidDataException("Trying to delete unsaved object!");
 		
-		// TODO: get this by db query!
-		List<LogClause> clauses = listLogClausesForRule(ent.getCleaned());
-		LogClause rootLc = null;
-		for (LogClause lc : clauses) {
-			if (lc.getNsLeft().intValue() == 1) {
-				rootLc = lc;
-				break;
-			}
-		}
+		RuleEnt ent = em.find(RuleEnt.class, dto.getId());
+		
+		LogClause rootLc = getRootLogClauseForRule(dto);
 		
 		if (rootLc != null) {
 			LogClauseEnt<?> lce = em.find(LogClauseEnt.class, rootLc.getId());
@@ -102,6 +99,21 @@ public class RuleDAOImpl extends GenericDAOImpl<RuleEnt, Rule> implements RuleDA
 		List<LogClause> clauses = listLogClausesForRule(savedRule);
 		savedRule.buildClausesTree(clauses);
 		return savedRule;
+	}
+
+	@Override
+	public LogClause getRootLogClauseForRule(Rule rule) {
+		LogClauseEnt<?> result = null;
+		try {
+			result = (LogClauseEnt<?>) em.createNamedQuery("RuleEnt.getRootLogClauseForRule")
+												.setParameter("rule", new RuleEnt(rule))
+												.getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+		
+		if (result == null) return null;
+		else return (LogClause)result.getCleaned();
 	}
 	
 }

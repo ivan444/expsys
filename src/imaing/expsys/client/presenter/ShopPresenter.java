@@ -65,7 +65,11 @@ public class ShopPresenter implements Presenter {
 	
 	public interface RuleManager {
 		void doDelete(Rule rule);
-		void doSave(Rule rule);
+		void doSave(Rule rule, RuleUpdater ru);
+	}
+	
+	public interface RuleUpdater {
+		void updateRule(Rule r);
 	}
 	
 	public ShopPresenter(ShopServiceAsync rpcService, EventBus eventBus, Display view, Shop shop){
@@ -102,8 +106,8 @@ public class ShopPresenter implements Presenter {
 		
 		display.setRuleManager(new RuleManager() {
 			@Override
-			public void doSave(Rule rule) {
-				saveRule(rule);
+			public void doSave(Rule rule, RuleUpdater ru) {
+				saveRule(rule, ru);
 			}
 			
 			@Override
@@ -127,11 +131,12 @@ public class ShopPresenter implements Presenter {
 		});
 	}
 
-	protected void saveRule(Rule rule) {
+	protected void saveRule(Rule rule, final RuleUpdater ru) {
 		shopSrv.saveRule(rule, new AsyncCallback<Rule>() {
 			@Override
 			public void onSuccess(Rule result) {
 				display.reportSuccess("Rule saved");
+				ru.updateRule(result);
 			}
 			
 			@Override

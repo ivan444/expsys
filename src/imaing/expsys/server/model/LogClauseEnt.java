@@ -1,7 +1,6 @@
 package imaing.expsys.server.model;
 
 import imaing.expsys.client.domain.AndClause;
-import imaing.expsys.client.domain.DTOObject;
 import imaing.expsys.client.domain.Literal;
 import imaing.expsys.client.domain.LogClause;
 import imaing.expsys.client.domain.NotClause;
@@ -28,7 +27,7 @@ import javax.persistence.UniqueConstraint;
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name="TYPE", discriminatorType=DiscriminatorType.STRING,length=10)
 @DiscriminatorValue("LOG")
-public abstract class LogClauseEnt<L extends DTOObject> extends BaseEntity<L> {
+public abstract class LogClauseEnt<L extends LogClause> extends BaseEntity<L> {
     private static final long serialVersionUID = 1L;
     
     @ManyToOne(fetch=FetchType.EAGER, cascade = CascadeType.REFRESH)

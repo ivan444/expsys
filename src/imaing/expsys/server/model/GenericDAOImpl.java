@@ -115,6 +115,10 @@ public class GenericDAOImpl<E extends BaseEntity<G>, G extends DTOObject>
 	public void delete(E ent) throws InvalidDataException {
 		if (ent == null) throw new InvalidDataException("Trying to delete null object!");
 		
+		if (!em.contains(ent)) {
+			delete(ent.getId());
+		}
+		
 		em.remove(ent);
 	}
 	

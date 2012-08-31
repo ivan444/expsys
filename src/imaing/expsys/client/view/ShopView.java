@@ -9,6 +9,7 @@ import imaing.expsys.client.domain.Shop;
 import imaing.expsys.client.presenter.ShopPresenter;
 import imaing.expsys.client.presenter.ShopPresenter.FuzzyClassUpdateHandler;
 import imaing.expsys.client.presenter.ShopPresenter.RuleManager;
+import imaing.expsys.client.presenter.ShopPresenter.RuleUpdater;
 import imaing.expsys.client.view.widgets.FuzzyClassesWidget;
 import imaing.expsys.client.view.widgets.FuzzyClassesWidget.SaveHandler;
 import imaing.expsys.client.view.widgets.RuleWidget;
@@ -322,11 +323,16 @@ public class ShopView extends Composite implements ShopPresenter.Display {
 	@Override
 	public void listRules(List<Rule> rules) {
 		for (Rule r : rules) {
-			RuleWidget rWdgt = new RuleWidget(r);
+			final RuleWidget rWdgt = new RuleWidget(r);
 			rWdgt.setwRuleMan(new WidgetRuleManager() {
 				@Override
 				public void saveRule(Rule r) {
-					ruleManager.doSave(r);
+					ruleManager.doSave(r, new RuleUpdater() {
+						@Override
+						public void updateRule(Rule r) {
+							rWdgt.updateRuleId(r.getId());
+						}
+					});
 				}
 				
 				@Override
@@ -341,13 +347,18 @@ public class ShopView extends Composite implements ShopPresenter.Display {
 	
 	@UiHandler("btnNewRule")
 	void handleNewRuleClick(ClickEvent e) {
-		RuleWidget freshRWdgt = new RuleWidget(shop, chrs);
+		final RuleWidget freshRWdgt = new RuleWidget(shop, chrs);
 		freshRWdgt.setwRuleMan(new WidgetRuleManager() {
 			
 			@Override
 			public void saveRule(Rule r) {
 				if (ruleManager != null) {
-					ruleManager.doSave(r);
+					ruleManager.doSave(r, new RuleUpdater() {
+						@Override
+						public void updateRule(Rule r) {
+							freshRWdgt.updateRuleId(r.getId());
+						}
+					});
 				} else {
 					GWT.log("ruleManager is not set!");
 				}

@@ -195,4 +195,47 @@ public class DaoTest {
 		Assert.assertTrue("Original and retrieved logical clauses are the same", areSame);
 	}
 	
+	@Test
+	public void shouldDeleteRuleWithLogClauses() throws InvalidDataException {
+		Shop shop = TestUtils.newShop();
+		shop = shopDao.save(shop);
+
+		Characteristic chr1 = new Characteristic();
+		chr1.setfClsNum(10);
+		chr1.setShop(shop);
+		chr1.setName(TestUtils.generateRandStr(10));
+		
+		Characteristic chr2 = new Characteristic();
+		chr2.setfClsNum(10);
+		chr2.setShop(shop);
+		chr2.setName(TestUtils.generateRandStr(10));
+		
+		chr1 = chrDao.save(chr1);
+		chr2 = chrDao.save(chr2);
+		
+		Rule rule = new Rule();
+		rule.setDesc(TestUtils.generateRandStr(10));
+		rule.setShop(shop);
+		rule.setRel(Relevance.REL_HIGH);
+		
+		LogClause logClause = new AndClause(
+						new OrClause(
+								new Literal(chr1, 3),
+								new NotClause(new Literal(chr2, 1))),
+						new NotClause(
+								new Literal(chr2, 3)));
+		rule.setLogClause(logClause);
+		
+		Rule savedRule = ruleDao.save(rule);
+		
+		List<LogClause> logClauses = ruleDao.listLogClausesForRule(savedRule);
+		savedRule.buildClausesTree(logClauses);
+		
+		Assert.assertNotNull("savedRule should have non-null log clause", savedRule.getLogClause());
+		
+		ruleDao.delete(savedRule.getId());
+		
+		Rule retreivedRule = ruleDao.getById(savedRule.getId());
+		Assert.assertNull("Rule shouldn't exist", retreivedRule);
+	}
 }

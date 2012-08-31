@@ -122,6 +122,10 @@ public class RuleWidget extends Composite {
 		showRule(rule);
 	}
 	
+	public void updateRuleId(Long id) {
+		this.rule.setId(id);
+	}
+	
 	private void showRule(Rule rule) {
 		Label descLbl = new Label(rule.getDesc());
 		Label ruleLbl = new Label(rule.toString());
