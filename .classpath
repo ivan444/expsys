@@ -46,5 +46,10 @@
 	<classpathentry kind="lib" path="war/WEB-INF/lib/spring-test-3.2.0.M1.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/spring-expression-3.2.0.M1.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/cglib-nodep-2.2.3.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/spring-webmvc-portlet-3.2.0.M1.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/javaee-api-6.0.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/jackson-core-2.0.5.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/jackson-databind-2.0.5.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/jackson-annotations-2.0.5.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>

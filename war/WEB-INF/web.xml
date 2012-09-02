@@ -30,10 +30,16 @@
 		tj servlet je klasa (u ovom primjeru to je GreetingServiceImpl).
 		Mi prvo mapiramo na spring controller koji onda dispatcha dalje na klase (vidi spring-servlet.xml)  
 -->
+
 	<servlet-mapping>
 		<servlet-name>spring</servlet-name>
 		<url-pattern>*.rpc</url-pattern>
 	</servlet-mapping>
+	
+	<servlet-mapping>
+    <servlet-name>spring</servlet-name>
+    <url-pattern>/api/*</url-pattern>
+  </servlet-mapping>
 
 	<!-- Default page to serve -->
 	<welcome-file-list>
