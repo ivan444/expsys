@@ -1,10 +1,17 @@
 package imaing.expsys.server.api;
 
+import imaing.expsys.client.domain.Characteristic;
+import imaing.expsys.client.domain.ProdChr;
+import imaing.expsys.client.domain.Product;
+import imaing.expsys.client.domain.Shop;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class ProductJsonWrapper {
 	private String description;
-	private String id;
+	private String integId;;
 	private Map<String, String> characteristics;
 	
 	public ProductJsonWrapper() {
@@ -18,12 +25,12 @@ public class ProductJsonWrapper {
 		this.description = description;
 	}
 
-	public String getId() {
-		return id;
+	public String getIntegId() {
+		return integId;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setIntegId(String integId) {
+		this.integId = integId;
 	}
 
 	public Map<String, String> getCharacteristics() {
@@ -32,6 +39,31 @@ public class ProductJsonWrapper {
 
 	public void setCharacteristics(Map<String, String> characteristics) {
 		this.characteristics = characteristics;
+	}
+	
+	public Product genProduct(Shop shop, List<Characteristic> chrs) {
+		Product p = new Product();
+		p.setShop(shop);
+		p.setDescription(getDescription());
+		p.setIntegrationId(getIntegId());
+
+		List<ProdChr> parsedProdChrs = new ArrayList<ProdChr>(characteristics.size());
+		for (Characteristic c : chrs) {
+			if (characteristics.containsKey(c.getName())) {
+				String value = characteristics.get(c.getName());
+				
+				ProdChr pc = new ProdChr();
+				pc.setChr(c);
+				pc.setProd(p);
+				pc.setValue(value);
+				
+				parsedProdChrs.add(pc);
+			}
+		}
+		
+		p.setCharacteristics(parsedProdChrs);
+		
+		return p;
 	}
 
 	@Override
@@ -42,7 +74,7 @@ public class ProductJsonWrapper {
 				+ ((characteristics == null) ? 0 : characteristics.hashCode());
 		result = prime * result
 				+ ((description == null) ? 0 : description.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((integId == null) ? 0 : integId.hashCode());
 		return result;
 	}
 
@@ -65,10 +97,10 @@ public class ProductJsonWrapper {
 				return false;
 		} else if (!description.equals(other.description))
 			return false;
-		if (id == null) {
-			if (other.id != null)
+		if (integId == null) {
+			if (other.integId != null)
 				return false;
-		} else if (!id.equals(other.id))
+		} else if (!integId.equals(other.integId))
 			return false;
 		return true;
 	}
