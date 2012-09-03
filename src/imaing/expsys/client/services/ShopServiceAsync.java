@@ -5,6 +5,7 @@ import imaing.expsys.client.domain.FuzzyClass;
 import imaing.expsys.client.domain.Product;
 import imaing.expsys.client.domain.Rule;
 import imaing.expsys.client.domain.Shop;
+import java.util.Collection;
 import java.util.List;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -22,6 +23,7 @@ public interface ShopServiceAsync {
 	void listProducts(Shop shop, AsyncCallback<List<Product>> callback);
 	void deleteProduct(long prodId, AsyncCallback<Void> callback);
 	void addProduct(Product p, AsyncCallback<Product> callback);
+	void addAllProducts(Collection<Product> ps, AsyncCallback<List<Product>> callback);
 	
 	void listFuzzyClassesForShop(Shop shop, AsyncCallback<List<FuzzyClass>> callback);
 	void updateFuzzyClasses(List<FuzzyClass> fcls, AsyncCallback<Void> callback);

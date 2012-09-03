@@ -13,7 +13,9 @@ import imaing.expsys.test.util.TestUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import junit.framework.Assert;
@@ -27,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -78,6 +81,41 @@ public class RESTApiTest {
 		Assert.assertEquals("Generated object is invalid!", trueObj, genObj);
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void shouldTransformJsonToCorrectListOfObjects() throws JsonGenerationException, JsonMappingException, IOException {
+		String json = "[{\"description\":\"desc1\",\"integId\":\"id1\"," +
+				"\"characteristics\":{\"chr1\":\"val1\",\"chr2\":\"val2\"}}," +
+				"{\"description\":\"desc2\",\"integId\":\"id2\"," +
+				"\"characteristics\":{\"chr1\":\"val3\",\"chr2\":\"val2\"}}]";
+		
+		ProductJsonWrapper trueObj1 = new ProductJsonWrapper();
+		trueObj1.setDescription("desc1");
+		trueObj1.setIntegId("id1");
+		Map<String, String> chrs1 = new LinkedHashMap<String, String>();
+		chrs1.put("chr1", "val1");
+		chrs1.put("chr2", "val2");
+		trueObj1.setCharacteristics(chrs1);
+		
+		ProductJsonWrapper trueObj2 = new ProductJsonWrapper();
+		trueObj2.setDescription("desc2");
+		trueObj2.setIntegId("id2");
+		Map<String, String> chrs2 = new LinkedHashMap<String, String>();
+		chrs2.put("chr1", "val3");
+		chrs2.put("chr2", "val2");
+		trueObj2.setCharacteristics(chrs2);
+		
+		List<ProductJsonWrapper> prods = new ArrayList<ProductJsonWrapper>();
+		prods.add(trueObj1);
+		prods.add(trueObj2);
+		
+		ObjectMapper mapper = new ObjectMapper();
+		ArrayList<ProductJsonWrapper> genLst = (ArrayList<ProductJsonWrapper>) mapper.readValue(json,
+				new TypeReference<List<ProductJsonWrapper>>(){});
+		
+		Assert.assertEquals("Generated list is invalid!", prods, genLst);
+	}
+	
 	@Test
 	public void shouldGenerateObjFromJsonAndSaveProduct() throws JsonParseException, JsonMappingException, IOException, InvalidDataException {
 		String json = "{\"description\":\"desc1\",\"integId\":\"id1\",\"characteristics\":{\"chr1\":\"val1\",\"chr2\":\"val2\"}}";
@@ -92,7 +130,7 @@ public class RESTApiTest {
 		Characteristic chr2 = new Characteristic();
 		chr2.setfClsNum(10);
 		chr2.setShop(shop);
-		chr1.setName("chr2");
+		chr2.setName("chr2");
 		
 		chr1 = chrDao.save(chr1);
 		chr2 = chrDao.save(chr2);

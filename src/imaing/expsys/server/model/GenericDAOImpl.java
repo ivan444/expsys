@@ -4,6 +4,7 @@ import imaing.expsys.client.domain.DTOObject;
 import imaing.expsys.shared.exceptions.InvalidDataException;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -129,6 +130,39 @@ public class GenericDAOImpl<E extends BaseEntity<G>, G extends DTOObject>
 		E ent = (E) em.find(type, id);
 		
 		delete(ent);
+	}
+
+	@Override
+	@Transactional(readOnly=false)
+	public List<G> saveAll(Collection<G> gs) throws InvalidDataException {
+		if (gs == null) throw new InvalidDataException("Trying to save null collection!");
+		
+		int objsNum = gs.size();
+		
+		List<E> ents = new ArrayList<E>(objsNum);
+		try {
+			for (G g : gs) {
+				E ent = type.newInstance();
+				ent.fill(g);
+				ents.add(ent);
+			}
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+		
+		List<G> clean = new ArrayList<G>(objsNum);
+		try {
+			for (E ent : ents) {
+				ent = em.merge(ent);
+				clean.add(ent.getCleaned());
+			}
+		} catch (Exception e) {
+			throw new InvalidDataException(e);
+		}
+		
+		return clean;
 	}
 
 }

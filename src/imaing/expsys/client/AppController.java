@@ -83,7 +83,7 @@ public class AppController implements Presenter, ValueChangeHandler<String> {
 			shopRpcSrv.listShops(new AsyncCallback<List<Shop>>() {
 				@Override
 				public void onSuccess(List<Shop> result) {
-					Presenter p = new ShopPresenter(shopRpcSrv, eventBus, new ShopView(result.get(0)), result.get(0)); // TODO remove test shop!!
+					Presenter p = new ShopPresenter(shopRpcSrv, eventBus, new ShopView(result.get(0)), result.get(1)); // TODO remove test shop!!
 					p.go(container);
 				}
 				

@@ -4,6 +4,7 @@ package imaing.expsys.server.model;
 import imaing.expsys.client.domain.DTOObject;
 import imaing.expsys.shared.exceptions.InvalidDataException;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -29,6 +30,14 @@ public interface GenericDAO<E extends BaseEntity<G>, G extends DTOObject> {
 	 * @throws InvalidDataException 
 	 */
 	public G save(G gwtObject) throws InvalidDataException;
+	
+	/**
+	 * Save all objects from collection gs.
+	 * @param gs
+	 * @return List of saved objects.
+	 * @throws InvalidDataException
+	 */
+	public List<G> saveAll(Collection<G> gs) throws InvalidDataException;
 	
 	/**
 	 * @return All saved data from objects of type G as a list.

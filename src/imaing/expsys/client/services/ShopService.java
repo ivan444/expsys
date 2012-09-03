@@ -7,6 +7,7 @@ import imaing.expsys.client.domain.Rule;
 import imaing.expsys.client.domain.Shop;
 import imaing.expsys.shared.exceptions.InvalidDataException;
 
+import java.util.Collection;
 import java.util.List;
 
 import com.google.gwt.user.client.rpc.RemoteService;
@@ -26,6 +27,7 @@ public interface ShopService extends RemoteService {
 	List<Product> listProducts(Shop shop);
 	void deleteProduct(long prodId) throws InvalidDataException;
 	Product addProduct(Product p) throws InvalidDataException;
+	List<Product> addAllProducts(Collection<Product> ps) throws InvalidDataException;
 	
 	List<FuzzyClass> listFuzzyClassesForShop(Shop shop);
 	void updateFuzzyClasses(List<FuzzyClass> fcls) throws InvalidDataException;
