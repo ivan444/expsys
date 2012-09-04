@@ -1,9 +1,9 @@
 package imaing.expsys.server.engine;
 
-public class NotClause implements Rule {
-	private final Rule literal;
+public class NotClause implements IRule {
+	private final IRule literal;
 	
-	public NotClause(Rule literal) {
+	public NotClause(IRule literal) {
 		if (literal == null) {
 			throw new IllegalArgumentException("Literal musn't be null!");
 		}
@@ -11,7 +11,7 @@ public class NotClause implements Rule {
 	}
 
 	@Override
-	public double eval(Product p) {
+	public double eval(IProduct p) {
 		return 1-literal.eval(p);
 	}
 

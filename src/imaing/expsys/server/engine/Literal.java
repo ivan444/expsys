@@ -1,6 +1,6 @@
 package imaing.expsys.server.engine;
 
-public class Literal implements Rule {
+public class Literal implements IRule {
 	private final String characteristic;
 	private final int fcls;
 	
@@ -10,7 +10,7 @@ public class Literal implements Rule {
 	}
 
 	@Override
-	public double eval(Product p) {
+	public double eval(IProduct p) {
 		return p.charaMemberVal(characteristic, fcls);
 	}
 }

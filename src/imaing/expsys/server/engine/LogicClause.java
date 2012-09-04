@@ -1,10 +1,10 @@
 package imaing.expsys.server.engine;
 
-public abstract class LogicClause implements Rule {
-	protected final Rule leftLiteral;
-	protected final Rule rightLiteral;
+public abstract class LogicClause implements IRule {
+	protected final IRule leftLiteral;
+	protected final IRule rightLiteral;
 	
-	public LogicClause(Rule leftLiteral, Rule rightLiteral) {
+	public LogicClause(IRule leftLiteral, IRule rightLiteral) {
 		if (leftLiteral == null || rightLiteral == null) {
 			throw new IllegalArgumentException("Literals musn't be null!");
 		}
@@ -14,5 +14,5 @@ public abstract class LogicClause implements Rule {
 	}
 	
 	@Override
-	public abstract double eval(Product p);
+	public abstract double eval(IProduct p);
 }

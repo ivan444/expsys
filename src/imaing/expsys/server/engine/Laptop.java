@@ -3,7 +3,7 @@ package imaing.expsys.server.engine;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Laptop implements Product {
+public class Laptop implements IProduct {
 	private Map<String, String> chts;
 	private String desc;
 	

@@ -20,6 +20,8 @@
 <!--     <property name="appBaseUrl" value="${app.baseurl}" /> -->
   </bean>
   
+  <bean id="jsonMapper" class="imaing.expsys.server.api.JSONObjectMapper" />
+  
 <!--   <bean id="authenticationManager" class="org.springframework.security.authentication.ProviderManager"> -->
 <!--     <property name="providers"> -->
 <!--       <list> -->

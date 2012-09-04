@@ -10,12 +10,12 @@ public class ExpSys {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		List<Product> products = new LinkedList<Product>();
-		List<Rule> rules = new LinkedList<Rule>();
+		List<IProduct> products = new LinkedList<IProduct>();
+		List<IRule> rules = new LinkedList<IRule>();
 		Aggregator aggreg = new AvgAggregator();
 		
 		List<ProductScore> prodScores = new LinkedList<ProductScore>();
-		for (Product p : products) {
+		for (IProduct p : products) {
 			double score = evaluate(p, aggreg, rules);
 			prodScores.add(new ProductScore(p, score));
 		}
@@ -26,7 +26,7 @@ public class ExpSys {
 		}
 	}
 
-	private static double evaluate(Product p, Aggregator aggreg, List<Rule> rules) {
+	private static double evaluate(IProduct p, Aggregator aggreg, List<IRule> rules) {
 		double[] scores = new double[rules.size()];
 		for (int i = 0; i < scores.length; i++) {
 			scores[i] = rules.get(i).eval(p);
@@ -36,10 +36,10 @@ public class ExpSys {
 	}
 
 	private static class ProductScore implements Comparable<ProductScore> {
-		public final Product p;
+		public final IProduct p;
 		public final double score;
 		
-		public ProductScore(Product p, double score) {
+		public ProductScore(IProduct p, double score) {
 			super();
 			this.p = p;
 			this.score = score;

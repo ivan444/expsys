@@ -6,8 +6,8 @@ import imaing.expsys.server.engine.AvgAggregator;
 import imaing.expsys.server.engine.ImplicationClause;
 import imaing.expsys.server.engine.Laptop;
 import imaing.expsys.server.engine.Literal;
-import imaing.expsys.server.engine.Product;
-import imaing.expsys.server.engine.Rule;
+import imaing.expsys.server.engine.IProduct;
+import imaing.expsys.server.engine.IRule;
 import imaing.expsys.server.engine.ImplicationClause.Relevance;
 
 import java.util.Collections;
@@ -20,12 +20,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class ExpSysTest {
-	private List<Rule> rules;
-	private List<Product> laptops;
+	private List<IRule> rules;
+	private List<IProduct> laptops;
 	private Aggregator aggreg;
 	
 	public void makeRules() {
-		rules = new LinkedList<Rule>();
+		rules = new LinkedList<IRule>();
 		
 		rules.add(new ImplicationClause(
 				new AndClause(
@@ -53,7 +53,7 @@ public class ExpSysTest {
 	}
 	
 	public void makeProducts() {
-		laptops = new LinkedList<Product>();
+		laptops = new LinkedList<IProduct>();
 		
 		laptops.add(new Laptop("1", "i7", "17in", "1000GB"));
 		laptops.add(new Laptop("2", "i7", "10in", "1000GB"));
@@ -78,31 +78,31 @@ public class ExpSysTest {
 	
 	@Test
 	public void evalRuleMultimediaHighTest() {
-		List<Product> srt = evalRules(rules.get(0));
+		List<IProduct> srt = evalRules(rules.get(0));
 		Assert.assertEquals(srt.get(0).describe(), "1");
 	}
 	
 	@Test
 	public void evalRuleHighMultiLowMonLowTest() {
-		List<Product> srt = evalRules(rules.get(0), rules.get(3));
+		List<IProduct> srt = evalRules(rules.get(0), rules.get(3));
 		Assert.assertEquals(srt.get(0).describe(), "1");
 	}
 	
 	@Test
 	public void evalRuleHighMultiLowMonHighTest() {
-		List<Product> srt = evalRules(rules.get(0), rules.get(4));
+		List<IProduct> srt = evalRules(rules.get(0), rules.get(4));
 		Assert.assertEquals(srt.get(0).describe(), "2");
 	}
 	
-	public List<Product> evalRules(Rule ... rules) {
+	public List<IProduct> evalRules(IRule ... rules) {
 		List<ProductScore> prodScores = new LinkedList<ProductScore>();
-		for (Product p : laptops) {
+		for (IProduct p : laptops) {
 			double score = evaluate(p, aggreg, rules);
 			prodScores.add(new ProductScore(p, score));
 		}
 		
 		Collections.sort(prodScores);
-		List<Product> sortProd = new LinkedList<Product>();
+		List<IProduct> sortProd = new LinkedList<IProduct>();
 		System.out.println();
 		for (ProductScore ps : prodScores) {
 			sortProd.add(ps.p);
@@ -112,7 +112,7 @@ public class ExpSysTest {
 		return sortProd;
 	}
 
-	private static double evaluate(Product p, Aggregator aggreg, Rule ... rules) {
+	private static double evaluate(IProduct p, Aggregator aggreg, IRule ... rules) {
 		double[] scores = new double[rules.length];
 		for (int i = 0; i < scores.length; i++) {
 			scores[i] = rules[i].eval(p);
@@ -122,10 +122,10 @@ public class ExpSysTest {
 	}
 	
 	private static class ProductScore implements Comparable<ProductScore> {
-		public final Product p;
+		public final IProduct p;
 		public final double score;
 		
-		public ProductScore(Product p, double score) {
+		public ProductScore(IProduct p, double score) {
 			super();
 			this.p = p;
 			this.score = score;

@@ -1,21 +1,23 @@
 package imaing.expsys.server.api;
 
-public class APIResponse {
+public class APIExtendedResponse<P> {
+	private Status status;
+	private String msg;
+	private P payload;
+	
 	public enum Status {
 		OK,
 		ERROR
 	}
 	
-	private Status status;
-	private String msg;
-	
-	public APIResponse() {
+	public APIExtendedResponse() {
 	}
 
-	public APIResponse(Status status, String msg) {
+	public APIExtendedResponse(Status status, String msg, P payload) {
 		super();
 		this.status = status;
 		this.msg = msg;
+		this.payload = payload;
 	}
 
 	public Status getStatus() {
@@ -32,5 +34,13 @@ public class APIResponse {
 
 	public void setMsg(String msg) {
 		this.msg = msg;
+	}
+
+	public P getPayload() {
+		return payload;
+	}
+
+	public void setPayload(P payload) {
+		this.payload = payload;
 	}
 }

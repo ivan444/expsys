@@ -1,6 +1,6 @@
 package imaing.expsys.server.engine;
 
-public class ImplicationClause implements Rule {
+public class ImplicationClause implements IRule {
 
 	public enum Relevance {
 		REL_HIGH(1.0),
@@ -16,10 +16,10 @@ public class ImplicationClause implements Rule {
 		public double mval() { return memberValue; }
 	}
 	
-	private final Rule leftLiteral;
+	private final IRule leftLiteral;
 	private final Relevance rel;
 	
-	public ImplicationClause(Rule leftLiteral, Relevance rel) {
+	public ImplicationClause(IRule leftLiteral, Relevance rel) {
 		if (leftLiteral == null) {
 			throw new IllegalArgumentException("Literal musn't be null!");
 		}
@@ -29,8 +29,8 @@ public class ImplicationClause implements Rule {
 	}
 
 	@Override
-	public double eval(Product p) {
-//		OrClause or = new OrClause(new NotClause(leftLiteral), new Rule() {
+	public double eval(IProduct p) {
+//		OrClause or = new OrClause(new NotClause(leftLiteral), new IRule() {
 //				@Override
 //				public double eval(ProductEnt p) {
 //					return rel.mval();
@@ -38,9 +38,9 @@ public class ImplicationClause implements Rule {
 //			});
 //		
 //		return or.eval(p);
-		AndClause and = new AndClause(leftLiteral, new Rule() {
+		AndClause and = new AndClause(leftLiteral, new IRule() {
 			@Override
-			public double eval(Product p) {
+			public double eval(IProduct p) {
 				return rel.mval();
 			}
 		});

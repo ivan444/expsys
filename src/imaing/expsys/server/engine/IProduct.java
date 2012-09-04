@@ -1,6 +1,6 @@
 package imaing.expsys.server.engine;
 
-public interface Product {
+public interface IProduct {
 	/**
 	 * @param charaId ID of characteristic.
 	 * @param fcls Fuzzy class for which we need membership value.
