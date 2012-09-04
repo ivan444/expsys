@@ -1,5 +1,7 @@
 package imaing.expsys.client.domain;
 
+import java.util.Map;
+
 public class NotClause extends LogClause implements LogClause.HasLeft {
 	private LogClause leftClause;
 	
@@ -13,8 +15,6 @@ public class NotClause extends LogClause implements LogClause.HasLeft {
 
 	@Override
 	protected int goRight(int val) {
-//		setNsRight(Integer.valueOf(val+1));
-//		return getNsRight().intValue();
 		return val;
 	}
 	
@@ -33,6 +33,11 @@ public class NotClause extends LogClause implements LogClause.HasLeft {
 	@Override
 	public String toString() {
 		return "NOT( " + leftClause + " )";
+	}
+
+	@Override
+	protected double eval(Product p, Map<String, FuzzyClass> fclsByChar) {
+		return 1.0-leftClause.eval(p, fclsByChar);
 	}
 
 }

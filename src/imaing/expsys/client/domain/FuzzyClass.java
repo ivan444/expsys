@@ -24,6 +24,10 @@ public class FuzzyClass extends DTOObject {
 	public double[] getMembershipVal() {
 		return membershipVal;
 	}
+	
+	public double getMembershipVal(int idx) {
+		return membershipVal[idx];
+	}
 
 	public void setMembershipVal(double[] membershipVal) {
 		this.membershipVal = membershipVal;

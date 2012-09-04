@@ -1,6 +1,7 @@
 package imaing.expsys.server.controllers;
 
 import imaing.expsys.client.domain.Characteristic;
+import imaing.expsys.client.domain.FuzzyClass;
 import imaing.expsys.client.domain.Product;
 import imaing.expsys.client.domain.Rule;
 import imaing.expsys.client.domain.Shop;
@@ -9,7 +10,9 @@ import imaing.expsys.server.api.APIExtendedResponse.Status;
 import imaing.expsys.server.api.JSONObjectMapper;
 import imaing.expsys.server.api.ProductJsonWrapper;
 import imaing.expsys.server.api.Ranking;
+import imaing.expsys.server.engine.ExpSys;
 import imaing.expsys.server.model.CharacteristicDAO;
+import imaing.expsys.server.model.FuzzyClassDAO;
 import imaing.expsys.server.model.ProductDAO;
 import imaing.expsys.server.model.RuleDAO;
 import imaing.expsys.server.model.ShopDAO;
@@ -38,6 +41,7 @@ public class RESTController {
 	@Autowired private CharacteristicDAO chrDao;
 	@Autowired private ProductDAO prodDao;
 	@Autowired private RuleDAO ruleDao;
+	@Autowired private FuzzyClassDAO fclsDao;
 	@Autowired private ShopService shpService;
 	@Autowired private JSONObjectMapper mapper;
 	
@@ -138,22 +142,30 @@ public class RESTController {
 			}
 			
 			List<Rule> inclRules = new ArrayList<Rule>();
+			List<Long> inclRuleIds = new ArrayList<Long>();
 			Set<Long> ruleIds = new HashSet<Long>(genReq.getRuleIds());
 			for (Rule r : rules) {
 				if (ruleIds.contains(r.getId())) {
 					inclRules.add(r);
+					inclRuleIds.add(r.getId());
 				}
 			}
 			
 			// eval rules and return result
+			List<FuzzyClass> fclses = fclsDao.listFClsForShop(shop);
+			List<String> sortedProds = ExpSys.sortProducts(inclProds, inclRules, fclses);
+			Ranking rnk = new Ranking();
+			rnk.setIntegIds(sortedProds);
+			rnk.setRuleIds(inclRuleIds);
+
+			mapper.writeResponse(resp.getOutputStream(), Status.OK, "Sorting done!", rnk);
+			return;
 			
 		} catch (Exception e) {
 			mapper.writeResponse(resp.getOutputStream(), Status.ERROR, "Invalid JSON format.");
 			e.printStackTrace();
 			return;
 		}
-		
-//		mapper.writeResponse(resp.getOutputStream(), Status.OK, "Products are saved.");
 	}
 	
 }

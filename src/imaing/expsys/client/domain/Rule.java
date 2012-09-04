@@ -3,6 +3,7 @@ package imaing.expsys.client.domain;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 import imaing.expsys.client.domain.LogClause.HasLeft;
 import imaing.expsys.client.domain.LogClause.HasRight;
@@ -18,6 +19,23 @@ public class Rule extends DTOObject {
 	public void determineNSetVals() {
 		int rootNsRight = logClause.determineNSetVals(0);
 		setNsRoot(Integer.valueOf(rootNsRight+1));
+	}
+	
+	public double eval(Product p, Map<String, FuzzyClass> fclsByChar) {
+		return new AndClause(logClause, new LogClause() {
+			@Override
+			protected int goRight(int val) {
+				throw new UnsupportedOperationException("This is dummy clause!");
+			}
+			@Override
+			protected int goLeft(int parentVal) {
+				throw new UnsupportedOperationException("This is dummy clause!");
+			}
+			@Override
+			protected double eval(Product p, Map<String, FuzzyClass> fclsByChar) {
+				return rel.mval();
+			}
+		}).eval(p, fclsByChar);
 	}
 	
 	public Rule() {

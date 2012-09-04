@@ -227,28 +227,28 @@ public class ShopPresenter implements Presenter {
 	}
 
 	protected void addProducts(String prodsJson) {
-		List<Product> parsedProds = null;
-		try {
-			parsedProds = Product.parseProductsJSON(prodsJson, shop, characteristics);
-		} catch (ParseException e) {
-			display.reportError(e.getMessage());
-			return;
-		}
-		
-		for (Product p : parsedProds) {
-			shopSrv.addProduct(p, new AsyncCallback<Product>() {
-				@Override
-				public void onSuccess(Product result) {
-					products.add(result);
-					display.listProducts(products);
-				}
-				@Override
-				public void onFailure(Throwable caught) {
-					GWT.log("Failed to add product", caught);
-					Window.alert("Failed to add product");
-				}
-			});
-		}
+//		List<Product> parsedProds = null;
+//		try {
+//			parsedProds = Product.parseProductsJSON(prodsJson, shop, characteristics);
+//		} catch (ParseException e) {
+//			display.reportError(e.getMessage());
+//			return;
+//		}
+//		
+//		for (Product p : parsedProds) {
+//			shopSrv.addProduct(p, new AsyncCallback<Product>() {
+//				@Override
+//				public void onSuccess(Product result) {
+//					products.add(result);
+//					display.listProducts(products);
+//				}
+//				@Override
+//				public void onFailure(Throwable caught) {
+//					GWT.log("Failed to add product", caught);
+//					Window.alert("Failed to add product");
+//				}
+//			});
+//		}
 	}
 
 	/**

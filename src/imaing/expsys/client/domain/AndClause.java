@@ -1,5 +1,7 @@
 package imaing.expsys.client.domain;
 
+import java.util.Map;
+
 public class AndClause extends LogClause implements LogClause.HasLeft, LogClause.HasRight {
 	private LogClause leftClause;
 	
@@ -42,6 +44,17 @@ public class AndClause extends LogClause implements LogClause.HasLeft, LogClause
 	@Override
 	public String toString() {
 		return "AND( " + leftClause + ", "+ rightClause + " )";
+	}
+
+	@Override
+	protected double eval(Product p, Map<String, FuzzyClass> fclsByChar) {
+		double left = leftClause.eval(p, fclsByChar);
+		double right = 0.0;
+		if (left != 0.0) {
+			right = rightClause.eval(p, fclsByChar);
+		}
+		
+		return left*right;
 	}
 
 }

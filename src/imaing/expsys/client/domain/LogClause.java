@@ -1,6 +1,7 @@
 package imaing.expsys.client.domain;
 
 import java.util.Iterator;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 public abstract class LogClause extends DTOObject implements Iterable<LogClause> {
@@ -25,6 +26,7 @@ public abstract class LogClause extends DTOObject implements Iterable<LogClause>
 
 	protected abstract int goLeft(int parentVal);
 	protected abstract int goRight(int val);
+	protected abstract double eval(Product p, Map<String, FuzzyClass> fclsByChar);
 
 	public void setRule(Rule rule) {
 		this.rule = rule;
