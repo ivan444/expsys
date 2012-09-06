@@ -78,12 +78,12 @@ public class ShopServiceImpl implements ShopService, SessionAware {
 	 * @throws InvalidDataException If error during FuzzyClass object save occurs.
 	 */
 	private void createFuzzyClasses(Shop shop, List<ProdChr> savedProdChars) throws InvalidDataException {
-		final String MOSTLIKELY_UNIQ = "<$>";
+		final String MOSTLIKELY_UNIQ = "\t";
 		List<FuzzyClass> existingFcls = fclsDao.listFClsForShop(shop);
 		Set<String> existingFclsKeys = new HashSet<String>();
 		
 		for (FuzzyClass fc : existingFcls) {
-			existingFclsKeys.add(fc.getChr().getName()+MOSTLIKELY_UNIQ+fc.getValue()); // DANGEROUS: assumes that "<$>" won't collide...
+			existingFclsKeys.add(fc.getChr().getName()+MOSTLIKELY_UNIQ+fc.getValue()); // DANGEROUS: assumes that "\t" won't collide...
 		}
 		
 		List<FuzzyClass> newFcls = new LinkedList<FuzzyClass>();
@@ -173,7 +173,25 @@ public class ShopServiceImpl implements ShopService, SessionAware {
 	@Override
 	public List<Product> addAllProducts(Collection<Product> ps)
 			throws InvalidDataException {
-		return prodDao.saveAll(ps);
+		
+		List<Product> savedProds = new ArrayList<Product>(ps.size());
+
+		for (Product p : ps) {
+			List<ProdChr> unsavedPcrs = p.getCharacteristics();
+			Product pSaved = prodDao.save(p);
+			
+			for (ProdChr pc : unsavedPcrs) {
+				pc.setProd(pSaved);
+			}
+			List<ProdChr> savedPcrs = prodChrDao.saveAll(unsavedPcrs);
+			pSaved.setCharacteristics(savedPcrs);
+
+			createFuzzyClasses(pSaved.getShop(), savedPcrs);
+			
+			savedProds.add(pSaved);
+		}
+		
+		return savedProds;
 	}
 
 }

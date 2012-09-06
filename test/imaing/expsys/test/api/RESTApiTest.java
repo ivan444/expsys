@@ -110,10 +110,16 @@ public class RESTApiTest {
 		prods.add(trueObj2);
 		
 		ObjectMapper mapper = new ObjectMapper();
-		ArrayList<ProductJsonWrapper> genLst = (ArrayList<ProductJsonWrapper>) mapper.readValue(json,
+		List<ProductJsonWrapper> genLst = (List<ProductJsonWrapper>) mapper.readValue(json,
 				new TypeReference<List<ProductJsonWrapper>>(){});
 		
 		Assert.assertEquals("Generated list is invalid!", prods, genLst);
+		
+		for (int i = 0; i < prods.size(); i++) {
+			Map<String, String> chrsP = prods.get(i).getCharacteristics();
+			Map<String, String> chrsG = genLst.get(i).getCharacteristics();
+			Assert.assertEquals("Original and generated characteristics aren't equal!", chrsP, chrsG);
+		}
 	}
 	
 	@Test

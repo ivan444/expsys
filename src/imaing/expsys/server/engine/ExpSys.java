@@ -60,7 +60,8 @@ public class ExpSys {
 		public int compareTo(ProductScore o) {
 			double diff = score-o.score;
 			if (Math.abs(diff) < 1e-6) return 0;
-			else return (int) diff;
+			else if (diff < 0.0) return -1;
+			else return 1;
 		}
 
 		@Override
