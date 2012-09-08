@@ -20,7 +20,7 @@ public class ExpSys {
 			fclsByValChr.put(Literal.makeKey(fc), fc);
 		}
 		
-		Aggregator aggreg = new AvgAggregator();
+		Aggregator aggreg = new OrAggregator();
 		
 		List<ProductScore> prodScores = new LinkedList<ProductScore>();
 		for (Product p : products) {
