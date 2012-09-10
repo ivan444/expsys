@@ -70,21 +70,11 @@ public class DaoTest {
 	public void shouldCreateNewShop() throws InvalidDataException {
 		Shop ns = TestUtils.newShop();
 		
-		shopDao.save(ns);
-		List<Shop> shops = shopDao.list();
+		Shop saved = shopDao.save(ns);
+		Shop retreived = shopDao.getById(saved.getId());
 		
-		Assert.assertEquals("There should be only one shop", 1, shops.size());
-		Assert.assertEquals("The shop should be our shop", ns, shops.get(0));
-	}
-	
-	@Test
-	public void shouldCreateTenNewShops() throws InvalidDataException {
-		for (int i = 0; i < 10; i++) {
-			shopDao.save(TestUtils.newShop());
-		}
-		List<Shop> shops = shopDao.list();
-		
-		Assert.assertEquals("There should be ten shops", 10, shops.size());
+		Assert.assertNotNull("New shop isn't saved!", retreived);
+		Assert.assertEquals("Created and retrieved shops should be equal!", ns, retreived);
 	}
 	
 	@Test(expected=InvalidDataException.class)

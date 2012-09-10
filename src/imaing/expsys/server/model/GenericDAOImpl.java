@@ -115,12 +115,25 @@ public class GenericDAOImpl<E extends BaseEntity<G>, G extends DTOObject>
 	@Transactional(readOnly=false)
 	public void delete(E ent) throws InvalidDataException {
 		if (ent == null) throw new InvalidDataException("Trying to delete null object!");
+		else if (ent.getId() == null) throw new InvalidDataException("Trying to delete object with null ID!");
 		
 		if (!em.contains(ent)) {
-			delete(ent.getId());
+			ent = (E) em.find(type, ent.getId());
 		}
 		
+		extraDeleteOperations(ent);
+		
 		em.remove(ent);
+	}
+
+	/**
+	 * This function is called right before deleting an entity.
+	 * It enables adding extra functionality in delete function skeleton
+	 * (this is template method).
+	 * 
+	 * @param ent Entity to be deleted. This entity MUST be inside entity manager.
+	 */
+	protected void extraDeleteOperations(E ent) throws InvalidDataException {
 	}
 	
 	@Override
@@ -163,6 +176,17 @@ public class GenericDAOImpl<E extends BaseEntity<G>, G extends DTOObject>
 		}
 		
 		return clean;
+	}
+	
+	@Override
+	@Transactional(readOnly=false)
+	public void deleteAll(Collection<G> gs) throws InvalidDataException {
+		if (gs == null) throw new InvalidDataException("Trying to delete null collection!");
+		
+		for (G g : gs) {
+			if (g.getId() == null) throw new InvalidDataException("Trying to delete object without ID!");
+			delete(g.getId());
+		}
 	}
 
 }

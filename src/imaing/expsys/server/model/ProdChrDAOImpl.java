@@ -49,9 +49,26 @@ public class ProdChrDAOImpl extends GenericDAOImpl<ProdChrEnt, ProdChr> implemen
 	public void deleteAllForProduct(Product product) throws InvalidDataException {
 		List<ProdChrEnt> ents = (List<ProdChrEnt>) em.createNamedQuery("ProdChrEnt.listProdChrForProduct")
 				  .setParameter("product", new ProductEnt(product)).getResultList();
+		
 		for (ProdChrEnt pce : ents) {
 			delete(pce);
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ProdChr> listProdChrForCharacteristic(Characteristic chr) {
+		List<ProdChrEnt> ents = (List<ProdChrEnt>) em
+				.createNamedQuery("ProdChrEnt.listProdChrForCharacteristic")
+				.setParameter("chr", new CharacteristicEnt(chr))
+				.getResultList();
+		List<ProdChr> dtos = new LinkedList<ProdChr>();
+		if (ents != null) {
+			for (ProdChrEnt fc : ents) {
+				dtos.add(fc.getCleaned());
+			}
+		}
+		return dtos;
 	}
 
 }

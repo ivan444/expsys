@@ -9,6 +9,7 @@ import java.util.List;
 
 public interface ProdChrDAO extends GenericDAO<ProdChrEnt, ProdChr> {
 	List<ProdChr> listProdChrForProduct(Product product);
+	List<ProdChr> listProdChrForCharacteristic(Characteristic chr);
 	ProdChr getProdChrForProductAndCharacteristic(Product product, Characteristic chr);
 	void deleteAllForProduct(Product product) throws InvalidDataException;
 }

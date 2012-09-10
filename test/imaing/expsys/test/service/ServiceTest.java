@@ -1,11 +1,18 @@
 package imaing.expsys.test.service;
 
+import imaing.expsys.client.domain.AndClause;
 import imaing.expsys.client.domain.Characteristic;
 import imaing.expsys.client.domain.FuzzyClass;
+import imaing.expsys.client.domain.Literal;
+import imaing.expsys.client.domain.LogClause;
+import imaing.expsys.client.domain.NotClause;
+import imaing.expsys.client.domain.OrClause;
 import imaing.expsys.client.domain.ProdChr;
 import imaing.expsys.client.domain.Product;
+import imaing.expsys.client.domain.Rule;
 import imaing.expsys.client.domain.Shop;
 import imaing.expsys.client.services.ShopService;
+import imaing.expsys.shared.Relevance;
 import imaing.expsys.shared.exceptions.InvalidDataException;
 import imaing.expsys.test.util.TestUtils;
 
@@ -127,6 +134,104 @@ public class ServiceTest {
 		
 		List<FuzzyClass> fclasses = shopSrv.listFuzzyClassesForShop(shop);
 		Assert.assertEquals("There should be five fuzzy classes", 5, fclasses.size());
+	}
+	
+	@Test
+	public void shouldCreateShopChrsProductsRulesAndByDeletingShopDeleteThemAll() throws InvalidDataException {
+		Shop shop = TestUtils.newShop();
+		shop = shopSrv.saveShop(shop);
+		
+		Characteristic proc = new Characteristic();
+		proc.setShop(shop);
+		proc.setName("proc");
+		proc.setfClsNum(3);
+		
+		Characteristic hdd = new Characteristic();
+		hdd.setShop(shop);
+		hdd.setName("hdd");
+		hdd.setfClsNum(3);
+		
+		Characteristic mem = new Characteristic();
+		mem.setShop(shop);
+		mem.setName("mem");
+		mem.setfClsNum(3);
+		
+		proc = shopSrv.saveCharacteristic(proc);
+		hdd = shopSrv.saveCharacteristic(hdd);
+		mem = shopSrv.saveCharacteristic(mem);
+		
+		Product p1 = new Product();
+		p1.setDescription("laptop1");
+		p1.setIntegrationId("integ1");
+		p1.setShop(shop);
+		
+		ProdChr pc1Mem = new ProdChr();
+		pc1Mem.setChr(mem);
+		pc1Mem.setProd(p1);
+		pc1Mem.setValue("4GB");
+		
+		ProdChr pc1Hdd = new ProdChr();
+		pc1Hdd.setChr(hdd);
+		pc1Hdd.setProd(p1);
+		pc1Hdd.setValue("500GB");
+		
+		ProdChr pc1Proc = new ProdChr();
+		pc1Proc.setChr(proc);
+		pc1Proc.setProd(p1);
+		pc1Proc.setValue("i7");
+		
+		p1.getCharacteristics().add(pc1Mem);
+		p1.getCharacteristics().add(pc1Hdd);
+		p1.getCharacteristics().add(pc1Proc);
+		
+		Product p2 = new Product();
+		p2.setDescription("laptop2");
+		p2.setIntegrationId("integ2");
+		p2.setShop(shop);
+		
+		ProdChr pc2Mem = new ProdChr();
+		pc2Mem.setChr(mem);
+		pc2Mem.setProd(p2);
+		pc2Mem.setValue("4GB");
+		
+		ProdChr pc2Hdd = new ProdChr();
+		pc2Hdd.setChr(hdd);
+		pc2Hdd.setProd(p2);
+		pc2Hdd.setValue("1000GB");
+		
+		ProdChr pc2Proc = new ProdChr();
+		pc2Proc.setChr(proc);
+		pc2Proc.setProd(p2);
+		pc2Proc.setValue("i5");
+		
+		p2.getCharacteristics().add(pc2Mem);
+		p2.getCharacteristics().add(pc2Hdd);
+		p2.getCharacteristics().add(pc2Proc);
+		
+		shopSrv.addProduct(p1);
+		shopSrv.addProduct(p2);
+
+		Rule rule = new Rule();
+		rule.setDesc(TestUtils.generateRandStr(10));
+		rule.setShop(shop);
+		rule.setRel(Relevance.REL_HIGH);
+		
+		LogClause logClause = new AndClause(
+						new OrClause(
+								new Literal(proc, 0),
+								new NotClause(new Literal(mem, 1))),
+						new NotClause(
+								new Literal(mem, 0)));
+		rule.setLogClause(logClause);
+		
+		shopSrv.saveRule(rule);
+		
+		shopSrv.deleteShop(shop.getId().longValue());
+		
+		List<Shop> shops = shopSrv.listShops();
+		for (Shop s : shops) {
+			if (s.getId().longValue() == shop.getId().longValue()) Assert.fail("Shop should not exist!");
+		}
 	}
 
 }

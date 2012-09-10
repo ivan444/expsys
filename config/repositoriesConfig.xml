@@ -21,6 +21,12 @@
 				<constructor-arg>
 					<value>imaing.expsys.server.model.ShopEnt</value>
 				</constructor-arg>
+				<property name="chrDao">
+            <ref bean="chrDao" />
+        </property>
+        <property name="prodDao">
+            <ref bean="prodDao" />
+        </property>
 			</bean>
 		</property>
 	</bean>
@@ -34,6 +40,15 @@
         <constructor-arg>
           <value>imaing.expsys.server.model.CharacteristicEnt</value>
         </constructor-arg>
+        <property name="prodChrDao">
+            <ref bean="prodChrDao" />
+        </property>
+        <property name="fclsDao">
+            <ref bean="fuzzyClsDao" />
+        </property>
+        <property name="ruleDao">
+            <ref bean="ruleDao" />
+        </property>
       </bean>
     </property>
   </bean>

@@ -28,7 +28,8 @@ import javax.persistence.UniqueConstraint;
 @NamedQueries({
     @NamedQuery(name="RuleEnt.listRulesForShop",query="select e from RuleEnt as e where e.shop=:shop"),
     @NamedQuery(name="RuleEnt.listLogClausesForRule",query="select e from LogClauseEnt as e where e.rule=:rule"),
-    @NamedQuery(name="RuleEnt.getRootLogClauseForRule",query="select e from LogClauseEnt as e where e.rule=:rule and nsLeft=1")
+    @NamedQuery(name="RuleEnt.getRootLogClauseForRule",query="select e from LogClauseEnt as e where e.rule=:rule and nsLeft=1"),
+    @NamedQuery(name="RuleEnt.getLiteralEntsForCharacteristic",query="select e from LiteralEnt as e where e.chr=:chr")
 })
 public class RuleEnt extends BaseEntity<Rule> {
 	private static final long serialVersionUID = 1L;

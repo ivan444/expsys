@@ -85,15 +85,10 @@ public class ProductDAOImpl extends GenericDAOImpl<ProductEnt, Product> implemen
 	}
 	
 	@Override
-	@Transactional(readOnly=false)
-	public void delete(Long id) throws InvalidDataException {
-		if (id == null) throw new InvalidDataException("Trying to delete object with null ID!");
-		ProductEnt ent = em.find(ProductEnt.class, id);
+	protected void extraDeleteOperations(ProductEnt ent)
+			throws InvalidDataException {
 		Product p = ent.getCleaned();
-		
 		prodChrDao.deleteAllForProduct(p);
-		
-		delete(ent);
 	}
 
 }

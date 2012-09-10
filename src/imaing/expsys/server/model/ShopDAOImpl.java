@@ -1,13 +1,20 @@
 package imaing.expsys.server.model;
 
+import imaing.expsys.client.domain.Characteristic;
+import imaing.expsys.client.domain.Product;
 import imaing.expsys.client.domain.Shop;
 import imaing.expsys.shared.exceptions.InvalidDataException;
+
+import java.util.List;
 
 import javax.persistence.NoResultException;
 
 import org.springframework.transaction.annotation.Transactional;
 
 public class ShopDAOImpl extends GenericDAOImpl<ShopEnt, Shop> implements ShopDAO {
+	
+	private ProductDAO prodDao;
+	private CharacteristicDAO chrDao;
 	
 	public ShopDAOImpl(Class<ShopEnt> type) {
 		super(type);
@@ -48,5 +55,25 @@ public class ShopDAOImpl extends GenericDAOImpl<ShopEnt, Shop> implements ShopDA
 		} else {
 			return result.getCleaned();
 		}
+	}
+
+	@Override
+	protected void extraDeleteOperations(ShopEnt ent)
+			throws InvalidDataException {
+		Shop shop = ent.getCleaned();
+		
+		List<Product> prods = prodDao.listProductsForShop(shop);
+		prodDao.deleteAll(prods);
+		
+		List<Characteristic> chrs = chrDao.listCharacteristicsForShop(shop);
+		chrDao.deleteAll(chrs);
+	}
+
+	public void setChrDao(CharacteristicDAO chrDao) {
+		this.chrDao = chrDao;
+	}
+
+	public void setProdDao(ProductDAO prodDao) {
+		this.prodDao = prodDao;
 	}
 }

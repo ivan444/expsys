@@ -20,7 +20,8 @@ import javax.persistence.UniqueConstraint;
 ))
 @NamedQueries({
     @NamedQuery(name="ProdChrEnt.listProdChrForProduct",query="select e from ProdChrEnt as e where e.product=:product"),
-    @NamedQuery(name="ProdChrEnt.getProdChrForProductAndCharacteristic",query="select e from ProdChrEnt as e where e.product=:product and e.chr=:chr")
+    @NamedQuery(name="ProdChrEnt.getProdChrForProductAndCharacteristic",query="select e from ProdChrEnt as e where e.product=:product and e.chr=:chr"),
+    @NamedQuery(name="ProdChrEnt.listProdChrForCharacteristic",query="select e from ProdChrEnt as e where e.chr=:chr")
 })
 public class ProdChrEnt extends BaseEntity<ProdChr> {
 	private static final long serialVersionUID = 1L;

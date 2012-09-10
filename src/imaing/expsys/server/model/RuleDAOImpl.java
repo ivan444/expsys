@@ -1,5 +1,6 @@
 package imaing.expsys.server.model;
 
+import imaing.expsys.client.domain.Characteristic;
 import imaing.expsys.client.domain.LogClause;
 import imaing.expsys.client.domain.Rule;
 import imaing.expsys.client.domain.Shop;
@@ -55,24 +56,6 @@ public class RuleDAOImpl extends GenericDAOImpl<RuleEnt, Rule> implements RuleDA
 	
 	@Override
 	@Transactional(readOnly=false)
-	public void delete(Rule dto) throws InvalidDataException {
-		if (dto == null) throw new InvalidDataException("Trying to delete null object!");
-		else if (dto.getId() == null) throw new InvalidDataException("Trying to delete unsaved object!");
-		
-		RuleEnt ent = em.find(RuleEnt.class, dto.getId());
-		
-		LogClause rootLc = getRootLogClauseForRule(dto);
-		
-		if (rootLc != null) {
-			LogClauseEnt<?> lce = em.find(LogClauseEnt.class, rootLc.getId());
-			em.remove(lce);
-		}
-		
-		em.remove(ent);
-	}
-	
-	@Override
-	@Transactional(readOnly=false)
 	public Rule save(Rule gRule) throws InvalidDataException {
 		if (gRule == null) throw new InvalidDataException("Trying to save null object!");
 		RuleEnt ent = new RuleEnt();
@@ -114,6 +97,29 @@ public class RuleDAOImpl extends GenericDAOImpl<RuleEnt, Rule> implements RuleDA
 		
 		if (result == null) return null;
 		else return (LogClause)result.getCleaned();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<LiteralEnt> getLiteralEntsForCharacteristic(Characteristic chr) {
+		List<LiteralEnt> ents = (List<LiteralEnt>) em
+				.createNamedQuery("RuleEnt.getLiteralEntsForCharacteristic")
+				.setParameter("chr", new CharacteristicEnt(chr)).getResultList();
+
+		return ents;
+	}
+
+	@Override
+	protected void extraDeleteOperations(RuleEnt ent)
+			throws InvalidDataException {
+		
+		Rule rule = ent.getCleaned();
+		LogClause rootLc = getRootLogClauseForRule(rule);
+		
+		if (rootLc != null) {
+			LogClauseEnt<?> lce = em.find(LogClauseEnt.class, rootLc.getId());
+			em.remove(lce);
+		}
 	}
 	
 }

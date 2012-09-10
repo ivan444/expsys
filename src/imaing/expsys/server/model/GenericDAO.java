@@ -60,4 +60,12 @@ public interface GenericDAO<E extends BaseEntity<G>, G extends DTOObject> {
 	 */
 	public void delete(Long id) throws InvalidDataException;
 	
+	/**
+	 * Delete all DTOs.
+	 * 
+	 * @param gs DTOs to be deleted.
+	 * @throws InvalidDataException
+	 */
+	public void deleteAll(Collection<G> gs) throws InvalidDataException;
+	
 }
