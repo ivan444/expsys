@@ -15,8 +15,8 @@ import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name="characteristic",uniqueConstraints=@UniqueConstraint(
-		columnNames={"shop_id", "name"}
+@Table(name="fuzzychrcls",uniqueConstraints=@UniqueConstraint(
+		columnNames={"chr_id", "xleftup", "xleftdown", "xrightup", "xrightdown"}
 ))
 @NamedQueries({
     @NamedQuery(name="FuzzyChrClsEnt.listForCharacteristic",query="select e from FuzzyChrClsEnt as e where e.chr=:chr")
