@@ -107,5 +107,18 @@
       </bean>
     </property>
   </bean>
+  
+	<bean id="fuzzyChrClsDao" parent="abstractDao">
+    <property name="proxyInterfaces">
+      <value>imaing.expsys.server.model.FuzzyChrClsDAO</value>
+    </property>
+    <property name="target">
+      <bean class="imaing.expsys.server.model.FuzzyChrClsDAOImpl" parent="abstractDaoTarget">
+        <constructor-arg>
+          <value>imaing.expsys.server.model.FuzzyChrClsEnt</value>
+        </constructor-arg>
+      </bean>
+    </property>
+  </bean>
 	
 </beans>
