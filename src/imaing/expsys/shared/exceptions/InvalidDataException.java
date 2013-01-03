@@ -3,7 +3,8 @@ package imaing.expsys.shared.exceptions;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 /**
- * Work with invalid data exception.
+ * Exception associated with persisting invalid data or trying to
+ * retrieve data using invalid parameters.
  *
  */
 public class InvalidDataException extends Exception implements IsSerializable {

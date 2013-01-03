@@ -114,16 +114,19 @@ public class ShopView extends Composite implements ShopPresenter.Display {
 	
 	// TODO remove this!
 	private void showFuzzyClasses() {
-		Element p = DOM.getElementById("fcls");
-		Element div = DOM.createDiv();
-		p.insertFirst(div);
+//		Element fclsContainer = DOM.getElementById("fcls");
+//		Element div = DOM.createDiv();
+//		p.insertFirst(div);
+//		fclsDiv.appendChild(div);
+		
+//		DOM.appendChild(fclsContainer, div);
 		
 		// load data from somewhere (here randomly generated)
-		double[] data = new double[10];
-		for (int i = 0; i < data.length; i++) {
-			data[i] = Math.random() + .1;
-		}
-
+//		double[] data = new double[10];
+//		for (int i = 0; i < data.length; i++) {
+//			data[i] = Math.random() + .1;
+//		}
+		
 		// convert data into jsarray (see
 		// https://developers.google.com/web-toolkit/doc/latest/DevGuideCodingBasicsJSNI
 		// for more documentation on overlay types etc.
@@ -163,12 +166,14 @@ public class ShopView extends Composite implements ShopPresenter.Display {
 		FuzzySet fs2 = FuzzySet.instance(fs2xData, fs2yData);
 		fSets.push(fs2);
 
-		createDragCirc(div, fSets);
+		createDragCirc("fcls", fSets);
 	}
 	
 	// call d3 with dom element & data
-	private native void createDragCirc(Element div, JsArray<FuzzySet> fSets)/*-{
-		$wnd.dragCirc(div, fSets);
+	private native void createDragCirc(String div, JsArray<FuzzySet> fSets)/*-{
+		$wnd.onload = function() {
+			$wnd.dragCirc(div, fSets);
+		};
 	}-*/;
 	
 	private void initCharacteristics() {

@@ -7,6 +7,7 @@ import imaing.expsys.shared.Relevance;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -19,7 +20,6 @@ import javax.persistence.UniqueConstraint;
 
 /**
  * http://www.slideshare.net/billkarwin/sql-antipatterns-strike-back
- *
  */
 @Entity
 @Table(name="fuzzy_rule",uniqueConstraints=@UniqueConstraint(
@@ -35,7 +35,7 @@ public class RuleEnt extends BaseEntity<Rule> {
 	private static final long serialVersionUID = 1L;
 	
 	@Column(name="rel", nullable=false)
-	@Enumerated
+	@Enumerated(EnumType.STRING)
 	private Relevance rel;
 	
 	@ManyToOne(fetch=FetchType.EAGER, cascade = CascadeType.REFRESH)

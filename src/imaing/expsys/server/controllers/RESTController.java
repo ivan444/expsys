@@ -35,6 +35,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
+/**
+ * Controller responsible for handling REST API calls.
+ * 
+ */
 @Controller
 public class RESTController {
 	@Autowired private ShopDAO shpDao;

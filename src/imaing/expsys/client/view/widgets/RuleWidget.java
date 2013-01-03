@@ -19,7 +19,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -257,11 +256,6 @@ public class RuleWidget extends Composite {
 					public boolean isComplete() {
 						boolean ret= firstChild != null && secondChild != null
 								&& firstChild.isComplete() && secondChild.isComplete();
-						Window.alert("OR is " + ret
-								+ "\n" + (firstChild != null)
-								+ "\n" + (secondChild != null)
-								+ "\n" + (firstChild == null ? false : firstChild.isComplete())
-								+ "\n" + (secondChild == null ? false : secondChild.isComplete()));
 						return ret;
 					}
 					
@@ -382,7 +376,6 @@ public class RuleWidget extends Composite {
 	
 	private void buildRuleLogClause() {
 		rule.setLogClause(clauseBuilder.buildLogClause());
-		Window.alert("Log clause is built! " + rule.getLogClause());
 		clauseBuilder = null;
 	}
 	

@@ -9,9 +9,11 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.persistence.Transient;
 
 @Entity
+@Table(name="and_clause")
 @DiscriminatorValue("AND")
 public class AndClauseEnt extends LogClauseEnt<AndClause> {
 	private static final long serialVersionUID = 1L;

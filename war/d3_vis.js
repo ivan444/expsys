@@ -40,7 +40,7 @@ function zipxs(xs, ys) {
 	return zip;
 }
 
-function dragCirc(div, fSets) {
+function dragCirc(divId, fSets) {
 
   fuzzySets = fSets;
   var colors = ["red", "blue", "green", "yellow"];
@@ -52,9 +52,14 @@ function dragCirc(div, fSets) {
 	}
   }
   
-  var svg = d3.select(div).append("svg")
+  var svgDiv = document.getElementById("fcls");
+//  var svg = d3.select("#" + divId).append("svg")
+  var svg = d3.select(svgDiv).append("svg")
 	.attr("width", width)
 	.attr("height", height);
+  console.log("Selected: " + svgDiv);
+  console.log("Selected: " + d3.select("#" + divId));
+  console.log("SVG: " + svg);
   
   var drag = d3.behavior.drag()
 	  .origin(Object)

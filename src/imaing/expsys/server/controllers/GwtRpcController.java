@@ -1,6 +1,5 @@
 package imaing.expsys.server.controllers;
 
-
 import imaing.expsys.server.SessionAware;
 
 import javax.servlet.ServletContext;
@@ -25,6 +24,7 @@ public class GwtRpcController extends RemoteServiceServlet implements
 	
 	private ServletContext servletContext;
 	private RemoteService remoteService;
+	@SuppressWarnings("rawtypes")
 	private Class remoteServiceClass;
 
 	public void setRemoteService(RemoteService remoteService) {
@@ -63,12 +63,10 @@ public class GwtRpcController extends RemoteServiceServlet implements
 			RPCRequest rpcRequest = RPC.decodeRequest(payload,
 					this.remoteServiceClass);
 			
-			
 			// inject session variable into remote services handler if session aware
 			if (remoteService instanceof SessionAware) {
 				((SessionAware) remoteService).setSession(request.getSession());
 			}
-			
 
 			// delegate work to the spring injected service
 			return RPC.invokeAndEncodeResponse(this.remoteService, rpcRequest

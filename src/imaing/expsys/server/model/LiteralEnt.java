@@ -7,11 +7,13 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import imaing.expsys.client.domain.Literal;
 
 @Entity
+@Table(name="literal")
 @DiscriminatorValue("LITERAL")
 public class LiteralEnt extends LogClauseEnt<Literal> {
 	private static final long serialVersionUID = 1L;

@@ -9,9 +9,11 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.persistence.Transient;
 
 @Entity
+@Table(name="not_clause")
 @DiscriminatorValue("NOT")
 public class NotClauseEnt extends LogClauseEnt<NotClause> {
 	private static final long serialVersionUID = 1L;

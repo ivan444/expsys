@@ -2,6 +2,10 @@ package imaing.expsys.shared;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 
+/**
+ * Rule relevance value (it is used to express priority
+ * of the rule).
+ */
 public enum Relevance implements IsSerializable {
 	REL_HIGH(1.0),
 	REL_MID(0.6),
