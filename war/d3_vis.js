@@ -1,18 +1,5 @@
 
-var fuzzySets = undefined;
-var data = [];
-var xpad = 30;
-var ypad = 10;
-var ymax = 100;
-var xmax = 600;
-var width = 700,
-	height = 500,
-	strokeW = 1.5,
-	circR = 5;
-var circHalfW = circR + strokeW + xpad;
-var circRS = circR + strokeW;
-
-function flatten(arr){
+function flatten(arr) {
 	var isArray = function(obj) {
 	    return Object.prototype.toString.call(obj) === '[object Array]';
 	}
@@ -29,7 +16,7 @@ function flatten(arr){
 	return flat;
 }
 
-function zipxs(xs, ys) {
+function zipxs(xs, ys, xpad, ypad, ymax) {
 	var zip = [];
 	for (var i = 0; i < xs.length; i++) {
 		zip.push({
@@ -41,6 +28,18 @@ function zipxs(xs, ys) {
 }
 
 function dragCirc(divId, fSets) {
+  var fuzzySets = undefined;
+  var data = [];
+  var xpad = 32;
+  var ypad = 10;
+  var ymax = 100;
+  var xmax = 600;
+  var width = 700,
+	  height = 150,
+	  strokeW = 1.5,
+	  circR = 5;
+  var circHalfW = circR + strokeW + xpad;
+  var circRS = circR + strokeW;
 
   fuzzySets = fSets;
   var colors = ["red", "blue", "green", "yellow"];
@@ -52,14 +51,10 @@ function dragCirc(divId, fSets) {
 	}
   }
   
-  var svgDiv = document.getElementById("fcls");
-//  var svg = d3.select("#" + divId).append("svg")
+  var svgDiv = document.getElementById(divId);
   var svg = d3.select(svgDiv).append("svg")
 	.attr("width", width)
 	.attr("height", height);
-  console.log("Selected: " + svgDiv);
-  console.log("Selected: " + d3.select("#" + divId));
-  console.log("SVG: " + svg);
   
   var drag = d3.behavior.drag()
 	  .origin(Object)
@@ -109,7 +104,7 @@ function dragCirc(divId, fSets) {
   };
   
   var updateLines = function() {
-	  var lines = d3.select("svg").selectAll(".borders").selectAll("line");
+	  var lines = svg.selectAll(".borders").selectAll("line");
 	  lines = flatten(lines);
 	  var padd = xpad;
 	  for (var i = 0; i < fuzzySets.length; i++) {
@@ -144,7 +139,7 @@ function dragCirc(divId, fSets) {
 	for (var i = 0; i < fuzzySets.length; i++) {
 		var fsi = fuzzySets[i];
 		svg.append("path")
-			.attr("d", areaLineGen(zipxs(fsi.xs, fsi.ys)))
+			.attr("d", areaLineGen(zipxs(fsi.xs, fsi.ys, xpad, ypad, ymax)))
 			.style("stroke-width", 0)
 			.style("fill", colors[i])
 			.style("opacity", "0.25");
@@ -152,11 +147,11 @@ function dragCirc(divId, fSets) {
   };
   
   var updateAreas = function() {
-	  var paths = d3.select("svg").selectAll("path");
+	  var paths = svg.selectAll("path");
 	  var pData = [];
 	  for (var i = 0; i < fuzzySets.length; i++) {
 		  var fsi = fuzzySets[i];
-		  pData.push(zipxs(fsi.xs, fsi.ys));
+		  pData.push(zipxs(fsi.xs, fsi.ys, xpad, ypad, ymax));
 	  }
 	  paths.data(pData).attr("d", areaLineGen);
   };

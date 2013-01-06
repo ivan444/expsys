@@ -34,8 +34,6 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
 import com.google.gwt.user.cellview.client.TextColumn;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
@@ -167,17 +165,18 @@ public class ShopView extends Composite implements ShopPresenter.Display {
 		fSets.push(fs2);
 
 		createDragCirc("fcls", fSets);
+		createDragCirc("fcls2", fSets);
 	}
 	
 	// call d3 with dom element & data
 	private native void createDragCirc(String div, JsArray<FuzzySet> fSets)/*-{
-		$wnd.onload = function() {
-			$wnd.dragCirc(div, fSets);
-		};
+		// TODO: @Test
+		// TODO: Remove!! fsets should be binded! This is for test ONLY!
+		var cloned = JSON.parse(JSON.stringify(fSets));
+		$wnd.dragCirc(div, cloned);
 	}-*/;
 	
 	private void initCharacteristics() {
-		showFuzzyClasses();
 		chrsTable = new CellTable<Characteristic>();
 
 	    // Create name column.
@@ -446,6 +445,12 @@ public class ShopView extends Composite implements ShopPresenter.Display {
 		});
 		
 		this.rulesPane.add(freshRWdgt);
+	}
+
+	@Override
+	protected void onLoad() {
+		super.onLoad();
+		showFuzzyClasses();
 	}
 
 }
