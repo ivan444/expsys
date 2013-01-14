@@ -3,6 +3,8 @@ package imaing.expsys.client.view;
 import imaing.expsys.client.domain.Characteristic;
 import imaing.expsys.client.domain.FuzzyClass;
 import imaing.expsys.client.domain.FuzzySet;
+import imaing.expsys.client.domain.JsCharacteristicFcls;
+import imaing.expsys.client.domain.JsCharacteristicValue;
 import imaing.expsys.client.domain.ProdChr;
 import imaing.expsys.client.domain.Product;
 import imaing.expsys.client.domain.Rule;
@@ -119,23 +121,6 @@ public class ShopView extends Composite implements ShopPresenter.Display {
 		
 //		DOM.appendChild(fclsContainer, div);
 		
-		// load data from somewhere (here randomly generated)
-//		double[] data = new double[10];
-//		for (int i = 0; i < data.length; i++) {
-//			data[i] = Math.random() + .1;
-//		}
-		
-		// convert data into jsarray (see
-		// https://developers.google.com/web-toolkit/doc/latest/DevGuideCodingBasicsJSNI
-		// for more documentation on overlay types etc.
-		//
-		// the idea is that a native js object gets passed into the js code
-		// so it runs fairly fast in dev mode
-//				JsArrayNumber jsData = JavaScriptObject.createArray().cast();
-//				for (int i = 0; i < data.length; i++) {
-//					jsData.push(data[i]);
-//				}
-		
 		JsArray<FuzzySet> fSets = JavaScriptObject.createArray().cast();
 		
 		JsArrayNumber fs1xData = JavaScriptObject.createArray().cast();
@@ -143,12 +128,7 @@ public class ShopView extends Composite implements ShopPresenter.Display {
 		fs1xData.push(100.0);
 		fs1xData.push(200.0);
 		fs1xData.push(300.0);
-		JsArrayNumber fs1yData = JavaScriptObject.createArray().cast();
-		fs1yData.push(110.0);
-		fs1yData.push(10.0);
-		fs1yData.push(10.0);
-		fs1yData.push(110.0);
-		FuzzySet fs1 = FuzzySet.instance(fs1xData, fs1yData);
+		FuzzySet fs1 = FuzzySet.instance(fs1xData, 0);
 		fSets.push(fs1);
 		
 		JsArrayNumber fs2xData = JavaScriptObject.createArray().cast();
@@ -156,24 +136,28 @@ public class ShopView extends Composite implements ShopPresenter.Display {
 		fs2xData.push(350.0);
 		fs2xData.push(350.0);
 		fs2xData.push(650.0);
-		JsArrayNumber fs2yData = JavaScriptObject.createArray().cast();
-		fs2yData.push(110.0);
-		fs2yData.push(10.0);
-		fs2yData.push(10.0);
-		fs2yData.push(110.0);
-		FuzzySet fs2 = FuzzySet.instance(fs2xData, fs2yData);
+		FuzzySet fs2 = FuzzySet.instance(fs2xData, 1);
 		fSets.push(fs2);
+		
+		
+		JsArray<JsCharacteristicValue> chrVals = JavaScriptObject.createArray().cast();
+		chrVals.push(JsCharacteristicValue.instance("prva", 10));
+		chrVals.push(JsCharacteristicValue.instance("druga", 30));
+		chrVals.push(JsCharacteristicValue.instance("treća", 100));
+		chrVals.push(JsCharacteristicValue.instance("četvrta neka", 300));
+		
+		JsCharacteristicFcls chr = JsCharacteristicFcls.instance("test", chrVals, fSets);
 
-		createDragCirc("fcls", fSets);
-		createDragCirc("fcls2", fSets);
+		callJsShowFuzzyClasses("fcls", chr);
+		callJsShowFuzzyClasses("fcls2", chr);
 	}
 	
 	// call d3 with dom element & data
-	private native void createDragCirc(String div, JsArray<FuzzySet> fSets)/*-{
+	private native void callJsShowFuzzyClasses(String div, JsCharacteristicFcls chr)/*-{
 		// TODO: @Test
 		// TODO: Remove!! fsets should be binded! This is for test ONLY!
-		var cloned = JSON.parse(JSON.stringify(fSets));
-		$wnd.dragCirc(div, cloned);
+		var cloned = JSON.parse(JSON.stringify(chr));
+		$wnd.showFuzzyClasses(div, cloned);
 	}-*/;
 	
 	private void initCharacteristics() {
