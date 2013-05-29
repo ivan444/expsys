@@ -124,8 +124,14 @@ public class RESTController {
 		mapper.writeResponse(resp.getOutputStream(), Status.OK, "Shops list", shops);
 	}
 	
-	@RequestMapping(value="/v1/shop/{shpemail:[a-zA-Z0-9_\\.\\-\\+]+\\@[a-zA-Z0-9\\-]+\\.[a-zA-Z0-9]+}/product/ranking", method=RequestMethod.GET, consumes="application/json", produces="application/json")
-	public void rankProducts(@RequestBody String body, @PathVariable String shpemail, HttpServletResponse resp) throws IOException {
+	//@RequestMapping(value="/v1/shop/{shpemail:[a-zA-Z0-9_\\.\\-\\+]+\\@[a-zA-Z0-9\\-]+\\.[a-zA-Z0-9]+}/product/ranking", method=RequestMethod.GET, consumes="application/json", produces="application/json")
+	@RequestMapping(value="/v1/shop/{shpId:[0-9]+}/product/ranking", method=RequestMethod.GET, consumes="application/json", produces="application/json")
+	public void rankProducts(@RequestBody String body, @PathVariable Long shpId, HttpServletResponse resp) throws IOException {
+		if (shpId == null) {
+			mapper.writeResponse(resp.getOutputStream(), Status.ERROR, "Invalid shop!");
+			return;
+		}
+		
 		try {
 			Ranking genReq = mapper.read(body, Ranking.class);
 			
@@ -135,10 +141,10 @@ public class RESTController {
 				return;
 			}
 			
-			Shop shop = shpDao.getShopForEmail(shpemail);
+			Shop shop = shpDao.getById(shpId);
 			if (shop == null) {
-				mapper.writeResponse(resp.getOutputStream(),
-						Status.ERROR, "E-mail " + shpemail + " isn't associated with any shop.");
+				mapper.writeResponse(resp.getOutputStream(), Status.ERROR,
+						"There is no shop with ID " + shpId);
 				return;
 			}
 			
@@ -167,7 +173,7 @@ public class RESTController {
 				}
 			}
 			
-			// eval rules and return result
+			// Evaluate rules and return result
 			List<FuzzyClass> fclses = fclsDao.listFClsForShop(shop);
 			List<String> sortedProds = ExpSys.sortProducts(inclProds, inclRules, fclses);
 			Ranking rnk = new Ranking();
