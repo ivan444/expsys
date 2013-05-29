@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class ProductJsonWrapper {
 	private String description;
-	private String integId;;
+	private String integId;
 	private Map<String, String> characteristics;
 	
 	public ProductJsonWrapper() {

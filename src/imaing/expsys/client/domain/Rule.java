@@ -25,11 +25,11 @@ public class Rule extends DTOObject {
 		return new AndClause(logClause, new LogClause() {
 			@Override
 			protected int goRight(int val) {
-				throw new UnsupportedOperationException("This is dummy clause!");
+				return val;
 			}
 			@Override
 			protected int goLeft(int parentVal) {
-				throw new UnsupportedOperationException("This is dummy clause!");
+				return parentVal;
 			}
 			@Override
 			protected double eval(Product p, Map<String, FuzzyClass> fclsByChar) {
@@ -118,7 +118,6 @@ public class Rule extends DTOObject {
 
 	public void buildClausesTree(List<LogClause> logClauses) {
 		if (logClauses.size() == 0) {
-//			throw new IllegalArgumentException("Can't build empty tree!");
 			return;
 		}
 		
@@ -128,7 +127,6 @@ public class Rule extends DTOObject {
 				return o1.getNsLeft().intValue()-o2.getNsLeft().intValue();
 			}
 		});
-		
 		
 		LogClause parent = logClauses.get(0);
 		recursiveTreeBuild(logClauses, 0);
@@ -153,11 +151,9 @@ public class Rule extends DTOObject {
 				return curIdx;
 			}
 			
-			
 			HasLeft lcHl = (HasLeft) lc;
 			lcHl.setLeftClause(logClauses.get(curIdx+1));
 			curIdx = recursiveTreeBuild(logClauses, curIdx+1);
-			
 			
 			if (lcNext.getNsLeft().intValue() > lc.getNsRight().intValue()) {
 				HasRight lcHr = (HasRight) lc;

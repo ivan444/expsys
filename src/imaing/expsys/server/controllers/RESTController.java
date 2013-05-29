@@ -76,15 +76,21 @@ public class RESTController {
 	 * @param resp Servlet response object for sending response to the caller.
 	 * @throws IOException Thrown if filling of servlet response fails.
 	 */
-	@RequestMapping(value="/v1/shop/{shpemail:[a-zA-Z0-9_\\.\\-\\+]+\\@[a-zA-Z0-9\\-]+\\.[a-zA-Z0-9]+}/product", method=RequestMethod.POST, consumes="application/json", produces="application/json")
-	public void saveProducts(@RequestBody String body, @PathVariable String shpemail, HttpServletResponse resp) throws IOException {
+	//@RequestMapping(value="/v1/shop/{shpemail:[a-zA-Z0-9_\\.\\-\\+]+\\@[a-zA-Z0-9\\-]+\\.[a-zA-Z0-9]+}/product", method=RequestMethod.POST, consumes="application/json", produces="application/json")
+	@RequestMapping(value="/v1/shop/{shpId:[0-9]+}/product/", method=RequestMethod.POST, consumes="application/json", produces="application/json")
+	public void saveProducts(@RequestBody String body, @PathVariable Long shpId, HttpServletResponse resp) throws IOException {
+		if (shpId == null) {
+			mapper.writeResponse(resp.getOutputStream(), Status.ERROR, "Invalid shop!");
+			return;
+		}
+		
 		try {
 			List<ProductJsonWrapper> genLst = mapper.read(body, new TypeReference<List<ProductJsonWrapper>>(){});
 			
-			Shop shop = shpDao.getShopForEmail(shpemail);
+			Shop shop = shpDao.getById(shpId);
 			if (shop == null) {
 				mapper.writeResponse(resp.getOutputStream(), Status.ERROR,
-						"E-mail " + shpemail + " isn't associated with any shop.");
+						"There is no shop with ID " + shpId);
 				return;
 			}
 			
@@ -110,6 +116,12 @@ public class RESTController {
 		}
 		
 		mapper.writeResponse(resp.getOutputStream(), Status.OK, "Products are saved.");
+	}
+	
+	@RequestMapping(value="/v1/shop", method=RequestMethod.GET, consumes="application/json", produces="application/json")
+	public void listShops(HttpServletResponse resp) throws IOException {
+		List<Shop> shops = shpDao.list();
+		mapper.writeResponse(resp.getOutputStream(), Status.OK, "Shops list", shops);
 	}
 	
 	@RequestMapping(value="/v1/shop/{shpemail:[a-zA-Z0-9_\\.\\-\\+]+\\@[a-zA-Z0-9\\-]+\\.[a-zA-Z0-9]+}/product/ranking", method=RequestMethod.GET, consumes="application/json", produces="application/json")
