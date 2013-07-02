@@ -7,6 +7,24 @@ import com.google.gwt.core.client.JavaScriptObject;
  * fuzzy classes graph.  
  */
 public class JsCharacteristicValue extends JavaScriptObject {
+//	private FuzzyClass ownerObject;
+//	
+//	public FuzzyClass getOwnerObject() {
+//		return ownerObject;
+//	}
+//	
+//	public void setOwnerObject(FuzzyClass ownerObject) {
+//		this.ownerObject = ownerObject;
+//	}
+//	
+//	/**
+//	 * Update FuzzySet coordinates with contents
+//	 * of JsFuzzySet.
+//	 */
+//	public void updateFromOwner() {
+//		ownerObject.setxPos(getXPos());
+//	}
+	
 	// Overlay types always have protected, zero-arg ctors
 	protected JsCharacteristicValue() {}
 	
@@ -17,5 +35,15 @@ public class JsCharacteristicValue extends JavaScriptObject {
 	 */
 	public static native JsCharacteristicValue instance(String value, int position) /*-{
 		return {val: value, x: position};
+	}-*/;
+	
+	public static JsCharacteristicValue instance(FuzzyClass ownerObject) {
+		JsCharacteristicValue jsChrVal = instance(ownerObject.getValue(), ownerObject.getxPos());
+//		jsChrVal.setOwnerObject(ownerObject);
+		return jsChrVal;
+	};
+	
+	public native final int getXPos() /*-{
+		return this.x;
 	}-*/;
 }

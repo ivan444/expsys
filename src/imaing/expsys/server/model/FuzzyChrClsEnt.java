@@ -19,7 +19,8 @@ import javax.persistence.UniqueConstraint;
 		columnNames={"chr_id", "xleftup", "xleftdown", "xrightup", "xrightdown"}
 ))
 @NamedQueries({
-    @NamedQuery(name="FuzzyChrClsEnt.listForCharacteristic",query="select e from FuzzyChrClsEnt as e where e.chr=:chr")
+    @NamedQuery(name="FuzzyChrClsEnt.listForCharacteristic",query="select e from FuzzyChrClsEnt as e where e.chr=:chr"),
+    @NamedQuery(name="FuzzyChrClsEnt.listForShop",query="select e from FuzzyChrClsEnt as e where e.chr.shop=:shop")
 })
 public class FuzzyChrClsEnt extends BaseEntity<FuzzyChrCls> {
 	private static final long serialVersionUID = 1L;

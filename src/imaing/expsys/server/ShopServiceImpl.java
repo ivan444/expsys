@@ -1,6 +1,7 @@
 package imaing.expsys.server;
 
 import imaing.expsys.client.domain.Characteristic;
+import imaing.expsys.client.domain.FuzzyChrCls;
 import imaing.expsys.client.domain.FuzzyClass;
 import imaing.expsys.client.domain.ProdChr;
 import imaing.expsys.client.domain.Product;
@@ -8,18 +9,22 @@ import imaing.expsys.client.domain.Rule;
 import imaing.expsys.client.domain.Shop;
 import imaing.expsys.client.services.ShopService;
 import imaing.expsys.server.model.CharacteristicDAO;
+import imaing.expsys.server.model.FuzzyChrClsDAO;
 import imaing.expsys.server.model.FuzzyClassDAO;
 import imaing.expsys.server.model.ProdChrDAO;
 import imaing.expsys.server.model.ProductDAO;
 import imaing.expsys.server.model.RuleDAO;
 import imaing.expsys.server.model.ShopDAO;
+import imaing.expsys.shared.Tuple;
 import imaing.expsys.shared.exceptions.InvalidDataException;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpSession;
@@ -33,6 +38,7 @@ public class ShopServiceImpl implements ShopService, SessionAware {
 	@Autowired private ProdChrDAO prodChrDao;
 	@Autowired private CharacteristicDAO chrDao;
 	@Autowired private FuzzyClassDAO fclsDao;
+	@Autowired private FuzzyChrClsDAO fChrClsDao;
 	@Autowired private RuleDAO ruleDao;
 	
 	public ShopServiceImpl() {
@@ -120,12 +126,29 @@ public class ShopServiceImpl implements ShopService, SessionAware {
 	@Override
 	public Characteristic saveCharacteristic(Characteristic chr)
 			throws InvalidDataException {
-		return chrDao.save(chr);
+		Characteristic c = chrDao.save(chr);
+		int fSetsNum = c.getfClsNum();
+		
+		final int shift = 50;
+		for (int i = 0; i < fSetsNum; i++) {
+			FuzzyChrCls fSet = new FuzzyChrCls();
+			fSet.setChr(c);
+			fSet.setxLeftDown(i*shift);
+			fSet.setxLeftUp(i*shift+20);
+			fSet.setxRightUp(i*shift+50);
+			fSet.setxRightDown(i*shift+70);
+			fChrClsDao.save(fSet);
+		}
+		
+		return c;
 	}
 
 	@Override
 	public void deleteCharacteristic(long chrId) throws InvalidDataException {
-		chrDao.delete(Long.valueOf(chrId));
+		Long characteristicId = Long.valueOf(chrId);
+		List<FuzzyChrCls> fSets = fChrClsDao.listForCharacteristic(chrDao.getById(characteristicId));
+		fChrClsDao.deleteAll(fSets);
+		chrDao.delete(characteristicId);
 	}
 
 	@Override
@@ -192,6 +215,67 @@ public class ShopServiceImpl implements ShopService, SessionAware {
 		}
 		
 		return savedProds;
+	}
+
+	@Override
+	public List<FuzzyChrCls> listFuzzyClassesDefinitions(Shop shop) {
+		return fChrClsDao.listForShop(shop);
+	}
+
+	@Override
+	public void updateFuzzyClassesDefinitions(List<FuzzyChrCls> fcls)
+			throws InvalidDataException {
+		for (FuzzyChrCls fc : fcls) {
+			if (fc.getId() == null) throw new InvalidDataException("Some FuzzyChrClses doesn't have ID set!");
+		}
+		
+		for (FuzzyChrCls fc : fcls) {
+			fChrClsDao.save(fc);
+		}
+		
+	}
+
+	@Deprecated
+	@Override
+	public Map<Characteristic, Tuple<List<FuzzyChrCls>, List<FuzzyClass>>> listFuzzySetsAndValsForShop(
+			Shop shop) {
+		List<FuzzyChrCls> fuzzySets = fChrClsDao.listForShop(shop);
+		List<FuzzyClass> fuzzyVals = fclsDao.listFClsForShop(shop);
+		
+		Set<Characteristic> allChrs = new HashSet<Characteristic>();
+		
+		Map<Characteristic, List<FuzzyChrCls>> mapChrFuzSets = new HashMap<Characteristic, List<FuzzyChrCls>>();
+		for (FuzzyChrCls fuzzyChrCls : fuzzySets) {
+			Characteristic chr = fuzzyChrCls.getChr();
+			allChrs.add(chr);
+			List<FuzzyChrCls> fuzSetLst = mapChrFuzSets.get(chr);
+			if (fuzSetLst == null) {
+				fuzSetLst = new LinkedList<FuzzyChrCls>();
+				mapChrFuzSets.put(chr, fuzSetLst);
+			}
+			fuzSetLst.add(fuzzyChrCls);
+		}
+		
+		Map<Characteristic, List<FuzzyClass>> mapChrFuzVals = new HashMap<Characteristic, List<FuzzyClass>>();
+		for (FuzzyClass fuzzyVal : fuzzyVals) {
+			Characteristic chr = fuzzyVal.getChr();
+			allChrs.add(chr);
+			List<FuzzyClass> fuzValLst = mapChrFuzVals.get(chr);
+			if (fuzValLst == null) {
+				fuzValLst = new LinkedList<FuzzyClass>();
+				mapChrFuzVals.put(chr, fuzValLst);
+			}
+			fuzValLst.add(fuzzyVal);
+		}
+		
+		Map<Characteristic, Tuple<List<FuzzyChrCls>, List<FuzzyClass>>> fuzChrDesc = new HashMap<Characteristic, Tuple<List<FuzzyChrCls>,List<FuzzyClass>>>();
+		for (Characteristic chr : allChrs) {
+			Tuple<List<FuzzyChrCls>, List<FuzzyClass>> fuzDesc =
+					new Tuple<List<FuzzyChrCls>, List<FuzzyClass>>(mapChrFuzSets.get(chr), mapChrFuzVals.get(chr));
+			fuzChrDesc.put(chr, fuzDesc);
+		}
+		
+		return fuzChrDesc;
 	}
 
 }

@@ -1,5 +1,5 @@
 /*
- * Visualisation of fuzzy sets for one characteristic.
+ * Visualization of fuzzy sets for one characteristic.
  */
 
 function flatten(arr) {
@@ -47,6 +47,10 @@ function showFuzzyClasses(divId, chr) {
   var circRS = circR + strokeW;
   var ys = [ymax+ypad, ypad, ypad, ymax+ypad];
   
+  // Array of fuzzy classes. Each fuzzy class is represented
+  // by four x-coordinates (top/bottom left/right x; y-coordinates
+  // are known -- max for top, min for bottom, depending on graph
+  // size and padding).  
   fuzzyClasses = chr.fcls;
   var colors = ["red", "blue", "green", "yellow", "orange", "purple", "teal", "violet", "grey", "olive", "brown"];
   
@@ -63,6 +67,7 @@ function showFuzzyClasses(divId, chr) {
   
   
   var svgDiv = document.getElementById(divId);
+  console.log(svgDiv);
   var svg = d3.select(svgDiv).append("svg")
   .attr("width", width)
   .attr("height", height);

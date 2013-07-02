@@ -41,6 +41,9 @@ public class FuzzyClassEnt extends BaseEntity<FuzzyClass> {
 	@ElementCollection(fetch=FetchType.EAGER)
 	private List<Double> membershipVal = new ArrayList<Double>();
 	
+	@Column(name="x_pos")
+	private Integer xPos;
+	
 	public FuzzyClassEnt() {
 	}
 	
@@ -55,6 +58,7 @@ public class FuzzyClassEnt extends BaseEntity<FuzzyClass> {
 		fc.setId(getId());
 		fc.setChr(getChr().getCleaned());
 		fc.setValue(getValue());
+		fc.setxPos(getxPos());
 		
 		List<Double> mvalEnt = getMembershipVal();
 		double[] mvalClean = new double[mvalEnt.size()];
@@ -131,6 +135,15 @@ public class FuzzyClassEnt extends BaseEntity<FuzzyClass> {
 		} else if (!value.equals(other.value))
 			return false;
 		return true;
+	}
+
+	public Integer getxPos() {
+		if (xPos != null) return xPos;
+		else return Integer.valueOf(0);
+	}
+
+	public void setxPos(Integer xPos) {
+		this.xPos = xPos;
 	}
 
 }

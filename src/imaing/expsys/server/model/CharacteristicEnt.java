@@ -33,7 +33,7 @@ public class CharacteristicEnt extends BaseEntity<Characteristic> {
 	private String name;
 	
 	@Column(name="fclsnum")
-	private int fClsNum;
+	private Integer fClsNum;
 	
 	public CharacteristicEnt() {
 	}
@@ -78,11 +78,12 @@ public class CharacteristicEnt extends BaseEntity<Characteristic> {
 		this.name = name;
 	}
 
-	public int getfClsNum() {
-		return fClsNum;
+	public Integer getfClsNum() {
+		if (fClsNum != null) return fClsNum;
+		else return Integer.valueOf(0);
 	}
 
-	public void setfClsNum(int fClsNum) {
+	public void setfClsNum(Integer fClsNum) {
 		this.fClsNum = fClsNum;
 	}
 

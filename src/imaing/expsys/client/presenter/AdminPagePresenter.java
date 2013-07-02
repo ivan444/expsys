@@ -15,14 +15,12 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * Presenter for administration tasks.
  */
 public class AdminPagePresenter implements Presenter {
 
-	private final EventBus eventBus;
 	private final Display display;
 	private final ShopServiceAsync shopSrv;
 	private List<Shop> shops;
@@ -39,8 +37,7 @@ public class AdminPagePresenter implements Presenter {
 		Widget asWidget();
 	}
 	
-	public AdminPagePresenter(ShopServiceAsync rpcService, EventBus eventBus, Display view){
-		this.eventBus = eventBus;
+	public AdminPagePresenter(ShopServiceAsync rpcService, Display view){
 		this.display = view;
 		this.shopSrv = rpcService;
 		

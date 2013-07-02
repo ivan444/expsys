@@ -1,5 +1,6 @@
 package imaing.expsys.client.domain;
 
+
 /**
  * Fuzzy class descriptor for characteristic.
  */

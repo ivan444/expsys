@@ -134,7 +134,7 @@ public class AdminPageView extends Composite implements AdminPagePresenter.Displ
 	@Override
 	public long getSelectedShopId() {
 		if (selectedShop == null) {
-			String errMsg = "No shop is selected!";
+			String errMsg = "No shop selected!";
 			Window.alert(errMsg);
 			throw new IllegalStateException(errMsg);
 		}

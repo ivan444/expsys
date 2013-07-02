@@ -1,17 +1,24 @@
 package imaing.expsys.client.presenter;
 
-
 import imaing.expsys.client.domain.Characteristic;
+import imaing.expsys.client.domain.FuzzyChrCls;
 import imaing.expsys.client.domain.FuzzyClass;
 import imaing.expsys.client.domain.Product;
 import imaing.expsys.client.domain.Rule;
 import imaing.expsys.client.domain.Shop;
 import imaing.expsys.client.services.ShopServiceAsync;
 import imaing.expsys.client.view.BasicDisplay;
+import imaing.expsys.shared.Tuple;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -20,21 +27,18 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
-import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * Presenter for administration of the shop's content.
  */
 public class ShopPresenter implements Presenter {
 
-	private final EventBus eventBus;
 	private final Display display;
 	private final ShopServiceAsync shopSrv;
 	private final Shop shop;
 	
 	private List<Characteristic> characteristics;
 	private List<Product> products;
-	private List<FuzzyClass> fuzzClasses;
 	
 	public interface Display extends BasicDisplay {
 		HasClickHandlers getAddCharacteristic();
@@ -44,8 +48,13 @@ public class ShopPresenter implements Presenter {
 		long getSelectedCharacteristicId();
 		void listCharacteristics(List<Characteristic> chrs);
 		
-		void listFuzzyClasses(List<FuzzyClass> fcls);
+//		void listFuzzyClasses(List<FuzzyClass> fcls);
 		void setFuzzyClassUpdateHandler(FuzzyClassUpdateHandler handl);
+		
+//		void listFuzzyClassesDefinitions(List<FuzzyChrCls> fcls);
+		void setFuzzyClassDefUpdateHandler(FuzzyClassDefUpdateHandler handl);
+		
+		void listFuzzySetsAndVals(Map<Characteristic, Tuple<List<FuzzyChrCls>, List<FuzzyClass>>> fuzSets);
 		
 		void setRuleManager(RuleManager man);
 		void listRules(List<Rule> rules);
@@ -57,6 +66,10 @@ public class ShopPresenter implements Presenter {
 		void listProducts(List<Product> prods);
 		
 		void reportSuccess(String string);
+	}
+	
+	public interface FuzzyClassDefUpdateHandler {
+		void doUpdate(List<FuzzyChrCls> fcls);
 	}
 	
 	public interface FuzzyClassUpdateHandler {
@@ -72,15 +85,13 @@ public class ShopPresenter implements Presenter {
 		void updateRule(Rule r);
 	}
 	
-	public ShopPresenter(ShopServiceAsync rpcService, EventBus eventBus, Display view, Shop shop){
-		this.eventBus = eventBus;
+	public ShopPresenter(ShopServiceAsync rpcService, Display view, Shop shop){
 		this.display = view;
 		this.shopSrv = rpcService;
 		this.shop = shop;
 		
 		this.characteristics = new ArrayList<Characteristic>();
 		this.products = new ArrayList<Product>();
-		this.fuzzClasses = new ArrayList<FuzzyClass>();
 	}
 	
 	@Override
@@ -370,12 +381,41 @@ public class ShopPresenter implements Presenter {
 
 
 	private void listFuzzyClasses() {
+//		shopSrv.listFuzzySetsAndValsForShop(shop, new AsyncCallback<Map<Characteristic,Tuple<List<FuzzyChrCls>,List<FuzzyClass>>>>() {
+//			
+//			@Override
+//			public void onSuccess(
+//					Map<Characteristic, Tuple<List<FuzzyChrCls>, List<FuzzyClass>>> result) {
+//				display.listFuzzySetsAndVals(result);
+//			}
+//			
+//			@Override
+//			public void onFailure(Throwable caught) {
+//				
+//				
+//			}
+//		});
+		
+		
 		shopSrv.listFuzzyClassesForShop(shop, new AsyncCallback<List<FuzzyClass>>() {
 			@Override
-			public void onSuccess(List<FuzzyClass> result) {
-				fuzzClasses.clear();
-				fuzzClasses.addAll(result);
-				display.listFuzzyClasses(result);
+			public void onSuccess(final List<FuzzyClass> fuzzyVals) {
+				shopSrv.listFuzzyClassesDefinitions(shop, new AsyncCallback<List<FuzzyChrCls>>() {
+					
+					@Override
+					public void onSuccess(List<FuzzyChrCls> fuzzySets) {
+						GWT.log(Arrays.toString(fuzzySets.toArray()));
+						GWT.log(Arrays.toString(fuzzyVals.toArray()));
+						showFuzzySets(fuzzySets, fuzzyVals);
+					}
+					
+					@Override
+					public void onFailure(Throwable caught) {
+						String errMsg = "Failed to list fuzzy classes";
+						GWT.log(errMsg, caught);
+						Window.alert(errMsg);
+					}
+				});
 			}
 			
 			@Override
@@ -385,6 +425,43 @@ public class ShopPresenter implements Presenter {
 				Window.alert(errMsg);
 			}
 		});
+	}
+	
+	private void showFuzzySets(List<FuzzyChrCls> fuzzySets, List<FuzzyClass> fuzzyVals) {
+		Set<Characteristic> allChrs = new HashSet<Characteristic>();
+		
+		Map<Characteristic, List<FuzzyChrCls>> mapChrFuzSets = new HashMap<Characteristic, List<FuzzyChrCls>>();
+		for (FuzzyChrCls fuzzyChrCls : fuzzySets) {
+			Characteristic chr = fuzzyChrCls.getChr();
+			allChrs.add(chr);
+			List<FuzzyChrCls> fuzSetLst = mapChrFuzSets.get(chr);
+			if (fuzSetLst == null) {
+				fuzSetLst = new LinkedList<FuzzyChrCls>();
+				mapChrFuzSets.put(chr, fuzSetLst);
+			}
+			fuzSetLst.add(fuzzyChrCls);
+		}
+		
+		Map<Characteristic, List<FuzzyClass>> mapChrFuzVals = new HashMap<Characteristic, List<FuzzyClass>>();
+		for (FuzzyClass fuzzyVal : fuzzyVals) {
+			Characteristic chr = fuzzyVal.getChr();
+			allChrs.add(chr);
+			List<FuzzyClass> fuzValLst = mapChrFuzVals.get(chr);
+			if (fuzValLst == null) {
+				fuzValLst = new LinkedList<FuzzyClass>();
+				mapChrFuzVals.put(chr, fuzValLst);
+			}
+			fuzValLst.add(fuzzyVal);
+		}
+		
+		Map<Characteristic, Tuple<List<FuzzyChrCls>, List<FuzzyClass>>> fuzChrDesc = new HashMap<Characteristic, Tuple<List<FuzzyChrCls>,List<FuzzyClass>>>();
+		for (Characteristic chr : allChrs) {
+			Tuple<List<FuzzyChrCls>, List<FuzzyClass>> fuzDesc =
+					new Tuple<List<FuzzyChrCls>, List<FuzzyClass>>(mapChrFuzSets.get(chr), mapChrFuzVals.get(chr));
+			fuzChrDesc.put(chr, fuzDesc);
+		}
+		
+		display.listFuzzySetsAndVals(fuzChrDesc);
 	}
 	
 }

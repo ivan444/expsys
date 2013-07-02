@@ -4,7 +4,8 @@ public class FuzzyClass extends DTOObject {
 	private Characteristic chr;
 	private String value;
 	private double[] membershipVal;
-
+	private int xPos;
+	
 	public Characteristic getChr() {
 		return chr;
 	}
@@ -66,6 +67,14 @@ public class FuzzyClass extends DTOObject {
 		} else if (!value.equals(other.value))
 			return false;
 		return true;
+	}
+
+	public int getxPos() {
+		return xPos;
+	}
+
+	public void setxPos(int xPos) {
+		this.xPos = xPos;
 	}
 	
 }

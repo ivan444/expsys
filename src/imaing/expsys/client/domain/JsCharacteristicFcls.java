@@ -19,7 +19,7 @@ public class JsCharacteristicFcls extends JavaScriptObject {
 	 * @param fuzzySets
 	 * @return
 	 */
-	public static native JsCharacteristicFcls instance(String chrName, JsArray<JsCharacteristicValue> chrValues, JsArray<FuzzySet> fuzzySets) /*-{
+	public static native JsCharacteristicFcls instance(String chrName, JsArray<JsCharacteristicValue> chrValues, JsArray<JsFuzzySet> fuzzySets) /*-{
 		return {fcls: fuzzySets, chrName: chrName, chrValues: chrValues};
 	}-*/;
 }

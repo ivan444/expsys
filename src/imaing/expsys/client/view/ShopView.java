@@ -1,33 +1,27 @@
 package imaing.expsys.client.view;
 
 import imaing.expsys.client.domain.Characteristic;
+import imaing.expsys.client.domain.FuzzyChrCls;
 import imaing.expsys.client.domain.FuzzyClass;
-import imaing.expsys.client.domain.FuzzySet;
-import imaing.expsys.client.domain.JsCharacteristicFcls;
-import imaing.expsys.client.domain.JsCharacteristicValue;
 import imaing.expsys.client.domain.ProdChr;
 import imaing.expsys.client.domain.Product;
 import imaing.expsys.client.domain.Rule;
 import imaing.expsys.client.domain.Shop;
 import imaing.expsys.client.presenter.ShopPresenter;
+import imaing.expsys.client.presenter.ShopPresenter.FuzzyClassDefUpdateHandler;
 import imaing.expsys.client.presenter.ShopPresenter.FuzzyClassUpdateHandler;
 import imaing.expsys.client.presenter.ShopPresenter.RuleManager;
 import imaing.expsys.client.presenter.ShopPresenter.RuleUpdater;
-import imaing.expsys.client.view.widgets.FuzzyClassesWidget;
-import imaing.expsys.client.view.widgets.FuzzyClassesWidget.SaveHandler;
+import imaing.expsys.client.view.widgets.FuzzySetWidget;
 import imaing.expsys.client.view.widgets.RuleWidget;
 import imaing.expsys.client.view.widgets.RuleWidget.WidgetRuleManager;
+import imaing.expsys.shared.Tuple;
 
 import java.text.ParseException;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.JsArray;
-import com.google.gwt.core.client.JsArrayNumber;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -100,6 +94,7 @@ public class ShopView extends Composite implements ShopPresenter.Display {
 	private RuleManager ruleManager;
 	private final Shop shop;
 	private List<Characteristic> chrs;
+	//private Map<Characteristic, Tuple<List<FuzzyChrCls>, List<FuzzyClass>>> fuzzySets;
 	
 	public ShopView(Shop shop) {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -111,54 +106,6 @@ public class ShopView extends Composite implements ShopPresenter.Display {
 		initCharacteristics();
 		initProducts();
 	}
-	
-	// TODO remove this!
-	private void showFuzzyClasses() {
-//		Element fclsContainer = DOM.getElementById("fcls");
-//		Element div = DOM.createDiv();
-//		p.insertFirst(div);
-//		fclsDiv.appendChild(div);
-		
-//		DOM.appendChild(fclsContainer, div);
-		
-		JsArray<FuzzySet> fSets = JavaScriptObject.createArray().cast();
-		
-		JsArrayNumber fs1xData = JavaScriptObject.createArray().cast();
-		fs1xData.push(50.0);
-		fs1xData.push(100.0);
-		fs1xData.push(200.0);
-		fs1xData.push(300.0);
-		FuzzySet fs1 = FuzzySet.instance(fs1xData, 0);
-		fSets.push(fs1);
-		
-		JsArrayNumber fs2xData = JavaScriptObject.createArray().cast();
-		fs2xData.push(250.0);
-		fs2xData.push(350.0);
-		fs2xData.push(350.0);
-		fs2xData.push(650.0);
-		FuzzySet fs2 = FuzzySet.instance(fs2xData, 1);
-		fSets.push(fs2);
-		
-		
-		JsArray<JsCharacteristicValue> chrVals = JavaScriptObject.createArray().cast();
-		chrVals.push(JsCharacteristicValue.instance("prva", 10));
-		chrVals.push(JsCharacteristicValue.instance("druga", 30));
-		chrVals.push(JsCharacteristicValue.instance("treća", 100));
-		chrVals.push(JsCharacteristicValue.instance("četvrta neka", 300));
-		
-		JsCharacteristicFcls chr = JsCharacteristicFcls.instance("test", chrVals, fSets);
-
-		callJsShowFuzzyClasses("fcls", chr);
-		callJsShowFuzzyClasses("fcls2", chr);
-	}
-	
-	// call d3 with dom element & data
-	private native void callJsShowFuzzyClasses(String div, JsCharacteristicFcls chr)/*-{
-		// TODO: @Test
-		// TODO: Remove!! fsets should be binded! This is for test ONLY!
-		var cloned = JSON.parse(JSON.stringify(chr));
-		$wnd.showFuzzyClasses(div, cloned);
-	}-*/;
 	
 	private void initCharacteristics() {
 		chrsTable = new CellTable<Characteristic>();
@@ -282,8 +229,8 @@ public class ShopView extends Composite implements ShopPresenter.Display {
 	@Override
 	public long getSelectedCharacteristicId() {
 		if (selectedChr == null) {
-			String errMsg = "No characteristic is selected!";
-			Window.alert(errMsg);
+			String errMsg = "No characteristic selected!";
+			GWT.log(errMsg);
 			throw new IllegalStateException(errMsg);
 		}
 		
@@ -318,8 +265,8 @@ public class ShopView extends Composite implements ShopPresenter.Display {
 	@Override
 	public long getSelectedProductId() {
 		if (selectedProd == null) {
-			String errMsg = "No product is selected!";
-			Window.alert(errMsg);
+			String errMsg = "No product selected!";
+			GWT.log(errMsg);
 			throw new IllegalStateException(errMsg);
 		}
 		
@@ -335,30 +282,106 @@ public class ShopView extends Composite implements ShopPresenter.Display {
 		selectedProd = null;
 	}
 	
+//	@Override
+//	public void listFuzzyClasses(List<FuzzyClass> fcls) {
+//		fuzClsesByChr = new HashMap<Characteristic, List<FuzzyClass>>();
+//		
+//		for (FuzzyClass fc : fcls) {
+//			if (!fuzClsesByChr.containsKey(fc.getChr())) {
+//				fuzClsesByChr.put(fc.getChr(), new LinkedList<FuzzyClass>());
+//			}
+//			
+//			fuzClsesByChr.get(fc.getChr()).add(fc);
+//		}
+//		
+//		for (Characteristic c : fuzClsesByChr.keySet()) {
+//			FuzzyClassesWidget fcWdgt = new FuzzyClassesWidget(c, fuzClsesByChr.get(c));
+//			fcWdgt.setSaveHandl(new SaveHandler() {
+//				@Override
+//				public void doSave(List<FuzzyClass> fcls) {
+//					fclsUpdateHandl.doUpdate(fcls);
+//				}
+//			});
+//			this.fclsPane.add(fcWdgt);
+//		}
+//		
+//	}
+	
+
 	@Override
-	public void listFuzzyClasses(List<FuzzyClass> fcls) {
-		Map<Characteristic, List<FuzzyClass>> fclsByChr = new HashMap<Characteristic, List<FuzzyClass>>();
-		
-		for (FuzzyClass fc : fcls) {
-			if (!fclsByChr.containsKey(fc.getChr())) {
-				fclsByChr.put(fc.getChr(), new LinkedList<FuzzyClass>());
-			}
-			
-			fclsByChr.get(fc.getChr()).add(fc);
-		}
-		
-		for (Characteristic c : fclsByChr.keySet()) {
-			FuzzyClassesWidget fcWdgt = new FuzzyClassesWidget(c, fclsByChr.get(c));
-			fcWdgt.setSaveHandl(new SaveHandler() {
-				@Override
-				public void doSave(List<FuzzyClass> fcls) {
-					fclsUpdateHandl.doUpdate(fcls);
-				}
-			});
-			this.fclsPane.add(fcWdgt);
-		}
-		
+	public void setFuzzyClassDefUpdateHandler(FuzzyClassDefUpdateHandler handl) {
+		// TODO Auto-generated method stub
 	}
+
+	@Override
+	public void listFuzzySetsAndVals(Map<Characteristic, Tuple<List<FuzzyChrCls>, List<FuzzyClass>>> fuzzySets) {
+		for (Characteristic c : fuzzySets.keySet()) {
+			Tuple<List<FuzzyChrCls>, List<FuzzyClass>> fuzzySetAndVal = fuzzySets.get(c);
+			FuzzySetWidget fsWdgt = new FuzzySetWidget(c, fuzzySetAndVal.fst, fuzzySetAndVal.snd);
+			this.fclsPane.add(fsWdgt);
+		}
+		
+//		this.fuzzySets = fuzzySets;
+//		showFuzzyClasses();
+	}
+	
+//	private void showFuzzyClasses() {
+////		if (fuzzySets == null) return;
+////		Set<Characteristic> chrs = fuzzySets.keySet();
+////		for (Characteristic chr : chrs) {
+////			Tuple<List<FuzzyChrCls>, List<FuzzyClass>> fuzSet = fuzzySets.get(chr);
+////			showFuzzyClassesForCharacteristic(chr, fuzSet.fst, fuzSet.snd);
+////		}
+//	}
+//		
+//	private void showFuzzyClassesForCharacteristic(Characteristic characteristic, List<FuzzyChrCls> fuzClss, List<FuzzyClass> fuzVals) {
+//		Element fclsContainer = DOM.getElementById("fcls");
+//		Element div = DOM.createDiv();
+//		String divId = "fcls-"+System.currentTimeMillis();
+//		div.setId(divId);
+//		fclsContainer.appendChild(div);
+//	
+////		DOM.appendChild(fclsContainer, div);
+//		
+//		JsArray<JsFuzzySet> fSets = JavaScriptObject.createArray().cast();
+//		for (int i = 0; i < fuzClss.size(); i++) {
+//			fSets.push(fuzClss.get(i).getJsFuzzySet(i));
+//		}
+//		
+////		JsArrayNumber fs1xData = JavaScriptObject.createArray().cast();
+////		fs1xData.push(50.0);
+////		fs1xData.push(100.0);
+////		fs1xData.push(200.0);
+////		fs1xData.push(300.0);
+////		JsFuzzySet fs1 = JsFuzzySet.instance(fs1xData, 0);
+////		fSets.push(fs1);
+////		
+////		JsArrayNumber fs2xData = JavaScriptObject.createArray().cast();
+////		fs2xData.push(250.0);
+////		fs2xData.push(350.0);
+////		fs2xData.push(350.0);
+////		fs2xData.push(650.0);
+////		JsFuzzySet fs2 = JsFuzzySet.instance(fs2xData, 1);
+////		fSets.push(fs2);
+//		
+//		
+//		JsArray<JsCharacteristicValue> chrVals = JavaScriptObject.createArray().cast();
+//		for (int i = 0; i < fuzVals.size(); i++) {
+//			chrVals.push(fuzVals.get(i).getJsCharacteristicValue());
+//		}
+//		
+//		JsCharacteristicFcls chr = JsCharacteristicFcls.instance(characteristic.getName(), chrVals, fSets);
+//
+//		callJsShowFuzzyClasses(divId, chr);
+//	}
+	
+//	// call d3 with dom element & data
+//	private native void callJsShowFuzzyClasses(String div, JsCharacteristicFcls chr)/*-{
+//		// TODO: @Test
+//		// TODO: Remove!! fsets should be binded! This is for test ONLY!
+//		//var cloned = JSON.parse(JSON.stringify(chr));
+//		$wnd.showFuzzyClasses(div, chr);
+//	}-*/;
 
 	@Override
 	public void setFuzzyClassUpdateHandler(FuzzyClassUpdateHandler handl) {
@@ -434,7 +457,7 @@ public class ShopView extends Composite implements ShopPresenter.Display {
 	@Override
 	protected void onLoad() {
 		super.onLoad();
-		showFuzzyClasses();
+		//showFuzzyClasses();
 	}
 
 }
