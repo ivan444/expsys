@@ -8,8 +8,7 @@ import imaing.expsys.client.domain.Product;
 import imaing.expsys.client.domain.Rule;
 import imaing.expsys.client.domain.Shop;
 import imaing.expsys.client.presenter.ShopPresenter;
-import imaing.expsys.client.presenter.ShopPresenter.FuzzyClassDefUpdateHandler;
-import imaing.expsys.client.presenter.ShopPresenter.FuzzyClassUpdateHandler;
+import imaing.expsys.client.presenter.ShopPresenter.FuzzySetAndValUpdateHandler;
 import imaing.expsys.client.presenter.ShopPresenter.RuleManager;
 import imaing.expsys.client.presenter.ShopPresenter.RuleUpdater;
 import imaing.expsys.client.view.widgets.FuzzySetWidget;
@@ -35,7 +34,6 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.IntegerBox;
-import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -65,13 +63,7 @@ public class ShopView extends Composite implements ShopPresenter.Display {
 	HTMLPanel chrsPanel;
 	
 	@UiField
-	Button btnAddProds;
-	
-	@UiField
 	Button btnDelProd;
-	
-	@UiField
-	TextArea newProdsJson;
 	
 	@UiField
 	HTMLPanel prodsPanel;
@@ -90,8 +82,8 @@ public class ShopView extends Composite implements ShopPresenter.Display {
 	
 	private Characteristic selectedChr = null;
 	private Product selectedProd = null;
-	private FuzzyClassUpdateHandler fclsUpdateHandl;
 	private RuleManager ruleManager;
+	private FuzzySetAndValUpdateHandler fuzzySetAndValUpdateHandl;
 	private final Shop shop;
 	private List<Characteristic> chrs;
 	
@@ -247,16 +239,6 @@ public class ShopView extends Composite implements ShopPresenter.Display {
 	}
 
 	@Override
-	public HasClickHandlers getAddProducts() {
-		return btnAddProds;
-	}
-
-	@Override
-	public String getNewProductsJSON() {
-		return newProdsJson.getText();
-	}
-
-	@Override
 	public HasClickHandlers getDeleteProduct() {
 		return btnDelProd;
 	}
@@ -282,8 +264,8 @@ public class ShopView extends Composite implements ShopPresenter.Display {
 	}
 	
 	@Override
-	public void setFuzzyClassDefUpdateHandler(FuzzyClassDefUpdateHandler handl) {
-		// TODO Auto-generated method stub
+	public void setFuzzySetAndValUpdateHandler(FuzzySetAndValUpdateHandler handl) {
+		this.fuzzySetAndValUpdateHandl = handl;
 	}
 
 	@Override
@@ -291,16 +273,17 @@ public class ShopView extends Composite implements ShopPresenter.Display {
 		for (Characteristic c : fuzzySets.keySet()) {
 			Tuple<List<FuzzyChrCls>, List<FuzzyClass>> fuzzySetAndVal = fuzzySets.get(c);
 			FuzzySetWidget fsWdgt = new FuzzySetWidget(c, fuzzySetAndVal.fst, fuzzySetAndVal.snd);
+			fsWdgt.setSaveHandl(new FuzzySetWidget.SaveHandler() {
+				@Override
+				public void doSave(List<FuzzyChrCls> fuzzySets, List<FuzzyClass> fuzzyVals) {
+					fuzzySetAndValUpdateHandl.doUpdate(fuzzySets, fuzzyVals);
+				}
+			});
 			this.fclsPane.add(fsWdgt);
 		}
 		
 	}
 	
-	@Override
-	public void setFuzzyClassUpdateHandler(FuzzyClassUpdateHandler handl) {
-		this.fclsUpdateHandl = handl;
-	}
-
 	@Override
 	public void reportSuccess(String string) {
 	}

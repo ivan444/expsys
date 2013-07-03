@@ -11,12 +11,7 @@
 		  <g:HTMLPanel ui:field="chrsPanel"/>
 		  <g:Button ui:field="btnDelChr" text="Delete characteristic"/>
 	  </p>
-		<p id="fcls"></p>
-		<p id="fcls2"></p>
 	  <p>
-	      <g:TextArea ui:field="newProdsJson" />
-	      <g:Button ui:field="btnAddProds" text="Add products"/>
-    
         <g:HTMLPanel ui:field="prodsPanel"/>
         <g:Button ui:field="btnDelProd" text="Delete product"/>
 	  </p>

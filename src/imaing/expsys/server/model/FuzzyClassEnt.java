@@ -75,6 +75,7 @@ public class FuzzyClassEnt extends BaseEntity<FuzzyClass> {
 		setId(g.getId());
 		setChr(new CharacteristicEnt(g.getChr()));
 		setValue(g.getValue());
+		setxPos(g.getxPos());
 		
 		double[] mval = g.getMembershipVal();
 		for (int i = 0; i < mval.length; i++) {

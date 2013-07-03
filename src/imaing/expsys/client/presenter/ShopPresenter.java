@@ -12,7 +12,6 @@ import imaing.expsys.shared.Tuple;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -48,19 +47,12 @@ public class ShopPresenter implements Presenter {
 		long getSelectedCharacteristicId();
 		void listCharacteristics(List<Characteristic> chrs);
 		
-//		void listFuzzyClasses(List<FuzzyClass> fcls);
-		void setFuzzyClassUpdateHandler(FuzzyClassUpdateHandler handl);
-		
-//		void listFuzzyClassesDefinitions(List<FuzzyChrCls> fcls);
-		void setFuzzyClassDefUpdateHandler(FuzzyClassDefUpdateHandler handl);
-		
+		void setFuzzySetAndValUpdateHandler(FuzzySetAndValUpdateHandler handl);
 		void listFuzzySetsAndVals(Map<Characteristic, Tuple<List<FuzzyChrCls>, List<FuzzyClass>>> fuzSets);
 		
 		void setRuleManager(RuleManager man);
 		void listRules(List<Rule> rules);
 		
-		HasClickHandlers getAddProducts();
-		String getNewProductsJSON();
 		HasClickHandlers getDeleteProduct();
 		long getSelectedProductId();
 		void listProducts(List<Product> prods);
@@ -68,12 +60,8 @@ public class ShopPresenter implements Presenter {
 		void reportSuccess(String string);
 	}
 	
-	public interface FuzzyClassDefUpdateHandler {
-		void doUpdate(List<FuzzyChrCls> fcls);
-	}
-	
-	public interface FuzzyClassUpdateHandler {
-		void doUpdate(List<FuzzyClass> fcls);
+	public interface FuzzySetAndValUpdateHandler {
+		void doUpdate(List<FuzzyChrCls> fuzzySets, List<FuzzyClass> fuzzyVals);
 	}
 	
 	public interface RuleManager {
@@ -108,10 +96,12 @@ public class ShopPresenter implements Presenter {
 		listFuzzyClasses();
 		listRules();
 		
-		display.setFuzzyClassUpdateHandler(new FuzzyClassUpdateHandler() {
+		display.setFuzzySetAndValUpdateHandler(new FuzzySetAndValUpdateHandler() {
 			@Override
-			public void doUpdate(List<FuzzyClass> fcls) {
-				updateFuzzyClasses(fcls);
+			public void doUpdate(List<FuzzyChrCls> fuzzySets, List<FuzzyClass> fuzzyVals) {
+				// FIXME: better to do this in one transaction... this could lead to non-consistent state
+				updateFuzzySets(fuzzySets);
+				updateFuzzyValues(fuzzyVals);
 			}
 		});
 		
@@ -175,12 +165,6 @@ public class ShopPresenter implements Presenter {
 			}
 		});
 		
-		display.getAddProducts().addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				addProducts(display.getNewProductsJSON());
-			}
-		});
-		
 		display.getDeleteProduct().addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				try {
@@ -222,44 +206,34 @@ public class ShopPresenter implements Presenter {
 		});
 	}
 	
-	protected void updateFuzzyClasses(List<FuzzyClass> fcls) {
-		shopSrv.updateFuzzyClasses(fcls, new AsyncCallback<Void>() {
+	protected void updateFuzzySets(List<FuzzyChrCls> fuzzySets) {
+		shopSrv.updateFuzzyClassesDefinitions(fuzzySets, new AsyncCallback<Void>() {
 			@Override
 			public void onSuccess(Void result) {
-				display.reportSuccess("Fuzzy classes updated!");
+				display.reportSuccess("Fuzzy sets updated!");
 			}
 			
 			@Override
 			public void onFailure(Throwable caught) {
-				display.reportError("Failed to update fuzzy classes");
+				display.reportError("Failed to update fuzzy sets");
 			}
 		});
 		
 	}
-
-	protected void addProducts(String prodsJson) {
-//		List<Product> parsedProds = null;
-//		try {
-//			parsedProds = Product.parseProductsJSON(prodsJson, shop, characteristics);
-//		} catch (ParseException e) {
-//			display.reportError(e.getMessage());
-//			return;
-//		}
-//		
-//		for (Product p : parsedProds) {
-//			shopSrv.addProduct(p, new AsyncCallback<Product>() {
-//				@Override
-//				public void onSuccess(Product result) {
-//					products.add(result);
-//					display.listProducts(products);
-//				}
-//				@Override
-//				public void onFailure(Throwable caught) {
-//					GWT.log("Failed to add product", caught);
-//					Window.alert("Failed to add product");
-//				}
-//			});
-//		}
+	
+	protected void updateFuzzyValues(List<FuzzyClass> fuzzyVals) {
+		shopSrv.updateFuzzyClasses(fuzzyVals, new AsyncCallback<Void>() {
+			@Override
+			public void onSuccess(Void result) {
+				display.reportSuccess("Fuzzy values updated!");
+			}
+			
+			@Override
+			public void onFailure(Throwable caught) {
+				display.reportError("Failed to update fuzzy values");
+			}
+		});
+		
 	}
 
 	/**
@@ -404,8 +378,6 @@ public class ShopPresenter implements Presenter {
 					
 					@Override
 					public void onSuccess(List<FuzzyChrCls> fuzzySets) {
-						GWT.log(Arrays.toString(fuzzySets.toArray()));
-						GWT.log(Arrays.toString(fuzzyVals.toArray()));
 						showFuzzySets(fuzzySets, fuzzyVals);
 					}
 					

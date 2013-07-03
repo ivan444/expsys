@@ -23,9 +23,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 
 public class FuzzySetWidget extends Composite {
-	
 	private static FuzzySetWidgetUiBinder uiBinder = GWT.create(FuzzySetWidgetUiBinder.class);
-
 	interface FuzzySetWidgetUiBinder extends UiBinder<Widget, FuzzySetWidget> {
 	}
 
