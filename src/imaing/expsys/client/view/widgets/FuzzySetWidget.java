@@ -7,6 +7,7 @@ import imaing.expsys.client.domain.JsCharacteristicFcls;
 import imaing.expsys.client.domain.JsCharacteristicValue;
 import imaing.expsys.client.domain.JsFuzzySet;
 
+import java.util.Arrays;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
@@ -46,6 +47,9 @@ public class FuzzySetWidget extends Composite {
 	private List<FuzzyClass> fuzzyVals;
 	private List<FuzzyChrCls> fuzzySets;
 	private Characteristic chr;
+	private JsCharacteristicFcls jsChr;
+	private JsArray<JsCharacteristicValue> chrVals;
+	private JsArray<JsFuzzySet> fSets;
 	
 	
 	public FuzzySetWidget(Characteristic chr, List<FuzzyChrCls> fuzzySets, List<FuzzyClass> fuzzyVals) {
@@ -56,8 +60,27 @@ public class FuzzySetWidget extends Composite {
 		this.chr = chr;
 		this.fuzzySets = fuzzySets;
 		this.fuzzyVals = fuzzyVals;
+		
+		if (fuzzyVals != null && fuzzySets != null) {
+			init();
+		}
 	}
 	
+	private void init() {
+		
+		fSets = JavaScriptObject.createArray().cast();
+		for (int i = 0; i < fuzzySets.size(); i++) {
+			fSets.push(JsFuzzySet.instance(fuzzySets.get(i), i));
+		}
+		
+		chrVals = JavaScriptObject.createArray().cast();
+		for (int i = 0; i < fuzzyVals.size(); i++) {
+			chrVals.push(JsCharacteristicValue.instance(fuzzyVals.get(i)));
+		}
+		
+		jsChr = JsCharacteristicFcls.instance(chr.getName(), chrVals, fSets);
+	}
+		
 	private void showWidget() {
 		if (fuzzyVals == null || fuzzySets == null) {
 			GWT.log(chr.getName() + ": fuzzyVals == null: " + (fuzzyVals == null)
@@ -66,19 +89,37 @@ public class FuzzySetWidget extends Composite {
 			return;
 		}
 		
-		JsArray<JsFuzzySet> fSets = JavaScriptObject.createArray().cast();
-		for (int i = 0; i < fuzzySets.size(); i++) {
-			fSets.push(JsFuzzySet.instance(fuzzySets.get(i), i));
-		}
-		
-		JsArray<JsCharacteristicValue> chrVals = JavaScriptObject.createArray().cast();
-		for (int i = 0; i < fuzzyVals.size(); i++) {
-			chrVals.push(JsCharacteristicValue.instance(fuzzyVals.get(i)));
-		}
-		
-		JsCharacteristicFcls jsChr = JsCharacteristicFcls.instance(chr.getName(), chrVals, fSets);
-		
 		jsShowFuzzyClasses(container.getId(), jsChr);
+	}
+	
+	private void updateDataFromJs() {
+		updateFuzzyValsFromJs();
+		updateFuzzySetsFromJs();
+		adjustMembershipVals();
+	}
+	
+	private void adjustMembershipVals() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void updateFuzzySetsFromJs() {
+		for (int i = 0; i < fuzzySets.size(); i++) {
+			FuzzyChrCls set = fuzzySets.get(i);
+			JsFuzzySet jsSet = fSets.get(i);
+			set.setxLeftUp(jsSet.get(0));
+			set.setxLeftDown(jsSet.get(1));
+			set.setxRightUp(jsSet.get(2));
+			set.setxRightDown(jsSet.get(3));
+		}
+	}
+	
+	private void updateFuzzyValsFromJs() {
+		for (int i = 0; i < fuzzyVals.size(); i++) {
+			FuzzyClass val = fuzzyVals.get(i);
+			JsCharacteristicValue jsVal = chrVals.get(i);
+			val.setxPos(jsVal.getXPos());
+		}
 	}
 	
 	// call d3 with dom element & data
@@ -97,6 +138,9 @@ public class FuzzySetWidget extends Composite {
 	
 	@UiHandler("btnSave")
 	void handleClick(ClickEvent e) {
+		updateDataFromJs();
+		GWT.log("SETS: " + Arrays.toString(fuzzySets.toArray())
+				+",  VALS: " + Arrays.toString(fuzzyVals.toArray()));
 //		if (saveHandl != null) {
 //			saveHandl.doSave(fcls);
 //		}

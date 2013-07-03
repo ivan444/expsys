@@ -11,27 +11,6 @@ import com.google.gwt.core.client.JsArrayNumber;
  *
  */
 public class JsFuzzySet extends JavaScriptObject {
-//	private FuzzyChrCls ownerObject;
-//	
-//	public FuzzyChrCls getOwnerObject() {
-//		return ownerObject;
-//	}
-//	
-//	public void setOwnerObject(FuzzyChrCls ownerObject) {
-//		this.ownerObject = ownerObject;
-//	}
-//	
-//	/**
-//	 * Update FuzzySet coordinates with contents
-//	 * of JsFuzzySet.
-//	 */
-//	public void updateOwner() {
-//		ownerObject.setxLeftUp(get(0));
-//		ownerObject.setxLeftDown(get(1));
-//		ownerObject.setxRightUp(get(2));
-//		ownerObject.setxRightDown(get(3));
-//	}
-	
 	// Overlay types always have protected, zero-arg ctors
 	protected JsFuzzySet() {}
 	
@@ -52,7 +31,6 @@ public class JsFuzzySet extends JavaScriptObject {
 		fuzSetData.push(ownerObject.getxRightDown());
 		
 		JsFuzzySet jsFuzzySet = JsFuzzySet.instance(fuzSetData, fuzzySetIdx);
-//		jsFuzzySet.setOwnerObject(ownerObject);
 		return jsFuzzySet;
 	}
 	

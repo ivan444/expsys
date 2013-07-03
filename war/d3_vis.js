@@ -67,7 +67,6 @@ function showFuzzyClasses(divId, chr) {
   
   
   var svgDiv = document.getElementById(divId);
-  console.log(svgDiv);
   var svg = d3.select(svgDiv).append("svg")
   .attr("width", width)
   .attr("height", height);
@@ -233,7 +232,7 @@ function showFuzzyClasses(divId, chr) {
     .origin(Object)
     .on("drag", function (d) {
       var x = Math.max(d3.event.x, xpad);
-      
+      chr.chrValues[d.idx].x = x - xpad;
       d.x = x;
       d3.select(this).attr("transform", function(d) { return 'translate(' + x + ',0)'; });
     });

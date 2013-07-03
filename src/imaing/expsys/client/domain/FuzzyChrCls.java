@@ -1,6 +1,5 @@
 package imaing.expsys.client.domain;
 
-
 /**
  * Fuzzy class descriptor for characteristic.
  */
@@ -49,6 +48,12 @@ public class FuzzyChrCls extends DTOObject {
 
 	public void setxRightDown(double xRightDown) {
 		this.xRightDown = xRightDown;
+	}
+	
+
+	@Override
+	public String toString() {
+		return "{chr: "+getChr().getName()+", left_down: "+getxLeftDown()+", left_up: "+getxLeftUp()+", right_up: "+getxRightUp()+", right_down: "+getxRightDown()+"}";
 	}
 
 	@Override

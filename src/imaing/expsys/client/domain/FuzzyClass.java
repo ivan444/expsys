@@ -1,5 +1,7 @@
 package imaing.expsys.client.domain;
 
+import java.util.Arrays;
+
 public class FuzzyClass extends DTOObject {
 	private Characteristic chr;
 	private String value;
@@ -36,6 +38,11 @@ public class FuzzyClass extends DTOObject {
 	
 	public void setMembershipVal(int idx, double val) {
 		this.membershipVal[idx] = val;
+	}
+	
+	@Override
+	public String toString() {
+		return "{chr: "+getChr().getName()+", val: "+getValue()+", x_pos: "+getxPos()+", memval: "+Arrays.toString(membershipVal)+"}";
 	}
 
 	@Override
