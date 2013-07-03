@@ -7,7 +7,6 @@ import imaing.expsys.client.domain.JsCharacteristicFcls;
 import imaing.expsys.client.domain.JsCharacteristicValue;
 import imaing.expsys.client.domain.JsFuzzySet;
 
-import java.util.Arrays;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
@@ -33,9 +32,9 @@ public class FuzzySetWidget extends Composite {
 	/**
 	 * A registered handler will be notified when an item is selected.
 	 */
-//	public interface SaveHandler {
-//		void doSave(List<FuzzyChrCls> fcls);
-//	}
+	public interface SaveHandler {
+		void doSave(List<FuzzyChrCls> fuzzySets, List<FuzzyClass> fuzzyVals);
+	}
 	
 	@UiField
 	DivElement container;
@@ -43,7 +42,7 @@ public class FuzzySetWidget extends Composite {
 	@UiField
 	Button btnSave;
 	
-//	private SaveHandler saveHandl = null;
+	private SaveHandler saveHandl = null;
 	private List<FuzzyClass> fuzzyVals;
 	private List<FuzzyChrCls> fuzzySets;
 	private Characteristic chr;
@@ -99,8 +98,21 @@ public class FuzzySetWidget extends Composite {
 	}
 	
 	private void adjustMembershipVals() {
-		// TODO Auto-generated method stub
-		
+		for (FuzzyClass val : fuzzyVals) {
+			int xpos = val.getxPos();
+			for (int i = 0; i < fuzzySets.size(); i++) {
+				FuzzyChrCls set = fuzzySets.get(i);
+				if (xpos < set.getxLeftDown() || xpos > set.getxRightDown()) {
+					val.setMembershipVal(i, 0.0);
+				} else if (xpos < set.getxLeftUp()) {
+					val.setMembershipVal(i, (xpos - set.getxLeftDown())/(set.getxLeftUp() - set.getxLeftDown()));
+				} else if (xpos > set.getxRightUp()) {
+					val.setMembershipVal(i, (set.getxRightDown() - xpos)/(set.getxRightDown() - set.getxRightUp()));
+				} else {
+					val.setMembershipVal(i, 1.0);
+				}
+			}
+		}
 	}
 
 	private void updateFuzzySetsFromJs() {
@@ -124,9 +136,6 @@ public class FuzzySetWidget extends Composite {
 	
 	// call d3 with dom element & data
 	private native void jsShowFuzzyClasses(String div, JsCharacteristicFcls chr)/*-{
-		// TODO: @Test
-		// TODO: Remove!! fsets should be binded! This is for test ONLY!
-		//var cloned = JSON.parse(JSON.stringify(chr));
 		$wnd.showFuzzyClasses(div, chr);
 	}-*/;
 	
@@ -139,14 +148,14 @@ public class FuzzySetWidget extends Composite {
 	@UiHandler("btnSave")
 	void handleClick(ClickEvent e) {
 		updateDataFromJs();
-		GWT.log("SETS: " + Arrays.toString(fuzzySets.toArray())
-				+",  VALS: " + Arrays.toString(fuzzyVals.toArray()));
-//		if (saveHandl != null) {
-//			saveHandl.doSave(fcls);
-//		}
+//		GWT.log("SETS: " + Arrays.toString(fuzzySets.toArray())
+//				+",  VALS: " + Arrays.toString(fuzzyVals.toArray()));
+		if (saveHandl != null) {
+			saveHandl.doSave(fuzzySets, fuzzyVals);
+		}
 	}
 
-//	public void setSaveHandl(SaveHandler saveHandl) {
-//		this.saveHandl = saveHandl;
-//	}
+	public void setSaveHandl(SaveHandler saveHandl) {
+		this.saveHandl = saveHandl;
+	}
 }
